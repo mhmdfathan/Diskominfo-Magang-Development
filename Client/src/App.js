@@ -35,6 +35,7 @@ const App = () => {
         <Route path="user/presensi" element={<Presensi/>}/>
         <Route path="user/tugas" element={<Tugas/>}/>
         <Route path="user/homepage" element={<UserPages />}/>
+        <Route path='/edit/:id' element={<EditUser />}/>
         
         <Route path='admin' element={<Admin />} />
         <Route path="homepage" element={<Homepage />}/>
@@ -42,7 +43,8 @@ const App = () => {
         <Route path='presensi' element={<PresensiMagang />}/>
         <Route path='penugasan' element={<Penugasan />}/>
         <Route path='statistik' element={<Statistik />}/>
-        <Route path='/edit/:id' element={<EditUser />}/>
+        <Route path='edit-admin/:id' element={<EditAdmin />}/>
+        
       </Routes>
     </BrowserRouter>
   );
