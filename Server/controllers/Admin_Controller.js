@@ -253,6 +253,21 @@ async function addPeserta(req, res){
     });
 }
 
+function showPresensiPeserta(req, res){
+    const id = req.params.id;
+    models.Presensi.findAll({where:{p_id:id}}).then(result =>{
+        res.status(200).json({
+            presensi:result
+        });
+    }).catch(error =>{
+        res.status(500).json({
+            message: "Something went wrong",
+            error:error
+        });
+    });
+
+}
+
 async function addPresensiForPeserta(result_peserta, req, res){
     try {
         //result_peserta.tanggal_mulai
@@ -315,6 +330,57 @@ async function showPesertaAll(req, res){
         });
     });
 }
+
+async function showPesertaAktifAll(req, res){
+    statusCheck(req, res);
+    await models.Peserta_Magang.findAll({where:{status_aktif:true}}).then(result =>{
+        res.status(200).json({
+            peserta_magang:result
+        });
+    }).catch(error =>{
+        res.status(500).json({
+            message: "Something went wrong",
+            error:error
+        });
+    });
+}
+
+async function showPesertaAlumniAll(req, res){
+    statusCheck(req, res);
+    await models.Peserta_Magang.findAll({where:{status_aktif:false}}).then(result =>{
+        res.status(200).json({
+            peserta_magang:result
+        });
+    }).catch(error =>{
+        res.status(500).json({
+            message: "Something went wrong",
+            error:error
+        });
+    });
+}
+
+async function showCalonPesertaAll(req, res) {
+    statusCheck(req, res);
+    const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+    const currentDate = moment.tz(response.data.datetime, 'Asia/Jakarta'); // Get the current date and time
+    await models.Peserta_Magang.findAll({
+        where: {
+            tanggal_mulai: {
+                [Op.gt]: currentDate, // [Op.lt] stands for less than
+            }
+        }
+    }).then(result => {
+        res.status(200).json({
+            peserta_magang: result
+        });
+    }).catch(error => {
+        res.status(500).json({
+            message: "Something went wrong",
+            error: error
+        });
+    });
+}
+
 
 async function editPresensiForPeserta(result_peserta,id, req, res) {
     try {
@@ -436,7 +502,7 @@ function deletePeserta(req, res){
 }
 
 async function showPresensiPerDay(req, res) {
-    const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
+    const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
     const tanggal = req.query.tanggal ? moment.tz(req.query.tanggal, 'Asia/Jakarta') : moment.tz(response.data.datetime, 'Asia/Jakarta');
 
     try {
@@ -472,7 +538,7 @@ async function showPresensiPerDay(req, res) {
 
 async function showPresensiBelum(req, res) {
   try {
-    const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
+    const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
     const tanggal = req.body.tanggal ? moment.tz(req.body.tanggal, 'Asia/Jakarta') : moment.tz(response.data.datetime, 'Asia/Jakarta');
     
     const presensi = await models.Peserta_Magang.findAll({
@@ -731,7 +797,11 @@ async function exportAdmin(req, res) {
 
 async function exportPeserta(req, res) {
     try {
+      statusCheck(req,res);
       const results = await models.Peserta_Magang.findAll();
+
+      const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
   
       const workbook = new exceljs.Workbook();
       const sheet = workbook.addWorksheet('Peserta Magangs');
@@ -757,7 +827,7 @@ async function exportPeserta(req, res) {
           asal_jurusan: value.asal_jurusan,
           tanggal_mulai: value.tanggal_mulai,
           tanggal_selesai: value.tanggal_selesai,
-          status_aktif: value.status_aktif
+          status_aktif: value.status_aktif === true ? 'Aktif' : 'Alumni'
         });
       });
   
@@ -768,7 +838,187 @@ async function exportPeserta(req, res) {
   
       res.setHeader(
         'Content-Disposition',
-        'attachment;filename=PesertaMagangs.xlsx'
+        `attachment;filename=Peserta Magang (${tanggal}).xlsx`
+      );
+  
+      const buffer = await workbook.xlsx.writeBuffer();
+      res.end(buffer);
+  
+    } catch (error) {
+      console.error('An error occurred:', error);
+      res.status(500).json({
+        message: 'Something went wrong',
+        error: error,
+      });
+    }
+  }
+
+  async function exportPesertaAktif(req, res) {
+    try {
+      statusCheck(req, res);
+      const results = await models.Peserta_Magang.findAll({where:{status_aktif:true}});
+
+      const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
+  
+      const workbook = new exceljs.Workbook();
+      const sheet = workbook.addWorksheet('Peserta Magangs');
+      sheet.columns = [
+        { header: 'ID', key: 'id', width: 3 },
+        { header: 'Nama', key: 'nama', width: 30 },
+        { header: 'Username', key: 'username', width: 30 },
+        { header: 'Password', key: 'password', width: 80 },
+        { header: 'Asal Universitas', key: 'asal_univ', width: 80 },
+        { header: 'Asal Jurusan', key: 'asal_jurusan', width: 80 },
+        { header: 'Tanggal Mulai', key: 'tanggal_mulai', width: 80 },
+        { header: 'Tanggal Selesai', key: 'tanggal_selesai', width: 80 },
+        { header: 'Status Aktif', key: 'status_aktif', width: 80 }
+      ];
+  
+      results.forEach((value) => {
+        sheet.addRow({
+          id: value.id,
+          nama: value.nama,
+          username: value.username,
+          password: value.password,
+          asal_univ: value.asal_univ,
+          asal_jurusan: value.asal_jurusan,
+          tanggal_mulai: value.tanggal_mulai,
+          tanggal_selesai: value.tanggal_selesai,
+          status_aktif: value.status_aktif === true ? 'Aktif' : 'Alumni'
+        });
+      });
+  
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      );
+  
+      res.setHeader(
+        'Content-Disposition',
+        `attachment;filename=Peserta Magang Aktif (${tanggal}).xlsx`
+      );
+  
+      const buffer = await workbook.xlsx.writeBuffer();
+      res.end(buffer);
+  
+    } catch (error) {
+      console.error('An error occurred:', error);
+      res.status(500).json({
+        message: 'Something went wrong',
+        error: error,
+      });
+    }
+  }
+
+  async function exportPesertaAlumni(req, res) {
+    try {
+      statusCheck(req,res);
+      const results = await models.Peserta_Magang.findAll({where:{status_aktif:false}});
+
+      const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
+  
+      const workbook = new exceljs.Workbook();
+      const sheet = workbook.addWorksheet('Peserta Magangs');
+      sheet.columns = [
+        { header: 'ID', key: 'id', width: 3 },
+        { header: 'Nama', key: 'nama', width: 30 },
+        { header: 'Username', key: 'username', width: 30 },
+        { header: 'Password', key: 'password', width: 80 },
+        { header: 'Asal Universitas', key: 'asal_univ', width: 80 },
+        { header: 'Asal Jurusan', key: 'asal_jurusan', width: 80 },
+        { header: 'Tanggal Mulai', key: 'tanggal_mulai', width: 80 },
+        { header: 'Tanggal Selesai', key: 'tanggal_selesai', width: 80 },
+        { header: 'Status Aktif', key: 'status_aktif', width: 80 }
+      ];
+  
+      results.forEach((value) => {
+        sheet.addRow({
+          id: value.id,
+          nama: value.nama,
+          username: value.username,
+          password: value.password,
+          asal_univ: value.asal_univ,
+          asal_jurusan: value.asal_jurusan,
+          tanggal_mulai: value.tanggal_mulai,
+          tanggal_selesai: value.tanggal_selesai,
+          status_aktif: value.status_aktif === true ? 'Aktif' : 'Alumni'
+        });
+      });
+  
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      );
+  
+      res.setHeader(
+        'Content-Disposition',
+        `attachment;filename=Peserta Magang Alumni (${tanggal}).xlsx`
+      );
+  
+      const buffer = await workbook.xlsx.writeBuffer();
+      res.end(buffer);
+  
+    } catch (error) {
+      console.error('An error occurred:', error);
+      res.status(500).json({
+        message: 'Something went wrong',
+        error: error,
+      });
+    }
+  }
+
+  async function exportCalonPeserta(req, res) {
+    try {
+      statusCheck(req,res);
+      const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
+      const results = await models.Peserta_Magang.findAll({
+        where: {
+            tanggal_mulai: {
+                [Op.gt]: tanggal, // [Op.lt] stands for less than
+            }
+        }
+      });
+      
+  
+      const workbook = new exceljs.Workbook();
+      const sheet = workbook.addWorksheet('Peserta Magangs');
+      sheet.columns = [
+        { header: 'ID', key: 'id', width: 3 },
+        { header: 'Nama', key: 'nama', width: 30 },
+        { header: 'Username', key: 'username', width: 30 },
+        { header: 'Password', key: 'password', width: 80 },
+        { header: 'Asal Universitas', key: 'asal_univ', width: 80 },
+        { header: 'Asal Jurusan', key: 'asal_jurusan', width: 80 },
+        { header: 'Tanggal Mulai', key: 'tanggal_mulai', width: 80 },
+        { header: 'Tanggal Selesai', key: 'tanggal_selesai', width: 80 },
+        { header: 'Status Aktif', key: 'status_aktif', width: 80 }
+      ];
+  
+      results.forEach((value) => {
+        sheet.addRow({
+          id: value.id,
+          nama: value.nama,
+          username: value.username,
+          password: value.password,
+          asal_univ: value.asal_univ,
+          asal_jurusan: value.asal_jurusan,
+          tanggal_mulai: value.tanggal_mulai,
+          tanggal_selesai: value.tanggal_selesai,
+          status_aktif: value.status_aktif === true ? 'Aktif' : 'Alumni'
+        });
+      });
+  
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      );
+  
+      res.setHeader(
+        'Content-Disposition',
+        `attachment;filename=Calon Peserta Magang (${tanggal}).xlsx`
       );
   
       const buffer = await workbook.xlsx.writeBuffer();
@@ -786,9 +1036,12 @@ async function exportPeserta(req, res) {
   async function exportStatusTugas(req, res) {
     try {
       const tid = req.params.id;
+      const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
       const results = await models.Peserta_Magang.findAll({
         include:[{
             model:models.Status_tugas,
+            as:'status_tugas',
             where:{
                 t_id:tid
             }
@@ -804,14 +1057,23 @@ async function exportPeserta(req, res) {
       ];
   
       results.forEach((value) => {
-        console.log('Data:', value);
-        const statusPengerjaan = value.Status_tugas[0].status_pengerjaan ? 'Sudah Mengerjakan' : 'Belum Mengerjakan';
+        const statusPengerjaan = value.status_tugas[0].status_pengerjaan ? 'Sudah Mengerjakan' : 'Belum Mengerjakan';
+
+        function setCellBackgroundColor(value) {
+            return value === 'Sudah Mengerjakan' ? 'FF00FF00' : 'FFFFFFFF';
+        }
         
         sheet.addRow({
           nama: value.nama,
           asal_univ: value.asal_univ,
           status_pengerjaan: statusPengerjaan
         });
+
+        sheet.getCell(sheet.rowCount, sheet.getColumn('status_pengerjaan').number).fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: setCellBackgroundColor(statusPengerjaan) }
+        };
       });
   
       res.setHeader(
@@ -821,7 +1083,7 @@ async function exportPeserta(req, res) {
   
       res.setHeader(
         'Content-Disposition',
-        'attachment;filename=StatusTugas.xlsx'
+        `attachment;filename=Status Tugas ${tanggal}.xlsx`
       );
   
       const buffer = await workbook.xlsx.writeBuffer();
@@ -836,10 +1098,10 @@ async function exportPeserta(req, res) {
     }
   }
 
-  async function exportPresensiPeserta(req, res) {
+  async function exportPresensiPerTanggal(req, res) {
     try {
-      const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
-      const tanggal = req.query.tanggal ? moment.tz(req.query.tanggal, 'Asia/Jakarta') : moment.tz(response.data.datetime, 'Asia/Jakarta');
+      const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
       const results = await models.Peserta_Magang.findAll({
         include:[{
             model: models.Presensi,
@@ -855,21 +1117,38 @@ async function exportPeserta(req, res) {
       sheet.columns = [
         { header: 'ID', key: 'id', width: 3 },
         { header: 'Nama', key: 'nama', width: 30 },
-        { header: 'Asal Universitas', key: 'asal_univ', width: 80 },
-        { header: 'Asal Jurusan', key: 'asal_jurusan', width: 80 },
-        { header: 'Tanggal Mulai', key: 'tanggal_mulai', width: 80 },
-        { header: 'Tanggal Selesai', key: 'tanggal_selesai', width: 80 },
-        { header: 'Status Aktif', key: 'status_aktif', width: 80 },
-        { header: 'Tanggal', key: 'tanggal', width: 80 },
-        { header: 'Check-In', key: 'check_in', width: 80 },
-        { header: 'Check-Out', key: 'check_out', width: 80 }
+        { header: 'Asal Universitas', key: 'asal_univ', width: 30 },
+        { header: 'Asal Jurusan', key: 'asal_jurusan', width: 30 },
+        { header: 'Tanggal Mulai', key: 'tanggal_mulai', width: 30 },
+        { header: 'Tanggal Selesai', key: 'tanggal_selesai', width: 30 },
+        { header: 'Status Aktif', key: 'status_aktif', width: 30 },
+        { header: 'Tanggal', key: 'tanggal', width: 30 },
+        { header: 'Check-In', key: 'check_in', width: 30 },
+        { header: 'Check-Out', key: 'check_out', width: 30 }
 
       ];
   
       results.forEach((value) => {
         const tanggalPresensi = value.presensimagang[0].tanggal;
-        const checkInPresensi = value.presensimagang[0].check_in;
-        const checkOutPresensi = value.presensimagang[0].check_out;
+        const checkInPresensi = value.presensimagang[0].check_in ? 'Sudah Presensi' : 'Belum Presensi';
+        const checkOutPresensi = value.presensimagang[0].check_out ? 'Sudah Presensi' : 'Belum Presensi';
+
+        // Function to set cell background color
+        function setCellBackgroundColor(value) {
+            return value === 'Sudah Presensi' ? 'FF00FF00' : 'FFFFFFFF';
+        }
+
+        sheet.getCell(sheet.rowCount, sheet.getColumn('check_in').number).fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: setCellBackgroundColor(checkInPresensi) }
+        };
+        sheet.getCell(sheet.rowCount, sheet.getColumn('check_out').number).fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: setCellBackgroundColor(checkOutPresensi) }
+        };
+
         sheet.addRow({
           id: value.id,
           nama: value.nama,
@@ -877,7 +1156,7 @@ async function exportPeserta(req, res) {
           asal_jurusan: value.asal_jurusan,
           tanggal_mulai: value.tanggal_mulai,
           tanggal_selesai: value.tanggal_selesai,
-          status_aktif: value.status_aktif,
+          status_aktif: value.status_aktif === true ? 'Aktif':'Tidak Aktif',
           tanggal: tanggalPresensi,
           check_in: checkInPresensi,
           check_out: checkOutPresensi
@@ -891,7 +1170,7 @@ async function exportPeserta(req, res) {
   
       res.setHeader(
         'Content-Disposition',
-        'attachment;filename=Presensi.xlsx'
+        `attachment;filename=Presensi ${tanggal}.xlsx`
       );
   
       const buffer = await workbook.xlsx.writeBuffer();
@@ -905,6 +1184,83 @@ async function exportPeserta(req, res) {
       });
     }
   }
+
+  async function exportPresensiPerPeserta(req, res) {
+  try {
+    const id = req.params.id;
+    const results = await models.Presensi.findAll({ where: { p_id: id } });
+    const ambilNama = await models.Peserta_Magang.findByPk(id);
+    const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+    const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
+    const fileName = "Presensi " + ambilNama.nama;
+    
+
+    const workbook = new exceljs.Workbook();
+    const sheet = workbook.addWorksheet(ambilNama.nama);
+
+    
+
+    sheet.columns = [
+      { header: 'Tanggal', key: 'tanggal', width: 15 },
+      { header: 'Check-In', key: 'check_in', width: 15 },
+      { header: 'Check-Out', key: 'check_out', width: 15 },
+      { header: 'Nama Peserta Magang: '+ ambilNama.nama, width: 45 },
+    ];
+
+    
+
+    results.forEach((value) => {
+      const checkInValue = value.check_in ? 'Sudah Presensi' : 'Belum Presensi';
+      const checkOutValue = value.check_out ? 'Sudah Presensi' : 'Belum Presensi';
+
+      // Function to set cell background color
+      function setCellBackgroundColor(value) {
+        return value === 'Sudah Presensi' ? 'FF00FF00' : 'FFFFFFFF';
+      }
+
+      
+      sheet.addRow({
+        tanggal: value.tanggal,
+        check_in: checkInValue,
+        check_out: checkOutValue
+      });
+
+      // Set cell background color after adding the row
+      sheet.getCell(sheet.rowCount, sheet.getColumn('check_in').number).fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: setCellBackgroundColor(checkInValue) }
+      };
+      sheet.getCell(sheet.rowCount, sheet.getColumn('check_out').number).fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: setCellBackgroundColor(checkOutValue) }
+      };
+    });
+
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
+
+    res.setHeader(
+      'Content-Disposition',
+      `attachment;filename=${fileName} ${tanggal}.xlsx`
+    );
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    res.end(buffer);
+  } catch (error) {
+    console.error('An error occurred:', error);
+    res.status(500).json({
+      message: 'Something went wrong',
+      error: error,
+    });
+  }
+}
+
+  
+  
 
 module.exports = {
     addAdmin:addAdmin,
@@ -925,7 +1281,15 @@ module.exports = {
     exportAdmin: exportAdmin,
     exportPeserta: exportPeserta,
     exportStatusTugas: exportStatusTugas,
-    exportPresensiPeserta: exportPresensiPeserta,
+    exportPresensiPerTanggal: exportPresensiPerTanggal,
     showAdmin:showAdmin,
-    showAdminById:showAdminById
+    showAdminById:showAdminById,
+    showPresensiPeserta: showPresensiPeserta,
+    exportPresensiPerPeserta: exportPresensiPerPeserta,
+    showPesertaAktifAll:showPesertaAktifAll,
+    showPesertaAlumniAll:showPesertaAlumniAll,
+    showCalonPesertaAll:showCalonPesertaAll,
+    exportPesertaAktif:exportPesertaAktif,
+    exportPesertaAlumni:exportPesertaAlumni,
+    exportCalonPeserta:exportCalonPeserta
 }
