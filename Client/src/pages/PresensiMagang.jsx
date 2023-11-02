@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './PresensiMagang.css';
 import logo from "../Assets/diskominfo.png"
 import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "../Components/SideBar/Style.css"
-import axiosJWT from '../config/axiosJWT';
+import {axiosJWTadmin} from '../config/axiosJWT';
+import isUnauthorizedError  from '../config/errorHandling';
 import { TabTitle } from '../TabName';
 
 export const Peserta = () => {
@@ -12,6 +14,7 @@ export const Peserta = () => {
   const [users, setUsers] = useState([]);
   const [showNav, setShowNav] = useState(true);
   const [totalAttendance, setTotalAttendance] = useState(0);
+  const navigate = useNavigate();
 
   const [currentTime, setCurrentTime] = useState('');
   const [searchDate, setSearchDate] = useState('');
@@ -27,7 +30,7 @@ export const Peserta = () => {
       ? `https://api.diskominfo-smg-magang.cloud/admin/export-presensi?tanggal=${searchDate}`
       : 'https://api.diskominfo-smg-magang.cloud/admin/export-presensi';
 
-    const response = await axiosJWT.get(requestUrl, {
+    const response = await axiosJWTadmin.get(requestUrl, {
       responseType: 'arraybuffer',
     });
 
@@ -72,11 +75,13 @@ export const Peserta = () => {
       : 'https://api.diskominfo-smg-magang.cloud/admin/presensi';
 
     try {
-      const response = await axiosJWT.get(url);
+      const response = await axiosJWTadmin.get(url);
       setUsers(response.data.presensi);
       setTotalAttendance(response.data.totalSudahPresensi);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      if (isUnauthorizedError(error)){
+        navigate('/');
+      }
     }
   };
 
@@ -86,9 +91,12 @@ export const Peserta = () => {
 
   const getPresensiBelum = async () => {
     try {
-      const response = await axiosJWT.get('https://api.diskominfo-smg-magang.cloud/admin/presensi/negatif');
+      const response = await axiosJWTadmin.get('https://api.diskominfo-smg-magang.cloud/admin/presensi/negatif');
       setUsers(response.data.presensi);
     } catch (error) {
+      if (isUnauthorizedError(error)){
+        navigate('/');
+      }
       console.error('Error fetching data:', error);
     }
   };

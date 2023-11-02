@@ -1,4 +1,4 @@
-import axiosJWT from '../config/axiosJWT';
+import axiosJWTadmin from '../config/axiosJWT';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -13,6 +13,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../Components/SideBar/Style.css";
 import { TabTitle } from '../TabName';
+import isUnauthorizedError  from '../config/errorHandling';
 
 export const Peserta = () => {
   TabTitle('Peserta');
@@ -73,7 +74,7 @@ export const Peserta = () => {
 
   const exportPeserta = async () => {
     try {
-      const response = await axiosJWT.get("https://api.diskominfo-smg-magang.cloud/admin/export-peserta", {
+      const response = await axiosJWTadmin.get("https://api.diskominfo-smg-magang.cloud/admin/export-peserta", {
         responseType: 'arraybuffer'
       });
       const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -86,7 +87,9 @@ export const Peserta = () => {
       a.click();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      navigate('/');
+      if (isUnauthorizedError(error)){
+        navigate('/');
+      }
     }
   };
 
@@ -112,30 +115,36 @@ export const Peserta = () => {
 
   const getUsers = async (page) => {
     try {
-      const response = await axiosJWT.get('https://api.diskominfo-smg-magang.cloud/admin/peserta');
+      const response = await axiosJWTadmin.get('https://api.diskominfo-smg-magang.cloud/admin/peserta');
       setUsers(response.data.peserta_magang);
     } catch (error) {
-      navigate('/');
+      if (isUnauthorizedError(error)){
+        navigate('/');
+      }
     }
   };
 
   const deleteUser = async (id) => {
     try {
-      await axiosJWT.delete(`https://api.diskominfo-smg-magang.cloud/admin/peserta/${id}/delete`);
+      await axiosJWTadmin.delete(`https://api.diskominfo-smg-magang.cloud/admin/peserta/${id}/delete`);
       getUsers();
     } catch (error) {
-      navigate("/");
+      if (isUnauthorizedError(error)){
+        navigate('/');
+      }
     }
   };
 
   const saveUser = async (e) => {
     e.preventDefault();
     try {
-      await axiosJWT.post('https://api.diskominfo-smg-magang.cloud/admin/peserta/add', formData);
+      await axiosJWTadmin.post('https://api.diskominfo-smg-magang.cloud/admin/peserta/add', formData);
       getUsers();
       setShowTaskForm(false);
     } catch (error) {
-      navigate("/");
+      if (isUnauthorizedError(error)){
+        navigate('/');
+      }
     }
   };
 

@@ -1,15 +1,37 @@
 import axios from 'axios';
 
-const axiosJWT = axios.create();
+// Axios instance untuk admin
+const axiosJWTadmin = axios.create();
 
-
-axiosJWT.interceptors.request.use(async (config) => {
+axiosJWTadmin.interceptors.request.use(async (config) => {
   try {
-    const response = await axios.get("https://api.diskominfo-smg-magang.cloud/account/token");
+    const response = await axios.get("https://api.diskominfo-smg-magang.cloud/account/token", {
+      headers: {
+        'role': "admin"
+      },
+    });
     config.headers.Authorization = `Bearer ${response.data.token}`;
     return config;
   } catch (error) {
     return Promise.reject(error);
   }
 });
-export default axiosJWT;
+
+// Axios instance untuk user (peserta_magang)
+const axiosJWTuser = axios.create();
+
+axiosJWTuser.interceptors.request.use(async (config) => {
+  try {
+    const response = await axios.get("https://api.diskominfo-smg-magang.cloud/account/token", {
+      headers: {
+        'role': "peserta_magang"
+      },
+    });
+    config.headers.Authorization = `Bearer ${response.data.token}`;
+    return config;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+});
+
+export { axiosJWTadmin, axiosJWTuser };

@@ -1,4 +1,4 @@
-import axiosJWT from "../config/axiosJWT";
+import axiosJWTadmin from "../config/axiosJWT";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -9,6 +9,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../Components/SideBar/Style.css";
 import { TabTitle } from "../TabName";
+import isUnauthorizedError  from '../config/errorHandling';
 
 export const Admin = () => {
     TabTitle('Admin');
@@ -47,28 +48,31 @@ export const Admin = () => {
 
     const getAdmin = async () => {
         try {
-            const response = await axiosJWT.get('https://api.diskominfo-smg-magang.cloud/admin/show-admin');
+            const response = await axiosJWTadmin.get('https://api.diskominfo-smg-magang.cloud/admin/show-admin');
             setAdmins(response.data.admin);
         } catch (error) {
-            navigate("/");
+            if (isUnauthorizedError(error)){
+                navigate('/');
+            }
         }
     };
 
     const saveAdmin = async (e) => {
         e.preventDefault();
         try {
-            await axiosJWT.post("https://api.diskominfo-smg-magang.cloud/admin/add-admin", formData);
+            await axiosJWTadmin.post("https://api.diskominfo-smg-magang.cloud/admin/add-admin", formData);
             getAdmin();
             setShowTaskForm(false);
         } catch (error) {
-            navigate("/");
-            console.log(error);
+            if (isUnauthorizedError(error)){
+                navigate('/');
+            }
         }
     };
 
     const exportAdmin = async () => {
         try {
-            const response = await axiosJWT.get("https://api.diskominfo-smg-magang.cloud/admin/export-admin", {
+            const response = await axiosJWTadmin.get("https://api.diskominfo-smg-magang.cloud/admin/export-admin", {
                 responseType: 'arraybuffer'
             });
             const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -81,7 +85,9 @@ export const Admin = () => {
             a.click();
             window.URL.revokeObjectURL(url);
         } catch (error) {
-            navigate('/');
+            if (isUnauthorizedError(error)){
+                navigate('/');
+            }
         }
     }
 

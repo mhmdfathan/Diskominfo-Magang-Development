@@ -93,15 +93,19 @@ async function logout(req, res) {
 }
 
 const refreshToken = async (req, res) => {
+    const rolePermissions = {
+        admin: ['admin'],
+        peserta_magang: ['peserta_magang'],
+    };
+
     try {
-        const refreshTokenCookie = req.cookies.token; // Ganti nama variabel agar tidak konflik
+        const refreshTokenCookie = req.cookies.token;
         if (!refreshTokenCookie) {
             return res.status(401).json({
                 message: "Missing or invalid refresh token"
             });
         }
 
-        // Periksa token dengan jwt.verify
         jwt.verify(refreshTokenCookie, process.env.JWT_KEY, async (err, decoded) => {
             if (err) {
                 return res.status(403).json({
@@ -116,12 +120,19 @@ const refreshToken = async (req, res) => {
                 });
             }
 
-            // Di sini, pastikan Anda memiliki akses ke nilai "role" dari decoded token
+            const requestedPageRole = req.headers.role;
+
+            if (!rolePermissions[requestedPageRole] || !rolePermissions[requestedPageRole].includes(decoded.role)) {
+                return res.status(403).json({
+                    message: "Access denied. You are not authorized for this page."
+                });
+            }
+
             const newToken = jwt.sign({
                 nama: user.nama,
                 username: user.username,
                 userId: user.id,
-                role: decoded.role // Pastikan Anda mendapatkan "role" dengan benar
+                role: decoded.role
             }, process.env.JWT_KEY, {
                 expiresIn: '15m'
             });
@@ -136,6 +147,7 @@ const refreshToken = async (req, res) => {
         });
     }
 }
+
 
 
 

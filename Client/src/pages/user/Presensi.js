@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "../../Components/SideBar/Navbar.css"
 import jwt_decode from "jwt-decode"
-import axiosJWT from '../../config/axiosJWT';
+import axiosJWTuser from '../../config/axiosJWT';
 import axios from 'axios';
 import { TabTitle } from '../../TabName';
 
@@ -18,6 +18,11 @@ const Presensi = () => {
   const [showNav, setShowNav] = useState(true);
 
   useEffect(() => {
+    axios.get('https://api.diskominfo-smg-magang.cloud/account/token', {
+        headers: {
+          'role': "peserta_magang"
+        },
+      });
     let stream;
 
     const startCamera = async () => {
@@ -57,14 +62,18 @@ const Presensi = () => {
 
   const uploadImage = async () => {
     try {
-      const ambilid = await axios.get('https://api.diskominfo-smg-magang.cloud/account/token');
+      const ambilid = await axios.get('https://api.diskominfo-smg-magang.cloud/account/token', {
+        headers: {
+          'role': "peserta_magang"
+        },
+      });
       const decoded = jwt_decode(ambilid.data.token);
 
       // Create a FormData object to send the image as multipart/form-data
       const formData = new FormData();
       formData.append('image', imageSrc);
 
-      const response = await axiosJWT.patch(`https://api.diskominfo-smg-magang.cloud/user/presensi/${decoded.userId}/up`, formData, {
+      const response = await axiosJWTuser.patch(`https://api.diskominfo-smg-magang.cloud/user/presensi/${decoded.userId}/up`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data' // Set content type to multipart/form-data
         }
@@ -72,7 +81,9 @@ const Presensi = () => {
       console.log('Server Response:', response.data);
       window.alert("Berhasil Melakukan Presensi")
     } catch (error) {
-      console.error('Error:', error);
+      if (isUnauthorizedError(error)){
+        navigate('/');
+    }
       window.alert("Gagal Melakukan Presensi")
     }
   };

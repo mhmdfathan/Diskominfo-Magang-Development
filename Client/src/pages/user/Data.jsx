@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axiosJWT from '../../config/axiosJWT';
+import axiosJWTuser from '../../config/axiosJWT';
 import ListTable from './ListTable';
 import logo from "../../Assets/diskominfo.png"
 import "bootstrap/dist/css/bootstrap.css"
@@ -7,7 +7,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import "../../Components/SideBar/Navbar.css"
 import axios from 'axios';
 import jwt_decode from "jwt-decode";
-
+  
 // Import a modal library or create your custom modal component
 // For this example, I'm using a custom modal component.
 import ImageModal from './ImageModal'; // Create this component
@@ -31,11 +31,15 @@ function Data(props) {
   useEffect(() => {
     const fetchDataAndPresensiData = async () => {
       try {
-        const ambilid = await axios.get('https://api.diskominfo-smg-magang.cloud/account/token');
+        const ambilid = await axios.get('https://api.diskominfo-smg-magang.cloud/account/token', {
+          headers: {
+            'role': "peserta_magang"
+          },
+        });
         const decoded = jwt_decode(ambilid.data.token);
 
           
-        const response = await axiosJWT.get(`https://api.diskominfo-smg-magang.cloud/user/presensi/${decoded.userId}`);
+        const response = await axiosJWTuser.get(`https://api.diskominfo-smg-magang.cloud/user/presensi/${decoded.userId}`);
         const dataWithKosong = response.data.presensi.map((item) => ({
           ...item,
           check_in: item.check_in === null ? (
@@ -70,7 +74,9 @@ function Data(props) {
         setData(dataWithKosong);
         
       } catch (error) {
-        console.error('Error fetching data:', error);
+        if (isUnauthorizedError(error)){
+          navigate('/');
+      }
       }
     };
 

@@ -6,8 +6,9 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../Components/SideBar/Style.css";
 import "./Penugasan.css";
-import axiosJWT from "../config/axiosJWT";
+import axiosJWTadmin from "../config/axiosJWT";
 import { TabTitle } from "../TabName";
+import isUnauthorizedError  from '../config/errorHandling';
 
 function Penugasan() {
   TabTitle("Penugasan");
@@ -44,7 +45,7 @@ function Penugasan() {
   const exportPenugasan = async (tugasId) => {
     try {
       if (tugasId) {
-        const response = await axiosJWT.get(
+        const response = await axiosJWTadmin.get(
           `https://api.diskominfo-smg-magang.cloud/admin/tugas/${tugasId}/export-tugas`,
           {
             responseType: 'arraybuffer'
@@ -66,8 +67,9 @@ function Penugasan() {
         console.error('Tugas ID tidak tersedia');
       }
     } catch (error) {
-      // navigate('/');
-      console.error(error);
+      if (isUnauthorizedError(error)){
+        navigate('/');
+      }
     }
   };
 
@@ -114,20 +116,24 @@ function Penugasan() {
   const addTugas = async (e) => {
     e.preventDefault();
     try {
-      await axiosJWT.post("https://api.diskominfo-smg-magang.cloud/admin/tugas/add", formData);
+      await axiosJWTadmin.post("https://api.diskominfo-smg-magang.cloud/admin/tugas/add", formData);
       getTugas();
       setShowTaskForm(false);
     } catch (error) {
-      navigate("/");
+      if (isUnauthorizedError(error)){
+        navigate('/');
+      }
     }
   };
 
   const getTugas = async () => {
     try {
-      const response = await axiosJWT.get("https://api.diskominfo-smg-magang.cloud/admin/tugas");
+      const response = await axiosJWTadmin.get("https://api.diskominfo-smg-magang.cloud/admin/tugas");
       setTugas(response.data.tugas);
     } catch (error) {
-      navigate("/");
+      if (isUnauthorizedError(error)){
+        navigate('/');
+      }
     }
   };
 
@@ -135,11 +141,14 @@ function Penugasan() {
 
   const getTugasById = async (taskId) => {
     try {
-      const response = await axiosJWT.get(
+      const response = await axiosJWTadmin.get(
         `https://api.diskominfo-smg-magang.cloud/admin/tugas/${taskId}`
       );
       setStatusTugas(response.data.tugas);
     } catch (error) {
+      if (isUnauthorizedError(error)){
+        navigate('/');
+      }
     }
   };
 
