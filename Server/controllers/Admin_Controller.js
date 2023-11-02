@@ -361,7 +361,7 @@ async function showPesertaAlumniAll(req, res){
 
 async function showCalonPesertaAll(req, res) {
     statusCheck(req, res);
-    const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+    const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
     const currentDate = moment.tz(response.data.datetime, 'Asia/Jakarta'); // Get the current date and time
     await models.Peserta_Magang.findAll({
         where: {
@@ -502,7 +502,7 @@ function deletePeserta(req, res){
 }
 
 async function showPresensiPerDay(req, res) {
-    const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+    const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
     const tanggal = req.query.tanggal ? moment.tz(req.query.tanggal, 'Asia/Jakarta') : moment.tz(response.data.datetime, 'Asia/Jakarta');
 
     try {
@@ -538,7 +538,7 @@ async function showPresensiPerDay(req, res) {
 
 async function showPresensiBelum(req, res) {
   try {
-    const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+    const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
     const tanggal = req.body.tanggal ? moment.tz(req.body.tanggal, 'Asia/Jakarta') : moment.tz(response.data.datetime, 'Asia/Jakarta');
     
     const presensi = await models.Peserta_Magang.findAll({
@@ -800,7 +800,7 @@ async function exportPeserta(req, res) {
       statusCheck(req,res);
       const results = await models.Peserta_Magang.findAll();
 
-      const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
   
       const workbook = new exceljs.Workbook();
@@ -858,7 +858,7 @@ async function exportPeserta(req, res) {
       statusCheck(req, res);
       const results = await models.Peserta_Magang.findAll({where:{status_aktif:true}});
 
-      const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
   
       const workbook = new exceljs.Workbook();
@@ -916,7 +916,7 @@ async function exportPeserta(req, res) {
       statusCheck(req,res);
       const results = await models.Peserta_Magang.findAll({where:{status_aktif:false}});
 
-      const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
   
       const workbook = new exceljs.Workbook();
@@ -972,7 +972,7 @@ async function exportPeserta(req, res) {
   async function exportCalonPeserta(req, res) {
     try {
       statusCheck(req,res);
-      const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
       const results = await models.Peserta_Magang.findAll({
         where: {
@@ -1036,7 +1036,7 @@ async function exportPeserta(req, res) {
   async function exportStatusTugas(req, res) {
     try {
       const tid = req.params.id;
-      const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
       const results = await models.Peserta_Magang.findAll({
         include:[{
@@ -1100,7 +1100,7 @@ async function exportPeserta(req, res) {
 
   async function exportPresensiPerTanggal(req, res) {
     try {
-      const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
       const results = await models.Peserta_Magang.findAll({
         include:[{
@@ -1190,7 +1190,7 @@ async function exportPeserta(req, res) {
     const id = req.params.id;
     const results = await models.Presensi.findAll({ where: { p_id: id } });
     const ambilNama = await models.Peserta_Magang.findByPk(id);
-    const response = await axios.get('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+    const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
     const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
     const fileName = "Presensi " + ambilNama.nama;
     
