@@ -1,7 +1,7 @@
 import './card.css';
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import axiosJWT from '../config/axiosJWT';
+import { axiosJWTuser } from '../config/axiosJWT';
 import axios from 'axios';
 import jwt_decode from "jwt-decode"
 
@@ -54,7 +54,7 @@ const Cards = ({ data }) => {
       const formData = new FormData();
       formData.append('image', file);
 
-      const response = await axiosJWT.patch(`https://api.diskominfo-smg-magang.cloud/user/tugas/${decoded.userId}/submit/${selectedTaskID}`, formData);
+      const response = await axiosJWTuser.patch(`https://api.diskominfo-smg-magang.cloud/user/tugas/${decoded.userId}/submit/${selectedTaskID}`, formData);
       console.log('Server Response:', response.data);
       window.alert("Berhasil Submit Gambar")
       handleCloseModal()

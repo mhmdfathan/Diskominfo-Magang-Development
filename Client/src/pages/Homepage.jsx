@@ -13,7 +13,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import "../Components/SideBar/Style.css"
 import './Homestyle.css'
 import { TabTitle } from "../TabName"
-import isUnauthorizedError  from '../config/errorHandling';
+import { isUnauthorizedError }  from '../config/errorHandling';
 
 
 const Homepage = () => {

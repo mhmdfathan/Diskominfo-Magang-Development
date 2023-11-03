@@ -7,15 +7,19 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import "../../Components/SideBar/Navbar.css"
 import './Tugas.css'; // Import file CSS terpisah untuk mengatur layout
 import jwt_decode from "jwt-decode"
-import axiosJWT from '../../config/axiosJWT';
 import axios from 'axios';
+import { axiosJWTuser } from '../../config/axiosJWT';
 import { TabTitle } from '../../TabName';
+import { isUnauthorizedError }  from '../../config/errorHandling';
+import { useNavigate } from 'react-router-dom';
 
 function Tugas() {
   TabTitle('Tugas')
   const [showNav, setShowNav] = useState(true);
   const [cardData, setData] = useState([]);
+  const navigate = useNavigate()
   // const [id, setID] = useState([]);
+
 
   
 
@@ -25,9 +29,12 @@ function Tugas() {
         const ambilid = await axios.get('https://api.diskominfo-smg-magang.cloud/account/token');
         const decoded = jwt_decode(ambilid.data.token);
 
-        const response = await axiosJWT.get(`https://api.diskominfo-smg-magang.cloud/user/tugas-list/${decoded.userId}`);
+        const response = await axiosJWTuser.get(`https://api.diskominfo-smg-magang.cloud/user/tugas-list/${decoded.userId}`);
         setData(response.data.tugas);
       } catch (error) {
+        if (isUnauthorizedError(error)){
+          navigate('/');
+      }
         console.error('Error fetching data:', error);
       }
     };

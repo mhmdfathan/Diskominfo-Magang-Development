@@ -6,9 +6,11 @@ import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "../../Components/SideBar/Navbar.css"
 import jwt_decode from "jwt-decode"
-import axiosJWTuser from '../../config/axiosJWT';
 import axios from 'axios';
 import { TabTitle } from '../../TabName';
+import { isUnauthorizedError }  from '../../config/errorHandling';
+import { useNavigate } from 'react-router-dom';
+import { axiosJWTuser } from '../../config/axiosJWT';
 
 const Presensi = () => {
   TabTitle('Presensi');
@@ -16,20 +18,25 @@ const Presensi = () => {
   const [imageSrc, setImageSrc] = useState(null);
   const [captureTime, setCaptureTime] = useState(null);
   const [showNav, setShowNav] = useState(true);
+  const navigate = useNavigate()
 
   useEffect(() => {
-    axios.get('https://api.diskominfo-smg-magang.cloud/account/token', {
-        headers: {
-          'role': "peserta_magang"
-        },
-      });
+ 
     let stream;
 
     const startCamera = async () => {
       try {
+        await axios.get('https://api.diskominfo-smg-magang.cloud/account/token', {
+          headers: {
+            'role': "peserta_magang"
+          },
+        });
         stream = await navigator.mediaDevices.getUserMedia({ video: true });
         videoRef.current.srcObject = stream;
       } catch (error) {
+        if (isUnauthorizedError(error)){
+          navigate('/');
+      }
         console.error('Error accessing camera:', error);
       }
     };

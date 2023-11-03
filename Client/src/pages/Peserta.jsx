@@ -1,4 +1,4 @@
-import axiosJWTadmin from '../config/axiosJWT';
+import { axiosJWTadmin } from '../config/axiosJWT';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -13,7 +13,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../Components/SideBar/Style.css";
 import { TabTitle } from '../TabName';
-import isUnauthorizedError  from '../config/errorHandling';
+import { isUnauthorizedError }  from '../config/errorHandling';
 
 export const Peserta = () => {
   TabTitle('Peserta');

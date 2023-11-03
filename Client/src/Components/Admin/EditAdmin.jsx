@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
-import axiosJWT from "../../config/axiosJWT";
+import { axiosJWTadmin } from "../../config/axiosJWT";
+import { isUnauthorizedError }  from '../../config/errorHandling';
 
 export const EditAdmin = () => {
     const [nama, setNama] = useState("");
@@ -18,19 +19,21 @@ export const EditAdmin = () => {
     const updateAdmin = async (e) => {
         e.preventDefault();
         try {
-            await axiosJWT.patch(`https://api.diskominfo-smg-magang.cloud/admin/editadmin/${id}`, {
+            await axiosJWTadmin.patch(`https://api.diskominfo-smg-magang.cloud/admin/editadmin/${id}`, {
                 nama,
                 username,
                 password
             });
             navigate("/admin");
         } catch (error) {
-            console.log(error);
+            if (isUnauthorizedError(error)){
+                navigate('/');
+            }
         }
     };
 
     const getAdminById = async () => {
-        const response = await axiosJWT.get(`https://api.diskominfo-smg-magang.cloud/admin/show-admin-id/${id}`);
+        const response = await axiosJWTadmin.get(`https://api.diskominfo-smg-magang.cloud/admin/show-admin-id/${id}`);
         setNama(response.data.admin.nama);
     };
 

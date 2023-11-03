@@ -15,8 +15,9 @@ import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "../../Components/SideBar/Navbar.css"
 import './UserPages.css'
-import axiosJWT from "../../config/axiosJWT"
 import { TabTitle } from "../../TabName"
+import { isUnauthorizedError }  from '../../config/errorHandling';
+import { axiosJWTuser } from "../../config/axiosJWT"
 
 
 const UserPages = () => {
@@ -43,15 +44,19 @@ const UserPages = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get('https://api.diskominfo-smg-magang.cloud/account/token');
+      const response = await axios.get('https://api.diskominfo-smg-magang.cloud/account/token',{
+        headers: {
+          'role': "peserta_magang"
+        }
+      });
       const decoded = jwt_decode(response.data.token);
       setNama(decoded.nama);
       setuserName(decoded.username);
   
     } catch (error) {
-      if (error.response) {
-        navigate("/");
-      }
+      if (isUnauthorizedError(error)){
+        navigate('/');
+    }
     }
   }
   
@@ -73,10 +78,13 @@ const UserPages = () => {
       const ambilid = await axios.get('https://api.diskominfo-smg-magang.cloud/account/token');
       const decoded = jwt_decode(ambilid.data.token);
       
-      const response = await axiosJWT.patch(`https://api.diskominfo-smg-magang.cloud/user/peserta/${decoded.userId}/edit`, formData);
+      const response = await axiosJWTuser.patch(`https://api.diskominfo-smg-magang.cloud/user/peserta/${decoded.userId}/edit`, formData);
       console.log('Server Response:', response.data);
       window.alert("Berhasil menggati password")
     } catch (error) {
+      if (isUnauthorizedError(error)){
+        navigate('/');
+    }
       console.error('Error:', error);
     }
   };

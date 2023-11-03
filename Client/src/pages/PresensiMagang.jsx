@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "../Components/SideBar/Style.css"
 import {axiosJWTadmin} from '../config/axiosJWT';
-import isUnauthorizedError  from '../config/errorHandling';
+import { isUnauthorizedError }  from '../config/errorHandling';
 import { TabTitle } from '../TabName';
 
 export const Peserta = () => {

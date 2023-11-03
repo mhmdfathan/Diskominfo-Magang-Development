@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
-import axiosJWT from "../../config/axiosJWT";
+import { axiosJWTadmin } from "../../config/axiosJWT";
+import { isUnauthorizedError }  from '../../config/errorHandling';
+
 
 export const EditUser = () => {
     const [nama, setNama] = useState("");
@@ -23,7 +25,7 @@ export const EditUser = () => {
     const updateUser = async (e) => {
         e.preventDefault();
         try {
-            await axiosJWT.patch(`https://api.diskominfo-smg-magang.cloud/admin/peserta/${id}/edit`, {
+            await axiosJWTadmin.patch(`https://api.diskominfo-smg-magang.cloud/admin/peserta/${id}/edit`, {
                 nama,
                 asal_univ,
                 asal_jurusan,
@@ -35,12 +37,14 @@ export const EditUser = () => {
             });
             navigate("/peserta");
         } catch (error) {
-            console.log(error);
+            if (isUnauthorizedError(error)){
+                navigate('/');
+            }
         }
     };
 
     const getUserById = async () => {
-        const response = await axiosJWT.get(`https://api.diskominfo-smg-magang.cloud/admin/peserta/${id}`);
+        const response = await axiosJWTadmin.get(`https://api.diskominfo-smg-magang.cloud/admin/peserta/${id}`);
         setNama(response.data.peserta_magang.nama);
         setUniversitas(response.data.peserta_magang.asal_univ);
         setJurusan(response.data.peserta_magang.asal_jurusan);
