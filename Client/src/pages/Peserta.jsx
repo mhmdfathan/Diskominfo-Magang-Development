@@ -74,7 +74,7 @@ export const Peserta = () => {
 
   const exportPeserta = async () => {
     try {
-      const response = await axiosJWTadmin.get("https://api.diskominfo-smg-magang.cloud/admin/export-peserta", {
+      const response = await axiosJWTadmin.get("http://localhost:3000/admin/export-peserta", {
         responseType: 'arraybuffer'
       });
       const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -115,7 +115,7 @@ export const Peserta = () => {
 
   const getUsers = async (page) => {
     try {
-      const response = await axiosJWTadmin.get('https://api.diskominfo-smg-magang.cloud/admin/peserta');
+      const response = await axiosJWTadmin.get('http://localhost:3000/admin/peserta');
       setUsers(response.data.peserta_magang);
     } catch (error) {
       if (isUnauthorizedError(error)){
@@ -126,7 +126,7 @@ export const Peserta = () => {
 
   const deleteUser = async (id) => {
     try {
-      await axiosJWTadmin.delete(`https://api.diskominfo-smg-magang.cloud/admin/peserta/${id}/delete`);
+      await axiosJWTadmin.delete(`http://localhost:3000/admin/peserta/${id}/delete`);
       getUsers();
     } catch (error) {
       if (isUnauthorizedError(error)){
@@ -138,7 +138,7 @@ export const Peserta = () => {
   const saveUser = async (e) => {
     e.preventDefault();
     try {
-      await axiosJWTadmin.post('https://api.diskominfo-smg-magang.cloud/admin/peserta/add', formData);
+      await axiosJWTadmin.post('http://localhost:3000/admin/peserta/add', formData);
       getUsers();
       setShowTaskForm(false);
     } catch (error) {

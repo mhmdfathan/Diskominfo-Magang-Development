@@ -44,7 +44,7 @@ const UserPages = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get('https://api.diskominfo-smg-magang.cloud/account/token',{
+      const response = await axios.get('http://localhost:3000/account/token',{
         headers: {
           'role': "peserta_magang"
         }
@@ -75,10 +75,10 @@ const UserPages = () => {
 
   const uploadPassword = async () => {
     try {
-      const ambilid = await axios.get('https://api.diskominfo-smg-magang.cloud/account/token');
+      const ambilid = await axios.get('http://localhost:3000/account/token');
       const decoded = jwt_decode(ambilid.data.token);
       
-      const response = await axiosJWTuser.patch(`https://api.diskominfo-smg-magang.cloud/user/peserta/${decoded.userId}/edit`, formData);
+      const response = await axiosJWTuser.patch(`http://localhost:3000/user/peserta/${decoded.userId}/edit`, formData);
       console.log('Server Response:', response.data);
       window.alert("Berhasil menggati password")
     } catch (error) {

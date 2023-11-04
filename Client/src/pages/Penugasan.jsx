@@ -46,7 +46,7 @@ function Penugasan() {
     try {
       if (tugasId) {
         const response = await axiosJWTadmin.get(
-          `https://api.diskominfo-smg-magang.cloud/admin/tugas/${tugasId}/export-tugas`,
+          `http://localhost:3000/admin/tugas/${tugasId}/export-tugas`,
           {
             responseType: 'arraybuffer'
           }
@@ -116,7 +116,7 @@ function Penugasan() {
   const addTugas = async (e) => {
     e.preventDefault();
     try {
-      await axiosJWTadmin.post("https://api.diskominfo-smg-magang.cloud/admin/tugas/add", formData);
+      await axiosJWTadmin.post("http://localhost:3000/admin/tugas/add", formData);
       getTugas();
       setShowTaskForm(false);
     } catch (error) {
@@ -128,7 +128,7 @@ function Penugasan() {
 
   const getTugas = async () => {
     try {
-      const response = await axiosJWTadmin.get("https://api.diskominfo-smg-magang.cloud/admin/tugas");
+      const response = await axiosJWTadmin.get("http://localhost:3000/admin/tugas");
       setTugas(response.data.tugas);
     } catch (error) {
       if (isUnauthorizedError(error)){
@@ -142,7 +142,7 @@ function Penugasan() {
   const getTugasById = async (taskId) => {
     try {
       const response = await axiosJWTadmin.get(
-        `https://api.diskominfo-smg-magang.cloud/admin/tugas/${taskId}`
+        `http://localhost:3000/admin/tugas/${taskId}`
       );
       setStatusTugas(response.data.tugas);
     } catch (error) {

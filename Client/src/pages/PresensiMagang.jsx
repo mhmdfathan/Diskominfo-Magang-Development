@@ -27,8 +27,8 @@ export const Peserta = () => {
 
   const exportPresensi = async () => {
     const requestUrl = searchDate
-      ? `https://api.diskominfo-smg-magang.cloud/admin/export-presensi?tanggal=${searchDate}`
-      : 'https://api.diskominfo-smg-magang.cloud/admin/export-presensi';
+      ? `http://localhost:3000/admin/export-presensi?tanggal=${searchDate}`
+      : 'http://localhost:3000/admin/export-presensi';
 
     const response = await axiosJWTadmin.get(requestUrl, {
       responseType: 'arraybuffer',
@@ -71,8 +71,8 @@ export const Peserta = () => {
 
   const getUsers = async () => {
     const url = searchDate
-      ? `https://api.diskominfo-smg-magang.cloud/admin/presensi?tanggal=${searchDate}`
-      : 'https://api.diskominfo-smg-magang.cloud/admin/presensi';
+      ? `http://localhost:3000/admin/presensi?tanggal=${searchDate}`
+      : 'http://localhost:3000/admin/presensi';
 
     try {
       const response = await axiosJWTadmin.get(url);
@@ -91,7 +91,7 @@ export const Peserta = () => {
 
   const getPresensiBelum = async () => {
     try {
-      const response = await axiosJWTadmin.get('https://api.diskominfo-smg-magang.cloud/admin/presensi/negatif');
+      const response = await axiosJWTadmin.get('http://localhost:3000/admin/presensi/negatif');
       setUsers(response.data.presensi);
     } catch (error) {
       if (isUnauthorizedError(error)){

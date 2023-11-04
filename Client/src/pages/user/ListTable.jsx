@@ -5,8 +5,7 @@ function ListTable(props) {
   const { data } = props;
 
   return (
-    <div className="table-container">
-      <div className="table-content">
+    <div style={{maxHeight:"800px", overflowY:"scroll", width:"100%"}}>
         <table className='tabel'>
           <thead>
             <tr>
@@ -17,7 +16,7 @@ function ListTable(props) {
               <th>image url out</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody style={{marginTop:"100px"}}>
             {data.map((item) => (
               <tr key={item.id}>
                 <td>{item.tanggal}</td>
@@ -29,8 +28,7 @@ function ListTable(props) {
             ))}
           </tbody>
         </table>
-      </div>
-    </div>
+        </div>
   );
 }
 
