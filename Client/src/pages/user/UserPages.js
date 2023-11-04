@@ -18,6 +18,7 @@ import './UserPages.css'
 import { TabTitle } from "../../TabName"
 import { isUnauthorizedError }  from '../../config/errorHandling';
 import { axiosJWTuser } from "../../config/axiosJWT"
+import 'react-toastify/dist/ReactToastify.css'
 
 
 const UserPages = () => {
@@ -88,6 +89,22 @@ const UserPages = () => {
       console.error('Error:', error);
     }
   };
+
+  const showSuccessNotification = (message) => {
+    toast.success(message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+    });
+};
+
+const showErrorNotification = (message) => {
+    toast.error(message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+    });
+};
 
   return (
     <div className="body-main">
