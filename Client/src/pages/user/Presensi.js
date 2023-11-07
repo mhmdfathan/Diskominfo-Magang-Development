@@ -11,6 +11,9 @@ import { TabTitle } from '../../TabName';
 import { isUnauthorizedError }  from '../../config/errorHandling';
 import { useNavigate } from 'react-router-dom';
 import { axiosJWTuser } from '../../config/axiosJWT';
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from 'react-toastify';
+import {showSuccessNotification} from '../../Components/User/toastSuccess'
 
 const Presensi = () => {
   TabTitle('Presensi');
@@ -86,7 +89,7 @@ const Presensi = () => {
         }
       });
       console.log('Server Response:', response.data);
-      window.alert("Berhasil Melakukan Presensi")
+      showSuccessNotification("Berhasil Melakukan Presensi")
     } catch (error) {
       if (isUnauthorizedError(error)){
         navigate('/');
@@ -187,6 +190,7 @@ const Presensi = () => {
           </Container>
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 };

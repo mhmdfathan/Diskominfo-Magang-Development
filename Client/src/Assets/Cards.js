@@ -4,6 +4,10 @@ import Button from 'react-bootstrap/Button';
 import { axiosJWTuser } from '../config/axiosJWT';
 import axios from 'axios';
 import jwt_decode from "jwt-decode"
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from 'react-toastify';
+import { showSuccessNotification } from '../Components/User/toastSuccess';
+import { Modal } from 'react-bootstrap';
 
 const Cards = ({ data }) => {
   const colors = [
@@ -46,9 +50,14 @@ const Cards = ({ data }) => {
     setModalOpen(false);
   };
 
+ 
   const uploadFile = async () => {
     try {
-      const ambilid = await axios.get('http://localhost:3000/account/token');
+      const ambilid = await axios.get('http://localhost:3000/account/token', {
+        headers: {
+          'role': "peserta_magang"
+        },
+      });
       const decoded = jwt_decode(ambilid.data.token);
 
       const formData = new FormData();
@@ -56,13 +65,14 @@ const Cards = ({ data }) => {
 
       const response = await axiosJWTuser.patch(`http://localhost:3000/user/tugas/${decoded.userId}/submit/${selectedTaskID}`, formData);
       console.log('Server Response:', response.data);
-      window.alert("Berhasil Submit Gambar")
+      showSuccessNotification("Berhasil Submit Gambar")
       handleCloseModal()
     } catch (error) {
       console.error('Error:', error);
       window.alert("Gagal Submit Gambar")
     }
   }
+const footer = data.tugas.statu_pengerjaan ? formatDueDate(data.tugas.dueDate) : "Submited"
 
   return (
     <div className="card" style={{ maxWidth: '300px', cursor:"pointer"}} onClick={() => handleCardClick(data.tugas.id)} c >
@@ -74,24 +84,48 @@ const Cards = ({ data }) => {
         {data.tugas.judul}
       </h2>
       <p>{data.tugas.tugas_url}</p>
-      <div className="deadline">{formatDueDate(data.tugas.dueDate)}</div>
+      <div className="deadline">{footer}</div>
 
       {isModalOpen && (
-        <div className="modal-container">
-          <div className="modal-content">
-            <span className="close" onClick={handleCloseModal}>
-              &times;
-            </span>
-            <h2 style={{ textAlign: "center", borderBottom: "1px solid #000000", fontSize: "20px" }}>Submit untuk Tugas {selectedTaskID}</h2>
-            <div style={{ height: "100px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <input type='file' name='image' accept="image/jpeg, image/png" onChange={hadleFile} />
-            </div>
-            <Button variant="primary" onClick={uploadFile}>
-              Save Changes
-            </Button>
-          </div>
-        </div>
-      )}
+        <Modal show={isModalOpen} onHide={handleCloseModal} centered={true} style={{zIndex: 1050 }} >
+        <Modal.Header>
+          <Modal.Title>Submit Tugas</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <div style={{ height: "100px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <input type='file' name='image' accept="image/jpeg, image/png" onChange={hadleFile} />
+      </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" href='tugas'>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={uploadFile}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+  // <div className="modal-container">
+  //   <div className="modal-content">
+  //     <span className="close" onClick={handleCloseModal}>
+  //       &times;
+  //     </span>
+  //     <h2 style={{ textAlign: "center", borderBottom: "1px solid #000000", fontSize: "20px" }}>Submit for Task {selectedTaskID}</h2>
+  //     <div style={{ height: "100px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+  //       <input type='file' name='image' accept="image/jpeg, image/png" onChange={hadleFile} />
+  //     </div>
+  //     {/* Close button on the left */}
+  //     <Button variant="danger" onClick={handleCloseModal}>
+  //       Close
+  //     </Button>
+  //     <Button variant="primary" onClick={uploadFile}>
+  //       Save Changes
+  //     </Button>
+  //   </div>
+  // </div>
+)}
+
     </div>
   );
 };

@@ -19,6 +19,8 @@ import { TabTitle } from "../../TabName"
 import { isUnauthorizedError }  from '../../config/errorHandling';
 import { axiosJWTuser } from "../../config/axiosJWT"
 import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from 'react-toastify';
+
 
 
 const UserPages = () => {
@@ -76,13 +78,18 @@ const UserPages = () => {
 
   const uploadPassword = async () => {
     try {
-      const ambilid = await axios.get('http://localhost:3000/account/token');
+      const ambilid = await axios.get('http://localhost:3000/account/token', {
+        headers: {
+          'role': "peserta_magang"
+        },
+      });
       const decoded = jwt_decode(ambilid.data.token);
       
       const response = await axiosJWTuser.patch(`http://localhost:3000/user/peserta/${decoded.userId}/edit`, formData);
       console.log('Server Response:', response.data);
-      window.alert("Berhasil menggati password")
+      showSuccessNotification("Berhasil menggati password")
     } catch (error) {
+      showErrorNotification("Gagal Mengganti Password")
       if (isUnauthorizedError(error)){
         navigate('/');
     }
@@ -99,7 +106,7 @@ const UserPages = () => {
 };
 
 const showErrorNotification = (message) => {
-    toast.error(message, {
+  toast.error(message, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -117,65 +124,43 @@ const showErrorNotification = (message) => {
             />
           </div>
           <div className="header_img">
-            <img
-              src="https://reqres.in/img/faces/5-image.jpg"
-              alt=""
-            />
+            <img src="https://reqres.in/img/faces/5-image.jpg" alt="" />
           </div>
         </header>
         <div className={`l-navbar${showNav ? " show" : ""}`}>
           <nav className="nav">
             <div>
-              <a
-                href="/user/homepage"
-                target="_self"
-                className="nav_logo"
-              >
+              <a href="/user/homepage" target="_self" className="nav_logo">
                 {showNav ? (
-                  <img src={logo} alt="" style={{ width: '150px', height: 'auto' }} />
+                  <img
+                    src={logo}
+                    alt=""
+                    style={{ width: "150px", height: "auto" }}
+                  />
                 ) : (
                   <i className="bi bi-border-width nav_logo-icon" />
                 )}
               </a>
               <div className="nav_list">
-                <a
-                  href="homepage"
-                  className="nav_link"
-                >
+                <a href="homepage" className="nav_link">
                   <i className="bi bi-house nav_icon" />
                   <span className="nav_name">Home</span>
                 </a>
-                <a
-                  href="presensi/riwayat"
-                  target="_self"
-                  className="nav_link"
-                >
+                <a href="presensi/riwayat" target="_self" className="nav_link">
                   <i className="bi bi-card-checklist nav_icon" />
                   <span className="nav_name">History Presensi</span>
                 </a>
-                <a
-                  href="presensi"
-                  target="_self"
-                  className="nav_link"
-                >
+                <a href="presensi" target="_self" className="nav_link">
                   <i className="bi bi-camera nav_icon" />
                   <span className="nav_name">Lakukan Presensi</span>
                 </a>
-                <a
-                  href="tugas"
-                  target="_self"
-                  className="nav_link"
-                >
+                <a href="tugas" target="_self" className="nav_link">
                   <i className="bi bi-list-task nav_icon" />
                   <span className="nav_name">Penugasan</span>
                 </a>
               </div>
             </div>
-            <a
-              href="/"
-              target="_self"
-              className="nav_link"
-            >
+            <a href="/" target="_self" className="nav_link">
               <i className="bi bi-box-arrow-left nav_icon" />
               <span className="nav_name">SignOut</span>
             </a>
@@ -184,18 +169,37 @@ const showErrorNotification = (message) => {
         <div className="pt-4 pb-4">
           <div className="homepage-container">
             <div className="image-container">
-              <img className="background-home" src={imageCon} alt='' />
+              <img className="background-home" src={imageCon} alt="" />
             </div>
             <div className="account-info-container">
               <div className="info-box">
                 <div className="user-info">
                   <p>Selamat Datang,</p>
                   <p>{nama}</p>
-                  <p style={{fontSize:"15px", marginTop:"5px", borderTop:"1px solid #000000"}}>username : {username}</p>
-                  <p variant="primary" onClick={handleShow} style={{fontSize:"15px",color:"#0000aa", textDecoration:"underline", cursor:"pointer"}}>Edit password</p>
+                  <p
+                    style={{
+                      fontSize: "15px",
+                      marginTop: "5px",
+                      borderTop: "1px solid #000000",
+                    }}
+                  >
+                    username : {username}
+                  </p>
+                  <p
+                    variant="primary"
+                    onClick={handleShow}
+                    style={{
+                      fontSize: "15px",
+                      color: "#0000aa",
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Edit password
+                  </p>
                 </div>
               </div>
-              <div className='space'></div>
+              <div className="space"></div>
               <div className="user-image">
                 <img src="https://reqres.in/img/faces/5-image.jpg" alt="" />
               </div>
@@ -217,7 +221,13 @@ const showErrorNotification = (message) => {
           </div>
         </div>
       </div>
-      <Modal show={show} onHide={handleClose} centered={true} >
+      <Modal
+        show={show}
+        onHide={handleClose}
+        centered={true}
+        style={{ zIndex: 1050 }}
+        className="modal-container"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Change Password</Modal.Title>
         </Modal.Header>
@@ -229,8 +239,9 @@ const showErrorNotification = (message) => {
                 type="password"
                 placeholder="Enter new password"
                 value={Password}
-                onChange={(e) => {setPassword(e.target.value); 
-                  setFormData({ ...formData, password: (e.target.value) })
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setFormData({ ...formData, password: e.target.value });
                 }}
                 required
               />
@@ -249,7 +260,13 @@ const showErrorNotification = (message) => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              handleClose();
+              setShow(false);
+            }}
+          >
             Cancel
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
@@ -257,6 +274,8 @@ const showErrorNotification = (message) => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <ToastContainer />
     </div>
   );
 }

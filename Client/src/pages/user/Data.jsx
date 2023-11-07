@@ -171,8 +171,9 @@ function Data(props) {
             </a>
           </nav>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <h1>Daftar data Absen</h1>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <h1 style={{textAlign:'left', fontWeight:'bold', fontSize:'18px', fontfamily: 'Poppins'}} >Daftar data Absen</h1>
+          <br/>
           <ListTable data={data} />
         </div>
 

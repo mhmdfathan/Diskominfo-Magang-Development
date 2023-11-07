@@ -14,6 +14,7 @@ import { isUnauthorizedError } from "../../config/errorHandling";
 import { useNavigate } from "react-router-dom";
 import load from "../../Assets/Loading_Screen.gif"
 
+
 function Tugas() {
   TabTitle("Tugas");
   const [showNav, setShowNav] = useState(true);
@@ -24,7 +25,11 @@ function Tugas() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const ambilid = await axios.get("http://localhost:3000/account/token");
+        const ambilid = await axios.get('http://localhost:3000/account/token', {
+          headers: {
+            'role': "peserta_magang"
+          },
+        });
         const decoded = jwt_decode(ambilid.data.token);
 
         const response = await axiosJWTuser.get(
