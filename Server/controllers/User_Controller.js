@@ -8,10 +8,10 @@ function showTugasList(req,res){
     const id = req.params.id;
     models.Status_tugas.findAll({
       where:{p_id:id},
+      order: [['id', 'DESC']],        
       include: [{
         model: models.Tugas,
-        as: 'tugas'
-        
+        as: 'tugas',
     }]
     }).then(result =>{
         res.status(200).json({
