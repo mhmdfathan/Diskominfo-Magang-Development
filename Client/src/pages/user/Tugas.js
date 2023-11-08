@@ -36,6 +36,7 @@ function Tugas() {
           `http://localhost:3000/user/tugas-list/${decoded.userId}`
         );
         setData(response.data.tugas);
+        // console.log(response.data.tugas);
       } catch (error) {
         if (isUnauthorizedError(error)) {
           navigate("/");

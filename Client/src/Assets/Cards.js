@@ -31,26 +31,38 @@ const Cards = ({ data }) => {
     return day + '-' + month + "-" + year + ' ' + hours + ':' + minutes + ':' + seconds;
   }
 
-  const [isModalOpen, setModalOpen] = useState(false);
   const [selectedTaskID, setSelectedTaskID] = useState(null);
   const [file, setFile] = useState()
+
+  const showSuccessNotification = (message) => {
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+    });
+  };
 
   function hadleFile(event) {
     setFile(event.target.files[0])
     console.log(event.target.files[0])
   }
+  const [show, setShow] = useState(false);
+  const handleClose = () => { setShow(false); setSelectedTaskID(null); };
+  const handleShow = (taskID) => { setSelectedTaskID(taskID); setShow(true); }
 
-  const handleCardClick = (taskID) => {
-    setSelectedTaskID(taskID);
-    setModalOpen(true);
-  };
+  const cancelFile = async () => {
+    try {
+      const ambilid = await axios.get('http://localhost:3000/account/token', {
+        headers: {
+          'role': "peserta_magang"
+        },
+      });
+      handleClose()
+    } catch (error) {
+      handleClose()
+    }
+  }
 
-  const handleCloseModal = () => {
-    setSelectedTaskID(null);
-    setModalOpen(false);
-  };
-
- 
   const uploadFile = async () => {
     try {
       const ambilid = await axios.get('http://localhost:3000/account/token', {
@@ -66,38 +78,38 @@ const Cards = ({ data }) => {
       const response = await axiosJWTuser.patch(`http://localhost:3000/user/tugas/${decoded.userId}/submit/${selectedTaskID}`, formData);
       console.log('Server Response:', response.data);
       showSuccessNotification("Berhasil Submit Gambar")
-      handleCloseModal()
+      handleClose()
     } catch (error) {
       console.error('Error:', error);
       window.alert("Gagal Submit Gambar")
+      handleClose()
     }
   }
-const footer = data.tugas.statu_pengerjaan ? formatDueDate(data.tugas.dueDate) : "Submited"
+  const footer = data.status_pengerjaan ? "Submitted" : formatDueDate(data.tugas.dueDate)
 
   return (
-    <div className="card" style={{ maxWidth: '300px', cursor:"pointer"}} onClick={() => handleCardClick(data.tugas.id)} c >
+    <div className="card" style={{ maxWidth: '300px', cursor: "pointer" }} onClick={() => handleShow(data.tugas.id)} c >
       <h2
         className="card-body"
         style={{ backgroundColor: colors[randomNumber] }}
-        
       >
         {data.tugas.judul}
       </h2>
       <p>{data.tugas.tugas_url}</p>
       <div className="deadline">{footer}</div>
 
-      {isModalOpen && (
-        <Modal show={isModalOpen} onHide={handleCloseModal} centered={true} style={{zIndex: 1050 }} >
+
+      <Modal show={show} onHide={handleClose} centered={true} style={{ zIndex: 1050 }} >
         <Modal.Header>
           <Modal.Title>Submit Tugas</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <div style={{ height: "100px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <input type='file' name='image' accept="image/jpeg, image/png" onChange={hadleFile} />
-      </div>
+          <div style={{ height: "100px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <input type='file' name='image' accept="image/jpeg, image/png" onChange={hadleFile} />
+          </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" href='tugas'>
+          <Button variant="secondary" onClick={cancelFile}>
             Cancel
           </Button>
           <Button variant="primary" onClick={uploadFile}>
@@ -106,26 +118,26 @@ const footer = data.tugas.statu_pengerjaan ? formatDueDate(data.tugas.dueDate) :
         </Modal.Footer>
       </Modal>
 
-  // <div className="modal-container">
-  //   <div className="modal-content">
-  //     <span className="close" onClick={handleCloseModal}>
-  //       &times;
-  //     </span>
-  //     <h2 style={{ textAlign: "center", borderBottom: "1px solid #000000", fontSize: "20px" }}>Submit for Task {selectedTaskID}</h2>
-  //     <div style={{ height: "100px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-  //       <input type='file' name='image' accept="image/jpeg, image/png" onChange={hadleFile} />
-  //     </div>
-  //     {/* Close button on the left */}
-  //     <Button variant="danger" onClick={handleCloseModal}>
-  //       Close
-  //     </Button>
-  //     <Button variant="primary" onClick={uploadFile}>
-  //       Save Changes
-  //     </Button>
-  //   </div>
-  // </div>
-)}
+      {/* <div className="modal-container">
+    <div className="modal-content">
+      <span className="close" onClick={handleCloseModal}>
+        &times;
+      </span>
+      <h2 style={{ textAlign: "center", borderBottom: "1px solid #000000", fontSize: "20px" }}>Submit for Task {selectedTaskID}</h2>
+      <div style={{ height: "100px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <input type='file' name='image' accept="image/jpeg, image/png" onChange={hadleFile} />
+      </div>
+      
+      <Button variant="danger" onClick={handleCloseModal}>
+        Close
+      </Button>
+      <Button variant="primary" onClick={uploadFile}>
+        Save Changes
+      </Button>
+    </div>
+  </div> */}
 
+      <ToastContainer />
     </div>
   );
 };
