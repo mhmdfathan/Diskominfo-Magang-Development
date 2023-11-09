@@ -1124,7 +1124,9 @@ async function exportPeserta(req, res) {
         { header: 'Status Aktif', key: 'status_aktif', width: 30 },
         { header: 'Tanggal', key: 'tanggal', width: 30 },
         { header: 'Check-In', key: 'check_in', width: 30 },
-        { header: 'Check-Out', key: 'check_out', width: 30 }
+        { header: 'Check-Out', key: 'check_out', width: 30 },
+        { header: 'Check-In Foto', key: 'image_url_in', width: 50 },
+        { header: 'Check-Out Foto', key: 'image_url_out', width: 50 }
 
       ];
   
@@ -1132,6 +1134,9 @@ async function exportPeserta(req, res) {
         const tanggalPresensi = value.presensimagang[0].tanggal;
         const checkInPresensi = value.presensimagang[0].check_in ? 'Sudah Presensi' : 'Belum Presensi';
         const checkOutPresensi = value.presensimagang[0].check_out ? 'Sudah Presensi' : 'Belum Presensi';
+        const imageInValue = value.presensimagang[0].image_url_in ? image_url_in : 'Belum Presensi';
+        const imageOutValue = value.presensimagang[0].image_url_out ? image_url_out : 'Belum Presensi';
+        
 
         // Function to set cell background color
         function setCellBackgroundColor(value) {
@@ -1159,7 +1164,9 @@ async function exportPeserta(req, res) {
           status_aktif: value.status_aktif === true ? 'Aktif':'Tidak Aktif',
           tanggal: tanggalPresensi,
           check_in: checkInPresensi,
-          check_out: checkOutPresensi
+          check_out: checkOutPresensi,
+          image_url_in: imageInValue,
+          image_url_out: imageOutValue
         });
       });
   
@@ -1204,6 +1211,8 @@ async function exportPeserta(req, res) {
       { header: 'Tanggal', key: 'tanggal', width: 15 },
       { header: 'Check-In', key: 'check_in', width: 15 },
       { header: 'Check-Out', key: 'check_out', width: 15 },
+      { header: 'Check-In Foto', key: 'image_url_in', width: 50 },
+      { header: 'Check-Out Foto', key: 'image_url_in', width: 50 },
       { header: 'Nama Peserta Magang: '+ ambilNama.nama, width: 45 },
     ];
 
@@ -1212,6 +1221,8 @@ async function exportPeserta(req, res) {
     results.forEach((value) => {
       const checkInValue = value.check_in ? 'Sudah Presensi' : 'Belum Presensi';
       const checkOutValue = value.check_out ? 'Sudah Presensi' : 'Belum Presensi';
+      const imageInValue = value.image_url_in ? value.image_url_in : 'Belum Presensi';
+      const imageOutValue = value.image_url_out ? value.image_url_out : 'Belum Presensi';
 
       // Function to set cell background color
       function setCellBackgroundColor(value) {
@@ -1222,7 +1233,9 @@ async function exportPeserta(req, res) {
       sheet.addRow({
         tanggal: value.tanggal,
         check_in: checkInValue,
-        check_out: checkOutValue
+        check_out: checkOutValue,
+        image_url_in: imageInValue,
+        image_url_out: imageOutValue
       });
 
       // Set cell background color after adding the row
