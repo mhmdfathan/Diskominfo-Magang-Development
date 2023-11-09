@@ -135,7 +135,7 @@ const showErrorNotification = (message) => {
                   <img
                     src={logo}
                     alt=""
-                    style={{ width: "150px", height: "auto" }}
+                    style={{ width: "150px", height: "auto", marginRight:"-35px" }}
                   />
                 ) : (
                   <i className="bi bi-border-width nav_logo-icon" />
@@ -205,15 +205,15 @@ const showErrorNotification = (message) => {
               </div>
             </div>
             <div className="action-buttons">
-              <a href="user/presensi/riwayat">
+              <a href="presensi/riwayat">
                 <img src={data} alt="Peserta" />
                 <span>History Presensi</span>
               </a>
-              <a href="user/presensi">
+              <a href="presensi">
                 <img src={presensi} alt="Penugasan" />
                 <span>Penugasan</span>
               </a>
-              <a href="user/tugas">
+              <a href="tugas">
                 <img src={penugasan} alt="Statistik" />
                 <span>Tugas</span>
               </a>

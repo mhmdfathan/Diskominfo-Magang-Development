@@ -5,19 +5,10 @@ import { React, useState } from 'react';
 const Dates = () => {
   const [time, setTime] = useState(new Date());
 
-  const waktuskrg = async () => {
-    try {
-      const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
-      const data = await response.json();
-      const dateTimeString = data.datetime;
-      setTime(new Date(dateTimeString));
-      // console.log(dateTimeString)
-    } catch (error) {
-      console.error('Error fetching current time:', error);
-    }
-  }
-
-  setInterval(waktuskrg, 10000);
+  const updateTime = () => {
+    setTime(new Date());
+  };
+  setInterval(updateTime, 1000);
 
   function Tanggalan() {
     function nol(index) {
@@ -56,10 +47,13 @@ const Dates = () => {
         index = "0" + index
       } return index
     }
-    var jam = nol(time.getHours());
-    var mnt = nol(time.getMinutes());
+    var jam = nol(time.getHours())
+    var menit = nol(time.getMinutes())
+    // var detik = nol(time.getSeconds())
 
-    return (jam + ' : ' + mnt);
+    return (jam+':'+menit
+    // +':'+detik
+    );
   }
 
 
