@@ -8,7 +8,6 @@ import "../Components/SideBar/Style.css";
 import "./Penugasan.css";
 import { axiosJWTadmin } from "../config/axiosJWT";
 import { TabTitle } from "../TabName";
-import { isUnauthorizedError }  from '../config/errorHandling';
 
 function Penugasan() {
   TabTitle("Penugasan");
@@ -67,9 +66,8 @@ function Penugasan() {
         console.error('Tugas ID tidak tersedia');
       }
     } catch (error) {
-      if (isUnauthorizedError(error)){
-        navigate('/');
-      }
+      // navigate('/');
+      console.error(error);
     }
   };
 
@@ -84,7 +82,7 @@ function Penugasan() {
 
   const fetchCurrentTime = async () => {
     try {
-      const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const response = await fetch('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const data = await response.json();
       const dateTimeString = data.datetime;
       const dateTime = new Date(dateTimeString);
@@ -120,9 +118,7 @@ function Penugasan() {
       getTugas();
       setShowTaskForm(false);
     } catch (error) {
-      if (isUnauthorizedError(error)){
-        navigate('/');
-      }
+      navigate("/");
     }
   };
 
@@ -131,9 +127,7 @@ function Penugasan() {
       const response = await axiosJWTadmin.get("http://localhost:3000/admin/tugas");
       setTugas(response.data.tugas);
     } catch (error) {
-      if (isUnauthorizedError(error)){
-        navigate('/');
-      }
+      navigate("/");
     }
   };
 
@@ -146,9 +140,6 @@ function Penugasan() {
       );
       setStatusTugas(response.data.tugas);
     } catch (error) {
-      if (isUnauthorizedError(error)){
-        navigate('/');
-      }
     }
   };
 

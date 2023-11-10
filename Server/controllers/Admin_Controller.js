@@ -333,7 +333,15 @@ async function showPesertaAll(req, res){
 
 async function showPesertaAktifAll(req, res){
     statusCheck(req, res);
-    await models.Peserta_Magang.findAll({where:{status_aktif:true}}).then(result =>{
+    const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
+    const currentDate = moment.tz(response.data.datetime, 'Asia/Jakarta');
+    await models.Peserta_Magang.findAll({where:{
+      status_aktif:true, 
+      tanggal_mulai: {
+        [Op.lte]: currentDate
+      }
+    }
+  }).then(result =>{
         res.status(200).json({
             peserta_magang:result
         });
@@ -856,11 +864,16 @@ async function exportPeserta(req, res) {
   async function exportPesertaAktif(req, res) {
     try {
       statusCheck(req, res);
-      const results = await models.Peserta_Magang.findAll({where:{status_aktif:true}});
-
       const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
-  
+      const results = await models.Peserta_Magang.findAll({where:{
+        status_aktif:true,
+        tanggal_mulai: {
+          [Op.lte]: tanggal
+        }
+      }
+    });
+      
       const workbook = new exceljs.Workbook();
       const sheet = workbook.addWorksheet('Peserta Magangs');
       sheet.columns = [
@@ -1212,7 +1225,7 @@ async function exportPeserta(req, res) {
       { header: 'Check-In', key: 'check_in', width: 15 },
       { header: 'Check-Out', key: 'check_out', width: 15 },
       { header: 'Check-In Foto', key: 'image_url_in', width: 50 },
-      { header: 'Check-Out Foto', key: 'image_url_in', width: 50 },
+      { header: 'Check-Out Foto', key: 'image_url_out', width: 50 },
       { header: 'Nama Peserta Magang: '+ ambilNama.nama, width: 45 },
     ];
 
