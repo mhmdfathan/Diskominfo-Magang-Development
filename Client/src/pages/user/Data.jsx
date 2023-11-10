@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ListTable from './ListTable';
 import logo from "../../Assets/diskominfo.png"
+import icon from "../../Assets/icon.png"
 import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "../../Components/SideBar/Navbar.css"
@@ -9,11 +10,9 @@ import jwt_decode from "jwt-decode";
 import { axiosJWTuser } from '../../config/axiosJWT';
 import { isUnauthorizedError } from '../../config/errorHandling';
 import { useNavigate } from 'react-router-dom';
-  
-// Import a modal library or create your custom modal component
-// For this example, I'm using a custom modal component.
 import ImageModal from './ImageModal'; // Create this component
 import { TabTitle } from '../../TabName';
+import loading from "../../Assets/Loading_Screen.gif"
 
 function formatDueDate(inputDate) {
   const date = new Date(inputDate);
@@ -107,7 +106,7 @@ function Data(props) {
           </div>
           <div className="header_img">
             <img
-              src="https://reqres.in/img/faces/5-image.jpg"
+              src={icon}
               alt=""
             />
           </div>
@@ -174,7 +173,10 @@ function Data(props) {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <h1 style={{textAlign:'left', fontWeight:'bold', fontSize:'18px', fontfamily: 'Poppins'}} >Daftar data Absen</h1>
           <br/>
-          <ListTable data={data} />
+          {!data? (
+            <img src={loading}  alt=""/>
+          ) : (
+          <ListTable data={data} />)}
         </div>
 
         {showImageModal && (

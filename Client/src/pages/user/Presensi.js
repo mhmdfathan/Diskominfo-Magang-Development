@@ -14,6 +14,7 @@ import { axiosJWTuser } from '../../config/axiosJWT';
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer} from 'react-toastify';
 import {showSuccessNotification} from '../../Components/User/toastSuccess'
+import icon from "../../Assets/icon.png"
 
 const Presensi = () => {
   TabTitle('Presensi');
@@ -110,7 +111,7 @@ const Presensi = () => {
           </div>
           <div className="header_img">
             <img
-              src="https://reqres.in/img/faces/5-image.jpg"
+              src={icon}
               alt=""
             />
           </div>

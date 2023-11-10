@@ -13,6 +13,7 @@ import { TabTitle } from "../../TabName";
 import { isUnauthorizedError } from "../../config/errorHandling";
 import { useNavigate } from "react-router-dom";
 import load from "../../Assets/Loading_Screen.gif"
+import icon from "../../Assets/icon.png"
 
 
 function Tugas() {
@@ -59,7 +60,7 @@ function Tugas() {
             />
           </div>
           <div className="header_img">
-            <img src="https://reqres.in/img/faces/5-image.jpg" alt="" />
+            <img src={icon} alt="" />
           </div>
         </header>
         <div className={`l-navbar${showNav ? " show" : ""}`}>
