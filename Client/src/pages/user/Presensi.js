@@ -12,7 +12,7 @@ import { isUnauthorizedError }  from '../../config/errorHandling';
 import { useNavigate } from 'react-router-dom';
 import { axiosJWTuser } from '../../config/axiosJWT';
 import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import {showSuccessNotification} from '../../Components/User/toastSuccess'
 
 const Presensi = () => {
@@ -53,7 +53,7 @@ const Presensi = () => {
         tracks.forEach(track => track.stop());
       }
     };
-  }, []); // Empty dependency array ensures that this effect runs once when the component mounts
+  }, ); // Empty dependency array ensures that this effect runs once when the component mounts
 
   const capture = async () => {
     const canvas = document.createElement('canvas');

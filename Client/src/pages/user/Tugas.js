@@ -46,7 +46,7 @@ function Tugas() {
     };
 
     fetchData();
-  }, []);
+  }, );
 
   return (
     <div className="body-main">

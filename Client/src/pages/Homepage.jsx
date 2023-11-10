@@ -4,7 +4,6 @@ import jwt_decode from "jwt-decode"
 import { useNavigate } from 'react-router-dom'
 import imageCon from "../Assets/balaikota.jpg"
 import logo from "../Assets/diskominfo.png"
-// import icon from "../Assets/icon.png"
 import penugasan from "../Assets/image_Buat Penugasan.svg"
 import peserta from "../Assets/image_Peserta magang.svg"
 import statistik from "../Assets/image_Statistik.svg"
@@ -13,7 +12,6 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import "../Components/SideBar/Style.css"
 import './Homestyle.css'
 import { TabTitle } from "../TabName"
-import { isUnauthorizedError }  from '../config/errorHandling';
 
 
 const Homepage = () => {
@@ -37,9 +35,7 @@ const Homepage = () => {
       setNama(decoded.nama);
     } catch (error) {
       if (error.response) {
-        if (isUnauthorizedError(error)){
-          navigate('/');
-        }
+        navigate("/");
       }
     }
   }
@@ -70,11 +66,13 @@ const Homepage = () => {
                 target="_self"
                 className="nav_logo"
               >
-                {showNav ? (
-                  <img src={logo} alt="" style={{ width: '150px', height: 'auto' }} />
-                ) : (
-                  <i className="bi bi-border-width nav_logo-icon" />
-                )}
+                <div className="header_toggle">
+                  {showNav && window.innerWidth > 768 ? (
+                    <img src={logo} alt="" style={{ width: '150px', height: 'auto' }} />
+                  ) : (
+                    <i className="bi bi-border-width nav_logo-icon" />
+                  )}
+                </div>
               </a>
               <div className="nav_list">
                 <a
@@ -142,28 +140,20 @@ const Homepage = () => {
                 <img src="https://reqres.in/img/faces/5-image.jpg" alt="" />
               </div>
             </div>
-            <div className="action-buttons">
-              <a href="/peserta">
-                <img src={peserta} alt="" />
-              </a>
-              <a href="/penugasan">
-                <img src={penugasan} alt="" />
-              </a>
-              <a href="/statistik">
-                <img src={statistik} alt="" />
-              </a>
-            </div>
-            <div className="action-buttons-1">
-              <a href="/peserta">
-                <span>Peserta</span>
-              </a>
-              <a href="/penugasan">
-                <span>Penugasan</span>
-              </a>
-              <a href="/statistik">
-                <span>Statistik</span>
-              </a>
-            </div>
+          </div>
+          <div className="action-buttons">
+            <a href="/peserta">
+              <img src={peserta} alt="" />
+              <span>Peserta</span>
+            </a>
+            <a href="/penugasan">
+              <img src={penugasan} alt="" />
+              <span>Penugasan</span>
+            </a>
+            <a href="/statistik">
+              <img src={statistik} alt="" />
+              <span>Statistik</span>
+            </a>
           </div>
         </div>
       </div>
