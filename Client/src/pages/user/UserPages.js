@@ -207,7 +207,7 @@ const showErrorNotification = (message) => {
               </a>
               <a href="presensi">
                 <img src={presensi} alt="Penugasan" />
-                <span>Penugasan</span>
+                <span>Presensi</span>
               </a>
               <a href="tugas">
                 <img src={penugasan} alt="Statistik" />
