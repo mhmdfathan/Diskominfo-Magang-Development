@@ -150,10 +150,10 @@ const Homepage = () => {
               <img src={penugasan} alt="" />
               <span>Penugasan</span>
             </a>
-            <a href="/statistik">
+            {/* <a href="/statistik">
               <img src={statistik} alt="" />
               <span>Statistik</span>
-            </a>
+            </a> */}
           </div>
         </div>
       </div>
