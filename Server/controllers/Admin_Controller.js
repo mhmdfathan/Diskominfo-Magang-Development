@@ -864,11 +864,16 @@ async function exportPeserta(req, res) {
   async function exportPesertaAktif(req, res) {
     try {
       statusCheck(req, res);
-      const results = await models.Peserta_Magang.findAll({where:{status_aktif:true}});
-
       const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
-  
+      const results = await models.Peserta_Magang.findAll({where:{
+        status_aktif:true,
+        tanggal_mulai: {
+          [Op.lte]: tanggal
+        }
+      }
+    });
+      
       const workbook = new exceljs.Workbook();
       const sheet = workbook.addWorksheet('Peserta Magangs');
       sheet.columns = [
