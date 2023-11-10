@@ -116,7 +116,7 @@
 
 .action-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin-top: 10px;
 }
@@ -130,13 +130,15 @@
 }
 
 .action-buttons a img {
-  width: 150px;
+  width: 250px;
   height: auto;
 }
 
 .action-buttons a span {
   text-align: center;
-  margin-top: 10px;
+  font-weight: bold;
+  margin-top: -12px;
   font-family: "Poppins", sans-serif;
   margin-right: 20px;
+  color: #002c3e;
 }
