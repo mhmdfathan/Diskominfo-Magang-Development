@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import logo from "../../Assets/diskominfo.png"
-import { Container } from 'react-bootstrap';
+// import { Container } from 'react-bootstrap';
 import Dates from '../../Assets/Date';
 import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
@@ -12,11 +12,7 @@ import { isUnauthorizedError }  from '../../config/errorHandling';
 import { useNavigate } from 'react-router-dom';
 import { axiosJWTuser } from '../../config/axiosJWT';
 import 'react-toastify/dist/ReactToastify.css'
-<<<<<<< HEAD
 import { ToastContainer} from 'react-toastify';
-=======
-import { ToastContainer } from 'react-toastify';
->>>>>>> 156b570064f5497dd35afd9a77a663c118121bb3
 import {showSuccessNotification} from '../../Components/User/toastSuccess'
 
 const Presensi = () => {
@@ -57,7 +53,7 @@ const Presensi = () => {
         tracks.forEach(track => track.stop());
       }
     };
-  }, ); // Empty dependency array ensures that this effect runs once when the component mounts
+  }, []); // Empty dependency array ensures that this effect runs once when the component mounts
 
   const capture = async () => {
     const canvas = document.createElement('canvas');
