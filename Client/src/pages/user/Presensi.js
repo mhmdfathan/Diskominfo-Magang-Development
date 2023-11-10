@@ -12,7 +12,7 @@ import { isUnauthorizedError }  from '../../config/errorHandling';
 import { useNavigate } from 'react-router-dom';
 import { axiosJWTuser } from '../../config/axiosJWT';
 import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import {showSuccessNotification} from '../../Components/User/toastSuccess'
 
 const Presensi = () => {
@@ -85,7 +85,7 @@ const Presensi = () => {
 
       const response = await axiosJWTuser.patch(`http://localhost:3000/user/presensi/${decoded.userId}/up`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data' // Set content type to multipart/form-data
+          'role': "peserta_magang"
         }
       });
       console.log('Server Response:', response.data);
@@ -174,20 +174,19 @@ const Presensi = () => {
             </a>
           </nav>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
           <h1 style={{ marginBottom: "10px" }}>Silahkan Presensi</h1>
           <div> <Dates style={{ display: 'flex', alignItems: 'end' }} /> </div>
-          <Container style={{ marginTop: 10, display: 'flex', flexDirection: 'column', alignItems: 'left' }}>
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
-              <video ref={videoRef} autoPlay style={{ width: '50%', height: '60%' }} />
-              {imageSrc && <img src={URL.createObjectURL(imageSrc)} alt="Selfie" style={{ width: '50%', height: '60%' , marginLeft:"10px" }} />}
+          <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent:'flex-start' }}>
+            <div style={{ display: 'flex',}}>
+              <video ref={videoRef} autoPlay style={{ width: '40vw', height: 'auto' }} />
+              {imageSrc && <img src={URL.createObjectURL(imageSrc)} alt="Selfie" style={{ width: '40vw', height: 'auto' , marginLeft:"10px" }} />}
             </div>
             <div style={{ display: 'flex', marginTop: 10 }}>
               <button onClick={capture} style={{ height: "40px", width: "100px", borderRadius: "10px" }}>Ambil Foto</button>
               <button onClick={uploadImage} style={{ marginLeft: 10, height: "40px", width: "120px", borderRadius: "10px" }}>Upload Foto</button>
-              {captureTime && <p style={{ marginLeft: 10, marginTop: 10 }}>Foto diambil pada: {captureTime.toLocaleTimeString()}</p>}
             </div>
-          </Container>
+          </div>
         </div>
       </div>
       <ToastContainer/>
