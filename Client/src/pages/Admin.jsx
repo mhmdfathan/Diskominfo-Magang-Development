@@ -6,10 +6,11 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { TabTitle } from '../TabName';
-import { axiosJWTadmin } from "../config/axiosJWT";
+import { axiosJWTadmin } from '../config/axiosJWT';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditAdmin from '../Components/Admin/EditAdmin';
+import icon from "../Assets/icon.png"
 
 export const Admin = () => {
     TabTitle('Admin');
@@ -176,7 +177,7 @@ export const Admin = () => {
                     </div>
                     <div className="header_img">
                         <img
-                            src="https://reqres.in/img/faces/5-image.jpg"
+                            src={icon}
                             alt=""
                         />
                     </div>
@@ -270,7 +271,7 @@ export const Admin = () => {
                                                 <td>{index + 1}</td>
                                                 <td>{admin.nama}</td>
                                                 <td>{admin.username}</td>
-                                                <td style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                                <td>
                                                     <button
                                                         className="button is-small is-info"
                                                         onClick={() => handleOpenEditAdminModal(admin.id)}

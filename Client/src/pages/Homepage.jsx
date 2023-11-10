@@ -12,6 +12,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import "../Components/SideBar/Style.css"
 import './Homestyle.css'
 import { TabTitle } from "../TabName"
+import icon from "../Assets/icon.png"
 
 
 const Homepage = () => {
@@ -53,7 +54,7 @@ const Homepage = () => {
           </div>
           <div className="header_img">
             <img
-              src="https://reqres.in/img/faces/5-image.jpg"
+              src={icon}
               alt=""
             />
           </div>
@@ -137,7 +138,7 @@ const Homepage = () => {
               </div>
               <div className='space'></div>
               <div className="user-image">
-                <img src="https://reqres.in/img/faces/5-image.jpg" alt="" />
+                <img src={icon} alt="" />
               </div>
             </div>
           </div>
