@@ -1220,7 +1220,7 @@ async function exportPeserta(req, res) {
       { header: 'Check-In', key: 'check_in', width: 15 },
       { header: 'Check-Out', key: 'check_out', width: 15 },
       { header: 'Check-In Foto', key: 'image_url_in', width: 50 },
-      { header: 'Check-Out Foto', key: 'image_url_in', width: 50 },
+      { header: 'Check-Out Foto', key: 'image_url_out', width: 50 },
       { header: 'Nama Peserta Magang: '+ ambilNama.nama, width: 45 },
     ];
 
