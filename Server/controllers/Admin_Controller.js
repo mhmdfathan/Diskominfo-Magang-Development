@@ -333,7 +333,15 @@ async function showPesertaAll(req, res){
 
 async function showPesertaAktifAll(req, res){
     statusCheck(req, res);
-    await models.Peserta_Magang.findAll({where:{status_aktif:true}}).then(result =>{
+    const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
+    const currentDate = moment.tz(response.data.datetime, 'Asia/Jakarta');
+    await models.Peserta_Magang.findAll({where:{
+      status_aktif:true, 
+      tanggal_mulai: {
+        [Op.lte]: currentDate
+      }
+    }
+  }).then(result =>{
         res.status(200).json({
             peserta_magang:result
         });
