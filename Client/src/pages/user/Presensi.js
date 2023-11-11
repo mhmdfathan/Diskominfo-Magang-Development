@@ -30,7 +30,7 @@ const Presensi = () => {
 
     const startCamera = async () => {
       try {
-        await axios.get('https://api.diskominfo-smg-magang.cloud/account/token', {
+        await axios.get('http://localhost:3000/account/token', {
           headers: {
             'role': "peserta_magang"
           },
@@ -73,7 +73,7 @@ const Presensi = () => {
 
   const uploadImage = async () => {
     try {
-      const ambilid = await axios.get('https://api.diskominfo-smg-magang.cloud/account/token', {
+      const ambilid = await axios.get('http://localhost:3000/account/token', {
         headers: {
           'role': "peserta_magang"
         },
@@ -84,7 +84,7 @@ const Presensi = () => {
       const formData = new FormData();
       formData.append('image', imageSrc);
 
-      const response = await axiosJWTuser.patch(`https://api.diskominfo-smg-magang.cloud/user/presensi/${decoded.userId}/up`, formData, {
+      const response = await axiosJWTuser.patch(`http://localhost:3000/user/presensi/${decoded.userId}/up`, formData, {
         headers: {
           'role': "peserta_magang"
         }
