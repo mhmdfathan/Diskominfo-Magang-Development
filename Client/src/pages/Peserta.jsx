@@ -55,12 +55,12 @@ export const Peserta = () => {
   const getPresensiPeserta = async (id) => {
     try {
       const pesertaResponse = await axiosJWTadmin.get(
-        `http://localhost:3000/admin/peserta/${id}`
+        `https://api.diskominfo-smg-magang.cloud/admin/peserta/${id}`
       );
       const pesertaName = pesertaResponse.data.peserta_magang.nama;
       setSelectedPesertaName(pesertaName);
       const presensiResponse = await axiosJWTadmin.get(
-        `http://localhost:3000/admin/peserta/${id}/presensi`
+        `https://api.diskominfo-smg-magang.cloud/admin/peserta/${id}/presensi`
       );
       setPresensiData(presensiResponse.data.presensi);
     } catch (error) {
@@ -168,7 +168,7 @@ export const Peserta = () => {
           endpoint = "peserta";
       }
       const response = await axiosJWTadmin.get(
-        `http://localhost:3000/admin/${endpoint}`
+        `https://api.diskominfo-smg-magang.cloud/admin/${endpoint}`
       );
       setUsers(response.data.peserta_magang); // Mengisi state users
       setActiveCategory(category); // Update the active category
@@ -181,7 +181,7 @@ export const Peserta = () => {
   const exportPeserta = async () => {
     try {
       const response = await axiosJWTadmin.get(
-        "http://localhost:3000/admin/export-peserta",
+        "https://api.diskominfo-smg-magang.cloud/admin/export-peserta",
         {
           responseType: "arraybuffer",
         }
@@ -205,7 +205,7 @@ export const Peserta = () => {
   const exportPesertaAktif = async () => {
     try {
       const response = await axiosJWTadmin.get(
-        "http://localhost:3000/admin/export-peserta-aktif",
+        "https://api.diskominfo-smg-magang.cloud/admin/export-peserta-aktif",
         {
           responseType: "arraybuffer",
         }
@@ -229,7 +229,7 @@ export const Peserta = () => {
   const exportPesertaAlumni = async () => {
     try {
       const response = await axiosJWTadmin.get(
-        "http://localhost:3000/admin/export-peserta-alumni",
+        "https://api.diskominfo-smg-magang.cloud/admin/export-peserta-alumni",
         {
           responseType: "arraybuffer",
         }
@@ -253,7 +253,7 @@ export const Peserta = () => {
   const exportPesertaCalon = async () => {
     try {
       const response = await axiosJWTadmin.get(
-        "http://localhost:3000/admin/export-peserta-calon",
+        "https://api.diskominfo-smg-magang.cloud/admin/export-peserta-calon",
         {
           responseType: "arraybuffer",
         }
@@ -277,7 +277,7 @@ export const Peserta = () => {
   const exportPresensiPerPeserta = async (id) => {
     try {
       const response = await axiosJWTadmin.get(
-        `http://localhost:3000/admin/export-presensi-peserta/${id}`,
+        `https://api.diskominfo-smg-magang.cloud/admin/export-presensi-peserta/${id}`,
         {
           responseType: "arraybuffer",
         }
@@ -319,7 +319,7 @@ export const Peserta = () => {
     if (window.confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
       try {
         await axiosJWTadmin.delete(
-          `http://localhost:3000/admin/peserta/${id}/delete`
+          `https://api.diskominfo-smg-magang.cloud/admin/peserta/${id}/delete`
         );
         getUsers();
         showSuccessNotification("Pengguna berhasil dihapus.");
@@ -334,7 +334,7 @@ export const Peserta = () => {
   const saveUser = async (e) => {
     e.preventDefault();
     try {
-      await axiosJWTadmin.post("http://localhost:3000/admin/peserta/add", formData);
+      await axiosJWTadmin.post("https://api.diskominfo-smg-magang.cloud/admin/peserta/add", formData);
       getUsers();
       setShowTaskForm(false);
       showSuccessNotification("Pengguna berhasil ditambahkan.");
