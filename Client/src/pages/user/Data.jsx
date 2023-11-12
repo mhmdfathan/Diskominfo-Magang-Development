@@ -97,7 +97,7 @@ function Data(props) {
   return (
     <div className="body-main">
       <div className={`body-area${showNav ? " body-pd" : ""}`}>
-        <header className={`header${showNav ? " body-pd" : ""}`}>
+      <header className={`header${showNav ? " body-pd" : ""}`}>
           <div className="header_toggle">
             <i
               className={`bi ${showNav ? "bi-x" : "bi-list"}`}
@@ -120,42 +120,30 @@ function Data(props) {
                 className="nav_logo"
               >
                 {showNav ? (
-                  <img src={logo} alt="" style={{ width: '150px', height: 'auto' }} />
+                  <img
+                    src={logo}
+                    alt=""
+                    style={{ width: "120px", height: "auto" }}
+                  />
                 ) : (
                   <i className="bi bi-border-width nav_logo-icon" />
                 )}
               </a>
               <div className="nav_list">
-                <a
-                  href="/user/homepage"
-                  target="_self"
-                  className="nav_link"
-                >
+                <a href="homepage" className="nav_link">
                   <i className="bi bi-house nav_icon" />
                   <span className="nav_name">Home</span>
                 </a>
-                <a
-                  href="/user/presensi/riwayat"
-                  target="_self"
-                  className="nav_link"
-                >
-                  <i className="bi bi-list-task nav_icon" />
+                <a href="presensi/riwayat" target="_self" className="nav_link">
+                  <i className="bi bi-card-checklist nav_icon" />
                   <span className="nav_name">History Presensi</span>
                 </a>
-                <a
-                  href="/user/presensi"
-                  target="_self"
-                  className="nav_link"
-                >
+                <a href="presensi" target="_self" className="nav_link">
                   <i className="bi bi-camera nav_icon" />
                   <span className="nav_name">Lakukan Presensi</span>
                 </a>
-                <a
-                  href="/user/tugas"
-                  target="_self"
-                  className="nav_link"
-                >
-                  <i className="bi bi-card-checklist nav_icon" />
+                <a href="tugas" target="_self" className="nav_link">
+                  <i className="bi bi-list-task nav_icon" />
                   <span className="nav_name">Penugasan</span>
                 </a>
               </div>
