@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../Assets/diskominfo.png';
 import './Adminstyle.css';
 import { Button, Modal, Form } from 'react-bootstrap';
@@ -10,7 +10,8 @@ import { axiosJWTadmin } from '../config/axiosJWT';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditAdmin from '../Components/Admin/EditAdmin';
-import icon from "../Assets/icon.png"
+import icon from "../Assets/icon.png";
+import "../Components/SideBar/Navbar.css"
 
 export const Admin = () => {
     TabTitle('Admin');
@@ -30,6 +31,13 @@ export const Admin = () => {
 
     const indexOfLastAdmin = currentPage * adminsPerPage;
     const indexOfFirstAdmin = indexOfLastAdmin - adminsPerPage;
+
+    const location = useLocation();
+    const [activeLink, setActiveLink] = useState(location.pathname);
+
+    const handleNavLinkClick = (path) => {
+        setActiveLink(path);
+    };
 
     const totalPages = Math.ceil(admins.length / adminsPerPage);
     const pageNumbers = [];
@@ -70,7 +78,7 @@ export const Admin = () => {
         username: "",
         password: "",
     });
-    
+
     const handleCloseModal = () => {
         setEditingAdminId(null);
         setShowEditAdminModal(false);
@@ -185,39 +193,74 @@ export const Admin = () => {
                 <div className={`l-navbar${showNav ? " show" : ""}`}>
                     <nav className="nav">
                         <div>
-                            <a href="/homepage" target="_self" className="nav_logo">
-                                <div className="header_toggle">
-                                    {showNav && window.innerWidth > 768 ? (
-                                        <img src={logo} alt="" style={{ width: '150px', height: 'auto' }} />
-                                    ) : (
-                                        <i className="bi bi-border-width nav_logo-icon" />
-                                    )}
-                                </div>
+                            <a
+                                href="/homepage"
+                                target="_self"
+                                className="nav_logo"
+                            >
+                                {showNav ? (
+                                    <img
+                                        src={logo}
+                                        alt=""
+                                        style={{ width: "120px", height: "auto" }}
+                                    />
+                                ) : (
+                                    <i className="bi bi-border-width nav_logo-icon" />
+                                )}
                             </a>
                             <div className="nav_list">
-                                <a href="homepage" target="_self" className="nav_link">
+                                <a
+                                    href="homepage"
+                                    target="_self"
+                                    className={`nav_link ${activeLink === 'homepage' ? 'active' : ''}`}
+                                    onClick={() => handleNavLinkClick('homepage')}
+                                >
                                     <i className="bi bi-house nav_icon" />
                                     <span className="nav_name">Home</span>
                                 </a>
-                                <a href="admin" target="_self" className="nav_link">
+                                <a
+                                    href="admin"
+                                    target="_self"
+                                    className={`nav_link ${activeLink === 'admin' ? 'active' : ''}`}
+                                    onClick={() => handleNavLinkClick('admin')}
+                                >
                                     <i className="bi bi-person-check-fill nav_icon" />
                                     <span className="nav_name">Admin</span>
                                 </a>
-                                <a href="peserta" target="_self" className="nav_link">
+                                <a
+                                    href="peserta"
+                                    target="_self"
+                                    className={`nav_link ${activeLink === 'peserta' ? 'active' : ''}`}
+                                    onClick={() => handleNavLinkClick('peserta')}
+                                >
                                     <i className="bi bi-person nav_icon" />
                                     <span className="nav_name">Peserta</span>
                                 </a>
-                                <a href="presensi" target="_self" className="nav_link">
+                                <a
+                                    href="presensi"
+                                    target="_self"
+                                    className={`nav_link ${activeLink === 'presensi' ? 'active' : ''}`}
+                                    onClick={() => handleNavLinkClick('presensi')}
+                                >
                                     <i className="bi bi-person-check nav_icon" />
                                     <span className="nav_name">Presensi Magang</span>
                                 </a>
-                                <a href="penugasan" target="_self" className="nav_link">
+                                <a
+                                    href="penugasan"
+                                    target="_self"
+                                    className={`nav_link ${activeLink === 'penugasan' ? 'active' : ''}`}
+                                    onClick={() => handleNavLinkClick('penugasan')}
+                                >
                                     <i className="bi bi-list-task nav_icon" />
                                     <span className="nav_name">Penugasan</span>
                                 </a>
                             </div>
                         </div>
-                        <a href="/" target="_self" className="nav_link">
+                        <a
+                            href="/"
+                            target="_self"
+                            className="nav_link"
+                        >
                             <i className="bi bi-box-arrow-left nav_icon" />
                             <span className="nav_name">SignOut</span>
                         </a>

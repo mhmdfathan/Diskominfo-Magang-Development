@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from "react-router-dom";
 import './PresensiMagang.css';
 import logo from "../Assets/diskominfo.png"
 import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
-import "../Components/SideBar/Style.css"
+import "../Components/SideBar/Navbar.css"
 import { axiosJWTadmin } from '../config/axiosJWT';
 import { TabTitle } from '../TabName';
 import ImageOverlay from '../Components/Admin/ImageOverlay';
@@ -19,9 +20,15 @@ export const PresensiMagang = () => {
   const [searchDate, setSearchDate] = useState('');
   const [loading, setLoading] = useState(true);
 
-
   const [showImageOverlay, setShowImageOverlay] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
+
+  const location = useLocation();
+  const [activeLink, setActiveLink] = useState(location.pathname);
+
+  const handleNavLinkClick = (path) => {
+    setActiveLink(path);
+  };
 
   const handleImageClick = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -165,35 +172,40 @@ export const PresensiMagang = () => {
                 target="_self"
                 className="nav_logo"
               >
-                <div className="header_toggle">
-                  {showNav && window.innerWidth > 768 ? (
-                    <img
-                      src={logo}
-                      alt=""
-                      style={{ width: "150px", height: "auto" }}
-                    />
-                  ) : (
-                    <i className="bi bi-border-width nav_logo-icon" />
-                  )}
-                </div>
+                {showNav ? (
+                  <img
+                    src={logo}
+                    alt=""
+                    style={{ width: "120px", height: "auto" }}
+                  />
+                ) : (
+                  <i className="bi bi-border-width nav_logo-icon" />
+                )}
               </a>
               <div className="nav_list">
                 <a
                   href="homepage"
                   target="_self"
-                  className="nav_link"
+                  className={`nav_link ${activeLink === 'homepage' ? 'active' : ''}`}
+                  onClick={() => handleNavLinkClick('homepage')}
                 >
                   <i className="bi bi-house nav_icon" />
                   <span className="nav_name">Home</span>
                 </a>
-                <a href="admin" target="_self" className="nav_link">
+                <a
+                  href="admin"
+                  target="_self"
+                  className={`nav_link ${activeLink === 'admin' ? 'active' : ''}`}
+                  onClick={() => handleNavLinkClick('admin')}
+                >
                   <i className="bi bi-person-check-fill nav_icon" />
                   <span className="nav_name">Admin</span>
                 </a>
                 <a
                   href="peserta"
                   target="_self"
-                  className="nav_link"
+                  className={`nav_link ${activeLink === 'peserta' ? 'active' : ''}`}
+                  onClick={() => handleNavLinkClick('peserta')}
                 >
                   <i className="bi bi-person nav_icon" />
                   <span className="nav_name">Peserta</span>
@@ -201,7 +213,8 @@ export const PresensiMagang = () => {
                 <a
                   href="presensi"
                   target="_self"
-                  className="nav_link"
+                  className={`nav_link ${activeLink === 'presensi' ? 'active' : ''}`}
+                  onClick={() => handleNavLinkClick('presensi')}
                 >
                   <i className="bi bi-person-check nav_icon" />
                   <span className="nav_name">Presensi Magang</span>
@@ -209,7 +222,8 @@ export const PresensiMagang = () => {
                 <a
                   href="penugasan"
                   target="_self"
-                  className="nav_link"
+                  className={`nav_link ${activeLink === 'penugasan' ? 'active' : ''}`}
+                  onClick={() => handleNavLinkClick('penugasan')}
                 >
                   <i className="bi bi-list-task nav_icon" />
                   <span className="nav_name">Penugasan</span>
@@ -292,7 +306,7 @@ export const PresensiMagang = () => {
                                 {entry.image_url_in ? (
                                   <button
                                     onClick={() => handleImageClick(entry.image_url_in)}
-                                    className="image-button"
+                                    className="button is-small is-success"
                                   >
                                     Absen Masuk
                                   </button>
@@ -302,7 +316,7 @@ export const PresensiMagang = () => {
                                 {entry.image_url_out ? (
                                   <button
                                     onClick={() => handleImageClick(entry.image_url_out)}
-                                    className="image-button"
+                                    className="button is-small is-success"
                                   >
                                     Absen Pulang
                                   </button>
