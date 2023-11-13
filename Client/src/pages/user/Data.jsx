@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "../../Components/SideBar/Navbar.css"
 import axios from 'axios';
+import './UserPages.css'
 import jwt_decode from "jwt-decode";
 import { axiosJWTuser } from '../../config/axiosJWT';
 import { isUnauthorizedError } from '../../config/errorHandling';
@@ -33,7 +34,7 @@ function Data(props) {
   useEffect(() => {
     const fetchDataAndPresensiData = async () => {
       try {
-        const ambilid = await axios.get('http://localhost:3000/account/token', {
+        const ambilid = await axios.get('https://api.diskominfo-smg-magang.cloud/account/token', {
           headers: {
             'role': "peserta_magang"
           },
@@ -41,7 +42,7 @@ function Data(props) {
         const decoded = jwt_decode(ambilid.data.token);
 
           
-        const response = await axiosJWTuser.get(`http://localhost:3000/user/presensi/${decoded.userId}`);
+        const response = await axiosJWTuser.get(`https://api.diskominfo-smg-magang.cloud/user/presensi/${decoded.userId}`);
         const dataWithKosong = response.data.presensi.map((item) => ({
           ...item,
           check_in: item.check_in === null ? (
@@ -97,7 +98,7 @@ function Data(props) {
   return (
     <div className="body-main">
       <div className={`body-area${showNav ? " body-pd" : ""}`}>
-        <header className={`header${showNav ? " body-pd" : ""}`}>
+      <header className={`header${showNav ? " body-pd" : ""}`}>
           <div className="header_toggle">
             <i
               className={`bi ${showNav ? "bi-x" : "bi-list"}`}
@@ -120,42 +121,30 @@ function Data(props) {
                 className="nav_logo"
               >
                 {showNav ? (
-                  <img src={logo} alt="" style={{ width: '150px', height: 'auto' }} />
+                  <img
+                    src={logo}
+                    alt=""
+                    style={{ width: "120px", height: "auto" }}
+                  />
                 ) : (
                   <i className="bi bi-border-width nav_logo-icon" />
                 )}
               </a>
               <div className="nav_list">
-                <a
-                  href="/user/homepage"
-                  target="_self"
-                  className="nav_link"
-                >
+                <a href="/user/homepage" className="nav_link">
                   <i className="bi bi-house nav_icon" />
                   <span className="nav_name">Home</span>
                 </a>
-                <a
-                  href="/user/presensi/riwayat"
-                  target="_self"
-                  className="nav_link"
-                >
-                  <i className="bi bi-list-task nav_icon" />
+                <a href="/user/presensi/riwayat" target="_self" className="nav_link">
+                  <i className="bi bi-card-checklist nav_icon" />
                   <span className="nav_name">History Presensi</span>
                 </a>
-                <a
-                  href="/user/presensi"
-                  target="_self"
-                  className="nav_link"
-                >
+                <a href="/user/presensi" target="_self" className="nav_link">
                   <i className="bi bi-camera nav_icon" />
                   <span className="nav_name">Lakukan Presensi</span>
                 </a>
-                <a
-                  href="/user/tugas"
-                  target="_self"
-                  className="nav_link"
-                >
-                  <i className="bi bi-card-checklist nav_icon" />
+                <a href="/user/tugas" target="_self" className="nav_link">
+                  <i className="bi bi-list-task nav_icon" />
                   <span className="nav_name">Penugasan</span>
                 </a>
               </div>

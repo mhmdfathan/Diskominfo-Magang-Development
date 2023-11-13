@@ -60,7 +60,7 @@ export const Penugasan = () => {
     try {
       if (tugasId) {
         const response = await axiosJWTadmin.get(
-          `http://localhost:3000/admin/tugas/${tugasId}/export-tugas`,
+          `https://api.diskominfo-smg-magang.cloud/admin/tugas/${tugasId}/export-tugas`,
           {
             responseType: 'arraybuffer'
           }
@@ -97,7 +97,7 @@ export const Penugasan = () => {
 
   const fetchCurrentTime = async () => {
     try {
-      const response = await fetch('http://worldtimeapi.org/api/timezone/Asia/Jakarta');
+      const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const data = await response.json();
       const dateTimeString = data.datetime;
       const dateTime = new Date(dateTimeString);
@@ -129,7 +129,7 @@ export const Penugasan = () => {
   const addTugas = async (e) => {
     e.preventDefault();
     try {
-      await axiosJWTadmin.post("http://localhost:3000/admin/tugas/add", formData);
+      await axiosJWTadmin.post("https://api.diskominfo-smg-magang.cloud/admin/tugas/add", formData);
       getTugas();
       setShowTaskForm(false);
       toast.success("Tugas berhasil ditambahkan!", { position: "top-right" });
@@ -140,7 +140,7 @@ export const Penugasan = () => {
 
   const getTugas = async () => {
     try {
-      const response = await axiosJWTadmin.get("http://localhost:3000/admin/tugas");
+      const response = await axiosJWTadmin.get("https://api.diskominfo-smg-magang.cloud/admin/tugas");
       setTugas(response.data.tugas);
     } catch (error) {
       navigate("/");
@@ -152,7 +152,7 @@ export const Penugasan = () => {
   const getTugasById = async (taskId, index) => {
     try {
       const response = await axiosJWTadmin.get(
-        `http://localhost:3000/admin/tugas/${taskId}`
+        `https://api.diskominfo-smg-magang.cloud/admin/tugas/${taskId}`
       );
       setStatusTugas(response.data.tugas);
       setIdTugas(taskId);
