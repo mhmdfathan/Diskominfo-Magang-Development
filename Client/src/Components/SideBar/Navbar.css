@@ -6,7 +6,7 @@
     --first-color: #F7444E;
     --first-color-light: #F7F8F3;
     --white-color: #F7F6FB;
-    --active-color: #3708f3;
+    --active-color: rgb(0, 0, 0);
     --body-font: 'Nunito', sans-serif;
     --normal-font-size: 1rem;
     --z-fixed: 100

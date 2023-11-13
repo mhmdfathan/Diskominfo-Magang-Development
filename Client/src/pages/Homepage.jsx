@@ -27,7 +27,9 @@ const Homepage = () => {
 
   useEffect(() => {
     refreshToken();
-  })
+    setActiveLink(location.pathname);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   const refreshToken = async () => {
     try {
@@ -85,7 +87,7 @@ const Homepage = () => {
                 <a
                   href="homepage"
                   target="_self"
-                  className={`nav_link ${activeLink === 'homepage' ? 'active' : ''}`}
+                  className={`nav_link ${activeLink === '/homepage' ? 'active' : ''}`}
                   onClick={() => handleNavLinkClick('homepage')}
                 >
                   <i className="bi bi-house nav_icon" />
@@ -94,7 +96,7 @@ const Homepage = () => {
                 <a 
                   href="admin" 
                   target="_self" 
-                  className={`nav_link ${activeLink === 'admin' ? 'active' : ''}`}
+                  className={`nav_link ${activeLink === '/admin' ? 'active' : ''}`}
                   onClick={() => handleNavLinkClick('admin')}
                 >
                   <i className="bi bi-person-check-fill nav_icon" />
@@ -103,7 +105,7 @@ const Homepage = () => {
                 <a
                   href="peserta"
                   target="_self"
-                  className={`nav_link ${activeLink === 'peserta' ? 'active' : ''}`}
+                  className={`nav_link ${activeLink === '/peserta' ? 'active' : ''}`}
                   onClick={() => handleNavLinkClick('peserta')}
                 >
                   <i className="bi bi-person nav_icon" />
@@ -112,7 +114,7 @@ const Homepage = () => {
                 <a
                   href="presensi"
                   target="_self"
-                  className={`nav_link ${activeLink === 'presensi' ? 'active' : ''}`}
+                  className={`nav_link ${activeLink === '/presensi' ? 'active' : ''}`}
                   onClick={() => handleNavLinkClick('presensi')}
                 >
                   <i className="bi bi-person-check nav_icon" />
@@ -121,7 +123,7 @@ const Homepage = () => {
                 <a
                   href="penugasan"
                   target="_self"
-                  className={`nav_link ${activeLink === 'penugasan' ? 'active' : ''}`}
+                  className={`nav_link ${activeLink === '/penugasan' ? 'active' : ''}`}
                   onClick={() => handleNavLinkClick('penugasan')}
                 >
                   <i className="bi bi-list-task nav_icon" />
