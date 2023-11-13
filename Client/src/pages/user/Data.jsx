@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "../../Components/SideBar/Navbar.css"
 import axios from 'axios';
+import './UserPages.css'
 import jwt_decode from "jwt-decode";
 import { axiosJWTuser } from '../../config/axiosJWT';
 import { isUnauthorizedError } from '../../config/errorHandling';
@@ -130,19 +131,19 @@ function Data(props) {
                 )}
               </a>
               <div className="nav_list">
-                <a href="homepage" className="nav_link">
+                <a href="/user/homepage" className="nav_link">
                   <i className="bi bi-house nav_icon" />
                   <span className="nav_name">Home</span>
                 </a>
-                <a href="presensi/riwayat" target="_self" className="nav_link">
+                <a href="/user/presensi/riwayat" target="_self" className="nav_link">
                   <i className="bi bi-card-checklist nav_icon" />
                   <span className="nav_name">History Presensi</span>
                 </a>
-                <a href="presensi" target="_self" className="nav_link">
+                <a href="/user/presensi" target="_self" className="nav_link">
                   <i className="bi bi-camera nav_icon" />
                   <span className="nav_name">Lakukan Presensi</span>
                 </a>
-                <a href="tugas" target="_self" className="nav_link">
+                <a href="/user/tugas" target="_self" className="nav_link">
                   <i className="bi bi-list-task nav_icon" />
                   <span className="nav_name">Penugasan</span>
                 </a>

@@ -5,7 +5,7 @@ import logo from "../../Assets/diskominfo.png";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../../Components/SideBar/Navbar.css";
-import "./Tugas.css"; // Import file CSS terpisah untuk mengatur layout
+import './UserPages.css' // Import file CSS terpisah untuk mengatur layout
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { axiosJWTuser } from "../../config/axiosJWT";

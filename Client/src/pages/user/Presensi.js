@@ -7,6 +7,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import "../../Components/SideBar/Navbar.css"
 import jwt_decode from "jwt-decode"
 import axios from 'axios';
+import './UserPages.css'
 import { TabTitle } from '../../TabName';
 import { isUnauthorizedError } from '../../config/errorHandling';
 import { useNavigate } from 'react-router-dom';
@@ -69,6 +70,7 @@ const Presensi = () => {
     setImageSrc(capturedImageFile);
     setCaptureTime(new Date());
     console.log('Captured Image:', capturedImageFile);
+    console.log(captureTime);
   };
 
   const uploadImage = async () => {
