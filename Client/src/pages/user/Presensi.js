@@ -55,7 +55,8 @@ const Presensi = () => {
         tracks.forEach(track => track.stop());
       }
     };
-  }, []); // Empty dependency array ensures that this effect runs once when the component mounts
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const capture = async () => {
     const canvas = document.createElement('canvas');
