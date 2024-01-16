@@ -14,3 +14,6 @@ Feel free to check it out!
 - ReactJS (Frontend)
 - NodeJS (Backend)
 - XAMPP - MySQL (Database)
+
+## Special Thanks to:
+gelaws-hub and friends for the original repo
