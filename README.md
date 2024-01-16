@@ -13,3 +13,4 @@ Feel free to check it out
 Tech used :
 ReactJS (frontEnd)
 NodeJS (BackEnd)
+XAMPP - MySQL (Database)
