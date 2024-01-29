@@ -1015,6 +1015,7 @@ async function exportPeserta(req, res) {
           tanggal_mulai: value.tanggal_mulai,
           tanggal_selesai: value.tanggal_selesai,
           status_aktif: value.status_aktif === true ? 'Aktif' : 'Alumni'
+          //status_aktif: value.status_aktif === 1 ? 2 ? 3
         });
       });
   
