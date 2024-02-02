@@ -6,7 +6,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "../../Components/SideBar/Navbar.css";
 import './Surat.css'; // Import file CSS terpisah untuk mengatur layout
 import icon from "../../Assets/icon.png";
-import Button from 'react-bootstrap/Button';
 import jwt_decode from "jwt-decode"
 import { useNavigate } from 'react-router-dom'
 import { isUnauthorizedError }  from '../../config/errorHandling';
