@@ -9,6 +9,7 @@ import Data from './pages/user/Data'
 import Presensi from './pages/user/Presensi';
 import Tugas from './pages/user/Tugas';
 import UserPages from './pages/user/UserPages';
+import Surat from './pages/user/Surat';
 import Admin from './pages/Admin';
 import { ToastContainer } from 'react-toastify';
 
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="user/presensi" element={<Presensi/>}/>
         <Route path="user/tugas" element={<Tugas/>}/>
         <Route path="user/homepage" element={<UserPages />}/>
+        <Route path="user/surat" element={<Surat/>}/>
 
         <Route path='admin' element={<Admin />} />
         <Route path="homepage" element={<Homepage />}/>

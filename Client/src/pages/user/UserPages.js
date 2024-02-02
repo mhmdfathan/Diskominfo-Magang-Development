@@ -161,6 +161,10 @@ const showErrorNotification = (message) => {
                   <i className="bi bi-list-task nav_icon" />
                   <span className="nav_name">Penugasan</span>
                 </a>
+                <a href="surat" target="_self" className="nav_link">
+                  <i className="bi bi-list-task nav_icon" />
+                  <span className="nav_name">Persuratan</span>
+                </a>
               </div>
             </div>
             <a
