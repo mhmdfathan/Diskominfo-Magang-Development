@@ -866,6 +866,7 @@ async function exportPeserta(req, res) {
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
       const results = await models.Peserta_Magang.findAll({where:{
         status_aktif:true,
+          //status_aktif:1
         tanggal_mulai: {
           [Op.lte]: tanggal
         }
@@ -924,6 +925,7 @@ async function exportPeserta(req, res) {
     try {
       statusCheck(req,res);
       const results = await models.Peserta_Magang.findAll({where:{status_aktif:false}});
+        //status_aktif:2
 
       const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
@@ -988,7 +990,7 @@ async function exportPeserta(req, res) {
             }
         }
       });
-      
+      //status_aktif:3
   
       const workbook = new exceljs.Workbook();
       const sheet = workbook.addWorksheet('Peserta Magangs');
@@ -1013,6 +1015,7 @@ async function exportPeserta(req, res) {
           tanggal_mulai: value.tanggal_mulai,
           tanggal_selesai: value.tanggal_selesai,
           status_aktif: value.status_aktif === true ? 'Aktif' : 'Alumni'
+          //status_aktif: value.status_aktif === 1 ? 2 ? 3
         });
       });
   
