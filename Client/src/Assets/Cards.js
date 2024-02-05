@@ -8,15 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer, toast } from 'react-toastify';
 import { Modal } from 'react-bootstrap';
 
-const Cards = ({ data }) => {
-  const colors = [
-    "#FF5733", "#FFC300", "#85C1E9", "#D2B4DE", "#48C9B0", "#3B667E", "#3B7E76", "#275C33", "#8D9B37", "#AF642D",
-    "#9E2D2D", "#851666", "#FFD1DC", "#FFABAB", "#FFC3A0", "#FF677D", "#D4A5A5", "#DAC4FF", "#9A8C98", "#B5EAD7",
-    "#A2D2FF", "#FFE156", "#FF6F61", "#6A0572", "#FFC857", "#1A508B", "#E71D36", "#FF9F1C", "#00BFB2", "#2EC4B6",
-    "#FFD700", "#8338EC",
-  ];
-
-  const randomNumber = Math.floor(Math.random() * 32);
+const Cards = ({ data,setData }) => {
 
   function formatDueDate(inputDate) {
     const date = new Date(inputDate);
@@ -27,7 +19,7 @@ const Cards = ({ data }) => {
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
 
-    return day + '-' + month + "-" + year + ' ' + hours + ':' + minutes + ':' + seconds;
+    return 'Tenggat: ' + day + '-' + month + "-" + year + ' pada ' + hours + ':' + minutes + ':' + seconds;
   }
 
   const [selectedTaskID, setSelectedTaskID] = useState(null);
@@ -73,28 +65,84 @@ const Cards = ({ data }) => {
 
       const formData = new FormData();
       formData.append('image', file);
-
       const response = await axiosJWTuser.patch(`http://localhost:3000/user/tugas/${decoded.userId}/submit/${selectedTaskID}`, formData);
       console.log('Server Response:', response.data);
-      showSuccessNotification("Berhasil Submit Gambar")
-      handleClose()
+
+      //untuk refresh kartu setelah pengumpulan
+      const updatedResponse = await axiosJWTuser.get(`http://localhost:3000/user/tugas-list/${decoded.userId}`);
+      setData(updatedResponse.data.tugas);
+
+      showSuccessNotification("Berhasil Submit Gambar");
+      handleClose();
     } catch (error) {
       console.error('Error:', error);
-      window.alert("Gagal Submit Gambar")
-      handleClose()
+      window.alert("Gagal Submit Gambar");
+      handleClose();
     }
   }
-  const footer = data.status_pengerjaan ? "Submitted" : formatDueDate(data.tugas.dueDate)
 
+  // Fungsi untuk memisahkan warna tugas berdasarkan deadline
+  const getCardColor = (dueDate) => {
+    const currentDate = new Date();
+    const taskDueDate = new Date(dueDate);
+    const oneDay = 24 * 60 * 60 * 1000; // One day in milliseconds
+    const tomorrow = new Date(currentDate.getTime() + oneDay);
+
+    if (taskDueDate < currentDate) {
+      // Deadline has passed
+      return "#FF0000"; // Red
+    } else if (
+      taskDueDate.getDate() === currentDate.getDate() &&
+      taskDueDate.getMonth() === currentDate.getMonth() &&
+      taskDueDate.getFullYear() === currentDate.getFullYear()
+    ) {
+      // Deadline is today
+      if (taskDueDate.getTime() < currentDate.getTime()) {
+        // The time just passed
+        return "#FF0000"; // Red
+      } else {
+        return "#FF5722"; // Orange
+      }
+    } else if (
+      taskDueDate <= new Date(tomorrow.getTime() + 7 * oneDay)
+    ) {
+      // Deadline within the next 7 days from tomorrow
+      return "#FFC300"; // Yellow
+    } else {
+      // Deadline beyond the next 7 days from tomorrow
+      return "#85C1E9"; // Blue
+    }
+  };
+
+  
+  const getFooterText = (keterangan, dueDate) => {
+    if (keterangan === true) {
+      return "Submitted";
+    } else if (keterangan === false) {
+      return "Submitted Late";
+    } else {
+      return formatDueDate(dueDate);
+    }
+  };
+
+  const cardColor = getCardColor(data.tugas.dueDate);
+  const footer = getFooterText(data.status_tugas.keterangan, data.tugas.dueDate);
+
+
+  console.log("Data: ", data);
   return (
-    <div className="card" style={{ maxWidth: '300px', cursor: "pointer" }} onClick={() => handleShow(data.tugas.id)} c >
+    <div className="card" style={{ cursor: "pointer" }} onClick={() => handleShow(data.tugas.id)} c >
       <h2
         className="card-body"
-        style={{ backgroundColor: colors[randomNumber] }}
+        style={{ backgroundColor: cardColor }}
       >
         {data.tugas.judul}
       </h2>
-      <p>{data.tugas.tugas_url}</p>
+      <p
+          className='paragraph'
+        >
+          {data.tugas.tugas_url}
+      </p>
       <div className="deadline">{footer}</div>
 
 
@@ -117,24 +165,6 @@ const Cards = ({ data }) => {
         </Modal.Footer>
       </Modal>
 
-      {/* <div className="modal-container">
-    <div className="modal-content">
-      <span className="close" onClick={handleCloseModal}>
-        &times;
-      </span>
-      <h2 style={{ textAlign: "center", borderBottom: "1px solid #000000", fontSize: "20px" }}>Submit for Task {selectedTaskID}</h2>
-      <div style={{ height: "100px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <input type='file' name='image' accept="image/jpeg, image/png" onChange={hadleFile} />
-      </div>
-      
-      <Button variant="danger" onClick={handleCloseModal}>
-        Close
-      </Button>
-      <Button variant="primary" onClick={uploadFile}>
-        Save Changes
-      </Button>
-    </div>
-  </div> */}
 
       <ToastContainer />
     </div>

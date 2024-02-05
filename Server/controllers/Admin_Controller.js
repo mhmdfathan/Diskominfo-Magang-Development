@@ -174,6 +174,22 @@ function editAdmin(req, res){
     })
 }
 
+//deleteAdmin 
+function deleteAdmin(req, res){
+  const id = req.params.id;
+
+  models.Admin.destroy({where:{id:id}}).then(result =>{
+      res.status(200).json({
+          message: "Admin berhasil dihapus!"
+      });
+  }).catch(error =>{
+      res.status(500).json({
+          message: "Something went wrong",
+          error:error
+      });
+  }); 
+}
+
 async function addPeserta(req, res){
     models.Admin.findOne({where:{username: req.body.username}}).then (result =>{
         if (result){
@@ -591,7 +607,7 @@ function showPresensiPerPeserta(req, res){
     });
 }
 
-function showTugas(req, res){
+function showTugasById(req, res){
     const id = req.params.id;
     statusCheck(req, res);
 
@@ -672,8 +688,10 @@ async function addTugas(req, res, url) {
             });
         }
         
+        
       // Create the tugas record and await the result
         const result_tugas = await models.Tugas.create(tugas);
+        console.log("dueDate adalah: ", tugas.dueDate);
   
       // Call the addStatusToAll function with result_tugas
         await addStatusToAll(result_tugas, req, res);
@@ -710,7 +728,59 @@ async function addStatusToAll(result_tugas, req, res) {
         error: error
       });
     }
+}
+
+//fungsi untuk edit tugas
+async function editTugas(req, res) {
+  try {
+    statusCheck(req, res);
+
+    const tugas = {
+      judul: req.body.judul,
+      tugas_url: req.body.tugas_url,
+      dueDate: req.body.dueDate,
+    };
+
+
+    const schema = {
+      judul: { type: "string", optional: false, max: 50 },
+      tugas_url: { type: "string", optional: false },
+      dueDate: { type: "custom", optional: false },
+    };
+
+    const v = new Validator();
+    const validationResponse = v.validate(tugas, schema);
+
+    if (validationResponse !== true) {
+      return res.status(400).json({
+        message: "Validation false",
+        errors: validationResponse,
+      });
+    }
+
+    const existingTugas = await models.Tugas.findByPk(req.params.id);
+
+    if (!existingTugas) {
+      return res.status(404).json({
+        message: "Tugas not found",
+      });
+    }
+
+    // Perform the update on the tugas row
+    await existingTugas.update(tugas);
+
+    res.status(200).json({
+      message: "Tugas updated successfully",
+      data: existingTugas,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Something went wrong",
+      error: error,
+    });
   }
+}
+
 
 
 function deleteTugas(req, res){
@@ -1282,6 +1352,7 @@ async function exportPeserta(req, res) {
 
 module.exports = {
     addAdmin:addAdmin,
+    deleteAdmin:deleteAdmin,
     addPeserta:addPeserta,
     showPeserta:showPeserta,
     showPesertaAll:showPesertaAll,
@@ -1290,10 +1361,11 @@ module.exports = {
     showPresensiPerDay:showPresensiPerDay,
     showPresensiBelum:showPresensiBelum,
     showPresensiPerPeserta:showPresensiPerPeserta,
-    showTugas:showTugas,
+    showTugasById:showTugasById,
     showTugasAll:showTugasAll,
     showTugasStatusByTugas:showTugasStatusByTugas,
     addTugas:addTugas,
+    editTugas:editTugas,
     deleteTugas:deleteTugas,
     editAdmin:editAdmin,
     exportAdmin: exportAdmin,

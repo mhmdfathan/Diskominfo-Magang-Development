@@ -12,7 +12,6 @@ import { axiosJWTuser } from "../../config/axiosJWT";
 import { TabTitle } from "../../TabName";
 import { isUnauthorizedError } from "../../config/errorHandling";
 import { useNavigate } from "react-router-dom";
-import load from "../../Assets/Loading_Screen.gif"
 import icon from "../../Assets/icon.png"
 
 
@@ -22,6 +21,42 @@ function Tugas() {
   const [cardData, setData] = useState([]);
   const navigate = useNavigate();
   // const [id, setID] = useState([]);
+
+  //menyortir tugas berdasarkan deadline
+  const filterTasksByDueDate = (dueDate, filterType) => {
+    const currentDate = new Date();
+    const oneDay = 24 * 60 * 60 * 1000;
+    const taskDueDate = new Date(dueDate);
+    currentDate.setHours(0, 0, 0, 0);
+    taskDueDate.setHours(0, 0, 0, 0);
+
+    switch (filterType) {
+      case 'today':
+        return (
+          taskDueDate.getDate() === currentDate.getDate() &&
+          taskDueDate.getMonth() === currentDate.getMonth() &&
+          taskDueDate.getFullYear() === currentDate.getFullYear()
+        );
+
+      case 'nextWeek':
+        const nextWeek = new Date(currentDate.getTime() + 7 * oneDay);
+        return (
+          taskDueDate > currentDate && taskDueDate <= nextWeek
+        );
+
+      case 'all':
+        return true;
+
+      default:
+        return false;
+    }
+  };
+
+  //variabel yang berisi tugas terpisah berdasarkan deadline
+  const dueTodayTasks = cardData.filter((card) => filterTasksByDueDate(card.tugas.dueDate, 'today'));
+  const nextWeekTasks = cardData.filter((card) => filterTasksByDueDate(card.tugas.dueDate, 'nextWeek'));
+  const allTasks = cardData.filter((card) => filterTasksByDueDate(card.tugas.dueDate, 'all'));
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +72,6 @@ function Tugas() {
           `http://localhost:3000/user/tugas-list/${decoded.userId}`
         );
         setData(response.data.tugas);
-        // console.log(response.data.tugas);
       } catch (error) {
         if (isUnauthorizedError(error)) {
           navigate("/");
@@ -125,13 +159,33 @@ function Tugas() {
             {" "}
             <Dates />{" "}
           </div>
-          <h1 style={{ marginBottom: "16px" }}>Tugas</h1>
-          {!cardData ? (
-            <img src={load}  alt=""/>
+          <h1 style={{ marginBottom: "16px" }}>Tenggat Hari ini</h1>
+          {!dueTodayTasks.length ? (
+            <p>Tidak ada tugas untuk hari ini.</p>
           ) : (
             <div className="card-list">
-              {cardData.map((card) => (
-                <Cards key={card.id} data={card} />
+              {dueTodayTasks.map((card) => (
+                <Cards key={card.id} data={card} setData={setData} />
+              ))}
+            </div>
+          )}
+          <h1 style={{ marginTop: "16px", marginBottom: "16px" }}>Tenggat dalam 7 hari</h1>
+          {!nextWeekTasks.length ? (
+            <p>Tidak ada tugas dalam 7 hari kedepan</p>
+          ) : (
+            <div className="card-list">
+              {nextWeekTasks.map((card) => (
+                <Cards key={card.id} data={card} setData={setData} />
+              ))}
+            </div>
+          )}
+          <h1 style={{ marginTop: "16px", marginBottom: "16px" }}>Semua tugas</h1>
+          {!allTasks.length ? (
+            <p>Tidak ada tugas yanng harus dikerjakan.</p>
+          ) : (
+            <div className="card-list">
+              {allTasks.map((card) => (
+                <Cards key={card.id} data={card} setData={setData} />
               ))}
             </div>
           )}

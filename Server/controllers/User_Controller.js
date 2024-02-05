@@ -4,25 +4,31 @@ const axios = require('axios');
 const bcryptjs = require('bcryptjs');
 const Validator = require('fastest-validator');
 
-function showTugasList(req,res){
-    const id = req.params.id;
-    models.Status_tugas.findAll({
-      where:{p_id:id},
-      order: [['id', 'DESC']],        
-      include: [{
-        model: models.Tugas,
-        as: 'tugas',
+function showTugasList(req, res) {
+  const id = req.params.id;
+  models.Status_tugas.findAll({
+    where: { p_id: id },
+    order: [['id', 'DESC']],
+    include: [{
+      model: models.Tugas,
+      as: 'tugas',
     }]
-    }).then(result =>{
-        res.status(200).json({
-            tugas:result
-        });
-    }).catch(error =>{
-        res.status(500).json({
-            message: "Something went wrong",
-            error:error
-        });
+  }).then(result => {
+    res.status(200).json({
+      tugas: result.map(item => ({
+        tugas: item.tugas,
+        status_tugas: {
+          keterangan: item.keterangan, // Include keterangan property
+          // ... other properties
+        },
+      })),
     });
+  }).catch(error => {
+    res.status(500).json({
+      message: "Something went wrong",
+      error: error,
+    });
+  });
 }
 
 function showTugas(req, res){
@@ -168,28 +174,60 @@ async function doPresensi(req, res, url) {
     }
   }
 
-function doTugas(req, res, url){
-    const id = req.params.id; //ini perlu diganti biar otomatis
+  function doTugas(req, res, url) {
+    const id = req.params.id;
     const tid = req.params.tid;
 
-    // const baseUrl = process.env.APIDISKOMINFO;
     const baseUrl = "http://localhost:3000/";
-    const fileName = url.replace('\\' , '/');
+    const fileName = url.replace('\\', '/');
 
-    const tugas = {
-        tugas_url: baseUrl + fileName,
-        status_pengerjaan: true
-    }
-    models.Status_tugas.update(tugas, {where:{p_id:id, t_id: tid}}).then(result => {
-        res.status(201).json({
-            message: "Tugas Uploaded successfully"
+    // Mengambil informasi tugas
+    models.Tugas.findByPk(tid)
+        .then((assignment) => {
+            if (!assignment) {
+                return res.status(404).json({
+                    message: "Tugas Tidak Ditemukan",
+                });
+            }
+
+            const tugas = {
+                tugas_url: baseUrl + fileName,
+                status_pengerjaan: true,
+                keterangan: null, //Kondisi awal saat tugas belum dikumpulkan
+            };
+
+            // Variabel pembanding antara waktu sekarang dan deadline
+            const currentDateTime = new Date();
+            const dueDateTime = new Date(assignment.dueDate);
+
+            if (currentDateTime > dueDateTime) {
+                // telat
+                tugas.keterangan = 0;
+            } else {
+                // sebelum deadline
+                tugas.keterangan = 1;
+            }
+
+            // melakukan update terhadap status_tugas di database
+            models.Status_tugas.update(tugas, { where: { p_id: id, t_id: tid } })
+                .then((result) => {
+                    res.status(201).json({
+                        message: "Tugas Berhasil Diupload",
+                    });
+                })
+                .catch((error) => {
+                    res.status(500).json({
+                        message: "Something went wrong",
+                        error: error,
+                    });
+                });
+        })
+        .catch((error) => {
+            res.status(500).json({
+                message: "Terjadi kesalahan saat mengambil informasi tugas",
+                error: error,
+            });
         });
-    }).catch(error =>{
-        res.status(500).json({
-            message: "Something went wrong",
-            error:error
-        });
-    });
 }
 
 function editPassword(req, res){

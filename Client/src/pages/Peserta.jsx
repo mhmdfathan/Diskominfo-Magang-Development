@@ -39,6 +39,9 @@ export const Peserta = () => {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState(location.pathname);
 
+  //variabel untuk validasi pengisian form
+  const [validationErrors, setValidationErrors] = useState({});
+
   const handleNavLinkClick = (path) => {
     setActiveLink(path);
   };
@@ -333,19 +336,105 @@ export const Peserta = () => {
     }
   };
 
+  const clearForm = () => {
+    setFormData({
+      nama: "",
+      asal_univ: "",
+      asal_jurusan: "",
+      tanggal_mulai: null,
+      tanggal_selesai: null,
+      status_aktif: true,
+      username: "",
+      password: "",
+    });
+  }
+
+  const validateForm = () => {
+    const errors = {};
+    let isValid = true;
+
+    //validasi untuk setiap kolom
+    if (!formData.nama.trim()) {
+      errors.nama = "Nama harus diisi!";
+      isValid = false;
+    } else {
+      errors.nama = "";
+    }
+
+    if(!formData.asal_univ.trim()) {
+      errors.asal_univ = "Asal Universitas harus diisi!";
+      isValid = false;
+    } else {
+      errors.asal_univ = "";
+    }
+
+    if(!formData.asal_jurusan.trim()) {
+      errors.asal_jurusan = "Asal jurusan harus diisi!";
+      isValid = false;
+    } else {
+      errors.asal_jurusan = "";
+    }
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const mulaiDate = new Date(formData.tanggal_mulai);
+    const selesaiDate = new Date(formData.tanggal_selesai);
+    const thirtyDaysAfterMulai = new Date(mulaiDate);
+    thirtyDaysAfterMulai.setDate(thirtyDaysAfterMulai.getDate() + 30);
+
+    if(!formData.tanggal_mulai || mulaiDate < currentDate) {
+      errors.tanggal_mulai = "Tanggal mulai harus diisi minimal tanggal hari ini!";
+      isValid = false;
+    } else {
+      errors.tanggal_mulai = "";
+    }
+
+    if(!formData.tanggal_selesai || selesaiDate < thirtyDaysAfterMulai) {
+      errors.tanggal_selesai = "Tanggal selesai harus diisi minimal 30 hari dari tanggal mulai!";
+      isValid = false;
+    } else {
+      errors.tanggal_selesai = "";
+    }
+
+    if(!formData.username.trim()) {
+      errors.username = "Username harus diisi!";
+      isValid = false;
+    } else {
+      errors.username = "";
+    }
+
+    if(!formData.password) {
+      errors.password = "Password harus diisi!";
+      isValid = false;
+    } else {
+      errors.password = "";
+    }    
+
+    setValidationErrors(errors);
+    return isValid;
+  };
+
   const saveUser = async (e) => {
     e.preventDefault();
-    try {
-      await axiosJWTadmin.post("http://localhost:3000/admin/peserta/add", formData);
-      getUsers();
-      setShowTaskForm(false);
-      showSuccessNotification("Pengguna berhasil ditambahkan.");
-    } catch (error) {
-      navigate("/");
-      showErrorNotification("Gagal menambahkan pengguna.");
-      console.log(error);
+
+    if (!validateForm()) {
+      return;
+    } else {
+      try {
+        await axiosJWTadmin.post("http://localhost:3000/admin/peserta/add", formData);
+        getUsers();
+        setShowTaskForm(false);
+        showSuccessNotification("Pengguna berhasil ditambahkan.");
+        
+      } catch (error) {
+        navigate("/");
+        showErrorNotification("Gagal menambahkan pengguna.");
+        console.log(error);
+      }
+      clearForm();
     }
   };
+
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -751,10 +840,12 @@ export const Peserta = () => {
                 type="text"
                 placeholder="Masukkan nama"
                 value={formData.nama}
-                onChange={(e) =>
-                  setFormData({ ...formData, nama: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, nama: e.target.value });
+                  setValidationErrors({ ...validationErrors, nama: '' });
+                }}
               />
+              {validationErrors.nama && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.nama}</p>}
             </Form.Group>
             <Form.Group controlId="formTaskDescription">
               <Form.Label>Universitas</Form.Label>
@@ -762,10 +853,12 @@ export const Peserta = () => {
                 type="text"
                 placeholder="Masukkan universitas"
                 value={formData.asal_univ}
-                onChange={(e) =>
-                  setFormData({ ...formData, asal_univ: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, asal_univ: e.target.value });
+                  setValidationErrors({ ...validationErrors, asal_univ: '' });
+                }}
               />
+              {validationErrors.asal_univ && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.asal_univ}</p>}
             </Form.Group>
             <Form.Group controlId="formTaskDeadline">
               <Form.Label>Jurusan</Form.Label>
@@ -773,10 +866,12 @@ export const Peserta = () => {
                 type="text"
                 placeholder="Masukkan jurusan"
                 value={formData.asal_jurusan}
-                onChange={(e) =>
-                  setFormData({ ...formData, asal_jurusan: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, asal_jurusan: e.target.value });
+                  setValidationErrors({ ...validationErrors, asal_jurusan: '' });
+                }}
               />
+              {validationErrors.asal_jurusan && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.asal_jurusan}</p>}
             </Form.Group>
             <Form.Group controlId="formTaskDeadline">
               <Form.Label>Tanggal Mulai</Form.Label>
@@ -787,6 +882,7 @@ export const Peserta = () => {
                   setFormData({ ...formData, tanggal_mulai: e.target.value })
                 }
               />
+              {validationErrors.tanggal_mulai && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.tanggal_mulai}</p>}
             </Form.Group>
             <Form.Group controlId="formTaskDeadline">
               <Form.Label>Tanggal Selesai</Form.Label>
@@ -797,6 +893,7 @@ export const Peserta = () => {
                   setFormData({ ...formData, tanggal_selesai: e.target.value })
                 }
               />
+              {validationErrors.tanggal_selesai && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.tanggal_selesai}</p>}
             </Form.Group>
             <Form.Group controlId="formTaskStatus">
               <Form.Label>Status Aktif</Form.Label>
@@ -820,10 +917,12 @@ export const Peserta = () => {
                 type="text"
                 placeholder="Masukkan username"
                 value={formData.username}
-                onChange={(e) =>
-                  setFormData({ ...formData, username: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, username: e.target.value });
+                  setValidationErrors({ ...validationErrors, username: '' });
+                }}
               />
+              {validationErrors.username && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.username}</p>}
             </Form.Group>
 
             <Form.Group controlId="formTaskPassword">
@@ -832,10 +931,12 @@ export const Peserta = () => {
                 type="password"
                 placeholder="Masukkan password"
                 value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, password: e.target.value });
+                  setValidationErrors({ ...validationErrors, password: '' });
+                }}
               />
+              {validationErrors.password && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.password}</p>}
             </Form.Group>
           </Form>
         </Modal.Body>

@@ -12,6 +12,9 @@ import ImageOverlay from "../Components/Admin/ImageOverlay";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import icon from "../Assets/icon.png"
+import EditTugas from "../Components/Admin/EditTugas";
+
+
 
 export const Penugasan = () => {
   TabTitle("Penugasan");
@@ -40,6 +43,28 @@ export const Penugasan = () => {
     tugas_url: "",
     dueDate: "",
   });
+  
+  //variabel pembantu untuk menangani editing tugas
+  const [showEditTugasModal, setShowEditTugasModal] = useState(false);
+  const [selectedTugasId, setSelectedTugasId] = useState(null);
+
+  //fungsi untuk membuka dan menutup form editing tugas
+  const handleEditTugas = (tugasId) => {
+    setSelectedTugasId(tugasId);
+    setShowEditTugasModal(true);
+  };
+  
+  const handleCloseEditTugasModal = () => {
+    getTugas();
+    setSelectedTugasId(null);
+    setShowEditTugasModal(false);
+  };
+
+
+  //variabel untuk indikator validasi pengisian form
+  const [judulError, setJudulError] = useState('');
+  const [deskripsiError, setDeskripsiError] = useState('');
+  const [deadlineError, setDeadlineError] = useState('');
 
   useEffect(() => {
     getTugasById();
@@ -127,15 +152,63 @@ export const Penugasan = () => {
   }
 
   const addTugas = async (e) => {
-    e.preventDefault();
-    try {
-      await axiosJWTadmin.post("http://localhost:3000/admin/tugas/add", formData);
-      getTugas();
-      setShowTaskForm(false);
-      toast.success("Tugas berhasil ditambahkan!", { position: "top-right" });
-    } catch (error) {
-      navigate("/");
+    // kondisi untuk validasi pengisian form
+    let isValid = true;
+  
+    if (formData.judul.trim() === "") {
+      setJudulError("Judul tugas wajib diisi!");
+      isValid = false;
+    } else {
+      setJudulError("");
     }
+  
+    if (formData.tugas_url.trim() === "") {
+      setDeskripsiError("Deskripsi tugas wajib diisi!");
+      isValid = false;
+    } else {
+      setDeskripsiError("");
+    }
+  
+    //menetapkan bahwa deadline harus setidaknya 2 jam dari waktu sekarang
+    const dueDateTime = new Date(formData.dueDate);
+    const currentTime = new Date();
+    const twoHoursAhead = new Date(currentTime.getTime() + 2 * 60 * 60 * 1000);
+  
+    if (!formData.dueDate || dueDateTime <= twoHoursAhead) {
+      setDeadlineError("Deadline ditetapkan setidaknya 2 jam dari waktu sekarang");
+      isValid = false;
+    } else {
+      setDeadlineError("");
+    }
+  
+    if (isValid) {
+      e.preventDefault();
+      try {
+        await axiosJWTadmin.post("http://localhost:3000/admin/tugas/add", formData);
+        getTugas();
+        setShowTaskForm(false);
+        toast.success("Tugas berhasil ditambahkan!", { position: "top-right" });
+      } catch (error) {
+        navigate("/");
+      }
+  
+      // Untuk mengembalikan kondisi form setelah tugas berhasil ditambahkan
+      setFormData({
+        judul: "",
+        tugas_url: "",
+        dueDate: "",
+      });
+    }
+  };
+
+  
+  const updateTugasData = (updatedTugas) => {
+      console.log("Updated Tugas Data:", updatedTugas);
+    setTugas((prevTugas) =>
+      prevTugas.map((tugas) =>
+        tugas.id === updatedTugas.id ? { ...tugas, ...updatedTugas } : tugas
+      )
+    );
   };
 
   const getTugas = async () => {
@@ -161,6 +234,23 @@ export const Penugasan = () => {
       navigate("/");
     }
   };
+
+  //fungsi untuk menghapus tugas
+  const deleteTugas = async (id) => {
+    if(window.confirm("Apakah anda yakin ingin menghapus tugas ini?")) {
+      try {
+        await axiosJWTadmin.delete(
+          `http://localhost:3000/admin/tugas/${id}/delete`
+        );
+        getTugas();
+        toast.success("Tugas berhasil dihapus!", { position: "top-right" });
+      } catch (error) {
+        navigate('/');
+        toast.error("Gagal menghapus tugas");
+        console.log(error);
+      }
+    }
+  }
 
   const handleShowTaskForm = () => {
     setShowTaskForm(true);
@@ -320,25 +410,45 @@ export const Penugasan = () => {
                     </thead>
                     <tbody>
                       {tugas.map((tugas, index) => (
-                        <tr key={tugas.id}>
-                          <td>{index + 1}</td>
-                          <td>{tugas.judul}</td>
-                          <td>{tugas.tugas_url}</td>
-                          <td>{formatDueDate(tugas.dueDate)}</td>
-                          <td>
-                            <button
+                      <tr key={tugas.id}>
+                      <td>{index + 1}</td>
+                      <td>{tugas.judul}</td>
+                      <td>{tugas.tugas_url}</td>
+                      <td>{formatDueDate(tugas.dueDate)}</td>
+                        <td>
+                          <button
                               onClick={() => {
                                 getTugasById(tugas.id, index); // Pass the task ID and index
                               }}
-                              className="button is-small is-danger"
+                              className="button is-small is-info"
                             >
                               Detail
                             </button>
+                            <button
+                              style={{ minWidth: "60px" }}
+                              onClick={() => handleEditTugas(tugas.id)} 
+                              className="button is-small is-warning" 
+                            >
+                              Edit
+                            </button>
+                            <button
+                              style={{ minWidth: "60px" }}
+                              onClick={() => deleteTugas(tugas.id)}
+                              className="button is-small is-danger"
+                            >
+                              Delete
+                            </button>
                           </td>
-                        </tr>
+                      </tr>
                       ))}
                     </tbody>
                   </table>
+                  <EditTugas
+                    tugasId={selectedTugasId}
+                    handleCloseModal={handleCloseEditTugasModal}
+                    showEditTugasModal={showEditTugasModal}
+                    updateTugasData={updateTugasData}
+                  />
                 </div>
               </div>
               <div className="container-penugasan right">
@@ -352,6 +462,7 @@ export const Penugasan = () => {
                         <th>Nama</th>
                         <th>Tugas URL</th>
                         <th>Status Pengerjaan</th>
+                        <th>Keterangan</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -367,9 +478,9 @@ export const Penugasan = () => {
                                     setSelectedItemIndex(index);
                                     setShowImageOverlay(true);
                                   }}
-                                  className="button is-small is-danger"
+                                  className="button is-small is-info"
                                 >
-                                  Sudah Mengerjakan
+                                  Lihat hasil pekerjaan
                                 </button>
                               )
                               : (
@@ -395,6 +506,15 @@ export const Penugasan = () => {
                                 ? "Sudah Selesai"
                                 : "Belum Selesai"
                             ) : "Belum Selesai"}
+                          </td>
+                          <td>
+                            {tugas.status_tugas ? (
+                                tugas.status_tugas[0] ? (
+                                    tugas.status_tugas[0].status_pengerjaan ? (
+                                        tugas.status_tugas[0].keterangan === true ? "Tepat waktu" : "Terlambat"
+                                    ) : "-"
+                                ) : "-"
+                            ) : "-"}
                           </td>
                         </tr>
                       ))}
@@ -440,10 +560,12 @@ export const Penugasan = () => {
                 type="text"
                 placeholder="Masukkan judul"
                 value={formData.judul}
-                onChange={(e) =>
-                  setFormData({ ...formData, judul: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, judul: e.target.value });
+                  setJudulError('');
+                }}
               />
+              {judulError && <p style={{ color: 'red', fontSize: '14px' }}>{judulError}</p>}
             </Form.Group>
             <Form.Group controlId="formTaskDeskripsi">
               <Form.Label>Deskripsi</Form.Label>
@@ -452,10 +574,12 @@ export const Penugasan = () => {
                 rows={3}
                 placeholder="Masukkan deskripsi"
                 value={formData.tugas_url}
-                onChange={(e) =>
-                  setFormData({ ...formData, tugas_url: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, tugas_url: e.target.value });
+                  setDeskripsiError('');
+                }}
               />
+              {deskripsiError && <p style={{ color: 'red', fontSize: '14px' }}>{deskripsiError}</p>}
             </Form.Group>
             <Form.Group controlId="formTaskDueDate">
               <Form.Label>Deadline</Form.Label>
@@ -464,12 +588,14 @@ export const Penugasan = () => {
                 value={formData.dueDate ? formData.dueDate.slice(0, 16) : ""}
                 onChange={(e) => {
                   if (e.target.value) {
-                    const selectedDate = new Date(e.target.value);
-                    const isoDate = selectedDate.toISOString();
-                    setFormData({ ...formData, dueDate: isoDate });
+                    // const selectedDate = new Date(e.target.value);
+                    // const isoDate = selectedDate.toISOString();
+                    setFormData({ ...formData, dueDate: e.target.value });
+                    setDeadlineError('');
                   }
                 }}
               />
+              {deadlineError && <p style={{ color: 'red', fontSize: '14px' }}>{deadlineError}</p>}
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -477,7 +603,7 @@ export const Penugasan = () => {
           <Button variant="secondary" onClick={handleCloseTaskForm}>
             Batal
           </Button>
-          <Button variant="primary" onClick={addTugas}>
+          <Button variant="primary" onClick={addTugas}> 
             Simpan
           </Button>
         </Modal.Footer>

@@ -35,6 +35,9 @@ export const Admin = () => {
     const location = useLocation();
     const [activeLink, setActiveLink] = useState(location.pathname);
 
+    //variabel untuk validasi pengisian form
+    const [validationErrors, setValidationErrors] = useState({});
+
     const handleNavLinkClick = (path) => {
         setActiveLink(path);
     };
@@ -157,17 +160,80 @@ export const Admin = () => {
         );
     };
 
+    //fungsi untuk delete admin
+    const deleteAdmin = async (id) => {
+        if(window.confirm("Apakah anda yakin ingin menghapus admin ini?")) {
+            try {
+                await axiosJWTadmin.delete(
+                    `http://localhost:3000/admin/admin/${id}/delete`
+                );
+                getAdmin();
+                toast.success("Admin berhasil dihapus!", {position: "top-right" });
+            } catch (error){
+                navigate('/admin');
+                toast.error("Gagal menghapus admin");
+                console.log(error);
+            }
+        }
+    }
+
+    const clearForm = () => {
+        setFormData({
+            nama: "",
+            username: "",
+            password: "",
+        });
+    };
+
+    //fungsi validasi form
+    const validateForm = () => {
+        const errors = {};
+        let isValid = true;
+
+        if (!formData.nama.trim()) {
+            errors.nama = "Nama harus diisi!";
+            isValid = false;
+        } else {
+            errors.nama = "";
+        }
+
+        if (!formData.username.trim()) {
+            errors.username = "Username harus diisi!";
+            isValid = false;
+        } else {
+            errors.username = "";
+        }
+
+        if (!formData.password.trim()) {
+            errors.password = "Password harus diisi!";
+            isValid = false;
+        } else {
+            errors.password = "";
+        }
+
+        setValidationErrors(errors);
+        return isValid;
+    };
+
     const saveAdmin = async (e) => {
         e.preventDefault();
-        try {
-            await axiosJWTadmin.post("http://localhost:3000/admin/add-admin", formData);
-            getAdmin();
-            setShowTaskForm(false);
-            showSuccessNotification("Pengguna berhasil ditambahkan.");
-        } catch (error) {
-            navigate("/");
-            showErrorNotification("Gagal menambahkan pengguna.");
-            console.log(error);
+
+        //kondisi buat validasi form
+        if(!validateForm()){
+            return;
+        } else {
+            e.preventDefault();
+            try {
+                await axiosJWTadmin.post("http://localhost:3000/admin/add-admin", formData);
+                getAdmin();
+                setShowTaskForm(false);
+                showSuccessNotification("Pengguna berhasil ditambahkan.");
+            } catch (error) {
+                navigate("/");
+                showErrorNotification("Gagal menambahkan pengguna.");
+                console.log(error);
+            }
+            clearForm();
         }
     };
 
@@ -321,12 +387,24 @@ export const Admin = () => {
                                                     >
                                                         Edit
                                                     </button>
+                                                    <button
+                                                        style={{ minWidth: "60px" }}
+                                                        onClick={() => deleteAdmin(admin.id)}
+                                                        className="button is-small is-danger"
+                                                    >
+                                                        Delete
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
-                                <EditAdmin adminId={editingAdminId} handleCloseModal={handleCloseModal} showEditAdminModal={showEditAdminModal} updateAdminData={updateAdminData} />
+                                <EditAdmin 
+                                    adminId={editingAdminId} 
+                                    handleCloseModal={handleCloseModal} 
+                                    showEditAdminModal={showEditAdminModal} 
+                                    updateAdminData={updateAdminData} 
+                                />
                             </div>
                             <div className="pagination-admin" style={{ marginTop: 10 }}>
                                 <ul className="pagination-list-admin">
@@ -384,10 +462,12 @@ export const Admin = () => {
                                 type="text"
                                 placeholder="Masukkan nama"
                                 value={formData.nama}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, nama: e.target.value })
-                                }
+                                onChange={(e) => {
+                                    setFormData({ ...formData, nama: e.target.value });
+                                    setValidationErrors({ ...validationErrors, nama: "" });
+                                }}
                             />
+                            {validationErrors.nama && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.nama}</p>}
                         </Form.Group>
 
                         <Form.Group controlId="formTaskUsername">
@@ -396,10 +476,12 @@ export const Admin = () => {
                                 type="text"
                                 placeholder="Masukkan username"
                                 value={formData.username}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, username: e.target.value })
-                                }
+                                onChange={(e) => {
+                                    setFormData({ ...formData, username: e.target.value });
+                                    setValidationErrors({ ...validationErrors, username: "" });
+                                }}
                             />
+                            {validationErrors.username && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.username}</p>}
                         </Form.Group>
 
                         <Form.Group controlId="formTaskPassword">
@@ -408,10 +490,12 @@ export const Admin = () => {
                                 type="password"
                                 placeholder="Masukkan password"
                                 value={formData.password}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, password: e.target.value })
-                                }
+                                onChange={(e) => {
+                                    setFormData({ ...formData, password: e.target.value });
+                                    setValidationErrors({ ...validationErrors, password: "" });
+                                }}
                             />
+                            {validationErrors.password && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.password}</p>}
                         </Form.Group>
                     </Form>
                 </Modal.Body>
