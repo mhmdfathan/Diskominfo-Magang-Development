@@ -10,6 +10,7 @@ router.get("/show-admin-id/:id", checkAuthMiddleware.checkAuth('admin'), adminCo
 router.get("/show-admin", checkAuthMiddleware.checkAuth('admin'), adminController.showAdmin);
 router.post("/add-admin", checkAuthMiddleware.checkAuth('admin'), adminController.addAdmin);
 router.patch("/edit-admin/:id", checkAuthMiddleware.checkAuth('admin'), adminController.editAdmin);
+router.delete("/admin/:id/delete", checkAuthMiddleware.checkAuth('admin'), adminController.deleteAdmin);
 router.get("/export-admin", checkAuthMiddleware.checkAuth('admin'), adminController.exportAdmin);
 
 router.get("/peserta",  checkAuthMiddleware.checkAuth('admin'), adminController.showPesertaAll);
@@ -34,7 +35,9 @@ router.get("/export-presensi", checkAuthMiddleware.checkAuth('admin'), adminCont
 
 
 router.get("/tugas", checkAuthMiddleware.checkAuth('admin'), adminController.showTugasAll);
+router.get("/tugas-by-id/:id", checkAuthMiddleware.checkAuth('admin'), adminController.showTugasById);
 router.post("/tugas/add", checkAuthMiddleware.checkAuth('admin'), adminController.addTugas);
+router.patch("/tugas/:id/edit", checkAuthMiddleware.checkAuth('admin'), adminController.editTugas);
 router.get("/tugas/:id", checkAuthMiddleware.checkAuth('admin'), adminController.showTugasStatusByTugas);
 router.delete("/tugas/:id/delete", checkAuthMiddleware.checkAuth('admin'), adminController.deleteTugas);
 router.get("/tugas/:id/export-tugas", checkAuthMiddleware.checkAuth('admin'), adminController.exportStatusTugas);

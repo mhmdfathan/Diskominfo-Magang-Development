@@ -1,32 +1,35 @@
 .card {
-  width: 400px;
+  width: calc(100% - 40px); /* -40px karena ada margin kanan dan kiri 20px */
   padding: 20px;
-  border: 1px solid #000;
-  /* Garis luar kartu */
-  border-radius: 10px;
-  /* Sudut melengkung pada kartu */
-  background-color: #f5f5f5;
-  /* Warna latar belakang kartu */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* Bayangan pada kartu */
-  margin-bottom: 20px;
-  margin-left: 20px;
+  border: 1px solid #adabab; /* garis luar kartu */
+  border-radius: 10px; /* sudut melengkung untuk kartu */
+  background-color: #f5f5f5; /* warna latar belakang untuk kartu */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* efek bayangan */
+  margin: 20px auto; /* untuk spacing horizontal */
 }
 
 .card-body {
   /* background-color: #007bff; Warna latar belakang judul */
-  color: #fff;
+  color: #000;
   /* Warna teks judul */
   padding: 10px;
-  margin: -20px -20px 20px -20px;
+  margin: -20px -20px 10px -20px;
   /* Margin negatif untuk menyembunyikan garis atas kartu */
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   text-align: center;
 }
 
+.paragraph {
+  color: #202020;
+  text-align: justify;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
 .deadline {
-  border-top: 1px solid #000;
+  font-size: 14px;
+  border-top: 1px solid #adabab;
   padding: 10px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
