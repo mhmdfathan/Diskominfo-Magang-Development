@@ -9,6 +9,7 @@ const exceljs = require('exceljs');
 const fs = require('fs');
 const axios = require('axios');
 
+
 function showAdmin(req,res){
     models.Admin.findAll().then(result =>{
         res.status(200).json({
@@ -215,7 +216,7 @@ async function addPeserta(req, res){
                                 asal_jurusan: { type: "string", optional: false, max: 50 },
                                 tanggal_mulai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
                                 tanggal_selesai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
-                                status_aktif: { type: "boolean" } // Validate as a boolean
+                                status_aktif: { type: "string" } // Validate as a boolean
                             };
                             const v = new Validator();
                             const validationResponse = v.validate(peserta_magang, schema);
@@ -336,7 +337,7 @@ async function showPesertaAktifAll(req, res){
     const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
     const currentDate = moment.tz(response.data.datetime, 'Asia/Jakarta');
     await models.Peserta_Magang.findAll({where:{
-      status_aktif:true, 
+      status_aktif:2, 
       tanggal_mulai: {
         [Op.lte]: currentDate
       }
@@ -355,7 +356,7 @@ async function showPesertaAktifAll(req, res){
 
 async function showPesertaAlumniAll(req, res){
     statusCheck(req, res);
-    await models.Peserta_Magang.findAll({where:{status_aktif:false}}).then(result =>{
+    await models.Peserta_Magang.findAll({where:{status_aktif:1}}).then(result =>{
         res.status(200).json({
             peserta_magang:result
         });
@@ -468,7 +469,7 @@ async function editPeserta(req,res){
                     asal_jurusan: { type: "string", optional: true, max: 50 },
                     tanggal_mulai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
                     tanggal_selesai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
-                    status_aktif: { type: "boolean" } // Validate as a boolean
+                    status_aktif: { type: "string" } // Validate as a boolean
                 };
                 const v = new Validator();
                 const validationResponse = v.validate(updatedPeserta, schema);
@@ -804,60 +805,76 @@ async function exportAdmin(req, res) {
 }
 
 async function exportPeserta(req, res) {
-    try {
-      statusCheck(req,res);
+  try {
+      statusCheck(req, res);
       const results = await models.Peserta_Magang.findAll();
+
+      // Function to map integer to string
+      const getStatusString = (status) => {
+          switch (status) {
+              case 1:
+                  return 'Alumni';
+              case 2:
+                  return 'Aktif';
+              case 3:
+                  return 'Calon';
+              // Add more cases as needed
+              default:
+                  return 'Aktif';
+          }
+      };
 
       const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
-  
+
       const workbook = new exceljs.Workbook();
       const sheet = workbook.addWorksheet('Peserta Magangs');
       sheet.columns = [
-        { header: 'ID', key: 'id', width: 3 },
-        { header: 'Nama', key: 'nama', width: 30 },
-        { header: 'Username', key: 'username', width: 30 },
-        { header: 'Asal Universitas', key: 'asal_univ', width: 80 },
-        { header: 'Asal Jurusan', key: 'asal_jurusan', width: 80 },
-        { header: 'Tanggal Mulai', key: 'tanggal_mulai', width: 80 },
-        { header: 'Tanggal Selesai', key: 'tanggal_selesai', width: 80 },
-        { header: 'Status Aktif', key: 'status_aktif', width: 80 }
+          { header: 'ID', key: 'id', width: 3 },
+          { header: 'Nama', key: 'nama', width: 30 },
+          { header: 'Username', key: 'username', width: 30 },
+          { header: 'Asal Universitas', key: 'asal_univ', width: 80 },
+          { header: 'Asal Jurusan', key: 'asal_jurusan', width: 80 },
+          { header: 'Tanggal Mulai', key: 'tanggal_mulai', width: 80 },
+          { header: 'Tanggal Selesai', key: 'tanggal_selesai', width: 80 },
+          { header: 'Status Aktif', key: 'status_aktif', width: 80 }
       ];
-  
+
       results.forEach((value) => {
-        sheet.addRow({
-          id: value.id,
-          nama: value.nama,
-          username: value.username,
-          asal_univ: value.asal_univ,
-          asal_jurusan: value.asal_jurusan,
-          tanggal_mulai: value.tanggal_mulai,
-          tanggal_selesai: value.tanggal_selesai,
-          status_aktif: value.status_aktif === true ? 'Aktif' : 'Alumni'
-        });
+          sheet.addRow({
+              id: value.id,
+              nama: value.nama,
+              username: value.username,
+              asal_univ: value.asal_univ,
+              asal_jurusan: value.asal_jurusan,
+              tanggal_mulai: value.tanggal_mulai,
+              tanggal_selesai: value.tanggal_selesai,
+              status_aktif: getStatusString(value.status_aktif) // Convert integer to string
+          });
       });
-  
+
       res.setHeader(
-        'Content-Type',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       );
-  
+
       res.setHeader(
-        'Content-Disposition',
-        `attachment;filename=Peserta Magang (${tanggal}).xlsx`
+          'Content-Disposition',
+          `attachment;filename=Peserta Magang (${tanggal}).xlsx`
       );
-  
+
       const buffer = await workbook.xlsx.writeBuffer();
       res.end(buffer);
-  
-    } catch (error) {
+
+  } catch (error) {
       console.error('An error occurred:', error);
       res.status(500).json({
-        message: 'Something went wrong',
-        error: error,
+          message: 'Something went wrong',
+          error: error,
       });
-    }
   }
+}
+
 
   async function exportPesertaAktif(req, res) {
     try {
@@ -865,7 +882,7 @@ async function exportPeserta(req, res) {
       const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
       const results = await models.Peserta_Magang.findAll({where:{
-        status_aktif:true,
+        status_aktif:2,
         tanggal_mulai: {
           [Op.lte]: tanggal
         }
@@ -894,7 +911,7 @@ async function exportPeserta(req, res) {
           asal_jurusan: value.asal_jurusan,
           tanggal_mulai: value.tanggal_mulai,
           tanggal_selesai: value.tanggal_selesai,
-          status_aktif: value.status_aktif === true ? 'Aktif' : 'Alumni'
+          status_aktif: value.status_aktif 
         });
       });
   
@@ -950,7 +967,7 @@ async function exportPeserta(req, res) {
           asal_jurusan: value.asal_jurusan,
           tanggal_mulai: value.tanggal_mulai,
           tanggal_selesai: value.tanggal_selesai,
-          status_aktif: value.status_aktif === true ? 'Aktif' : 'Alumni'
+          status_aktif: value.status_aktif 
         });
       });
   
@@ -1012,7 +1029,7 @@ async function exportPeserta(req, res) {
           asal_jurusan: value.asal_jurusan,
           tanggal_mulai: value.tanggal_mulai,
           tanggal_selesai: value.tanggal_selesai,
-          status_aktif: value.status_aktif === true ? 'Aktif' : 'Alumni'
+          status_aktif: value.status_aktif 
         });
       });
   
@@ -1166,7 +1183,7 @@ async function exportPeserta(req, res) {
           asal_jurusan: value.asal_jurusan,
           tanggal_mulai: value.tanggal_mulai,
           tanggal_selesai: value.tanggal_selesai,
-          status_aktif: value.status_aktif === true ? 'Aktif':'Tidak Aktif',
+          status_aktif: value.status_aktif,
           tanggal: tanggalPresensi,
           check_in: checkInPresensi,
           check_out: checkOutPresensi,
