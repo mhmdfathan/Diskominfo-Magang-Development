@@ -26,8 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     asal_jurusan: DataTypes.STRING,
     tanggal_mulai: DataTypes.DATEONLY,
     tanggal_selesai: DataTypes.DATEONLY,
-    status_aktif: DataTypes.BOOLEAN,
-    //status_aktif: DataTypes.INT
+    status_aktif: DataTypes.INTEGER,
     username: DataTypes.STRING,
     password: DataTypes.STRING,
     refreshTokens: DataTypes.STRING    

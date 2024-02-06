@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditUser from "../Components/Admin/EditUser";
 import icon from "../Assets/icon.png"
+import moment from 'moment';
 
 export const Peserta = () => {
   TabTitle("Peserta");
@@ -133,11 +134,42 @@ export const Peserta = () => {
     asal_jurusan: "",
     tanggal_mulai: null,
     tanggal_selesai: null,
-    status_aktif: true,
+    status_aktif: "",
     username: "",
     password: "",
   });
 
+  const calculateUserStatus = (user) => {
+    const today = moment().startOf('day'); // Get the start of today
+  
+    // If status_aktif is 1, return "Alumni"
+    if (user.status_aktif === 1) {
+      return "Alumni";
+    }
+  
+    // If status_aktif is 2, return "Aktif"
+    else if (user.status_aktif === 2) {
+      return "Aktif";
+    }
+  
+    // If status_aktif is 3, return "Calon"
+    else if (user.status_aktif === 3) {
+      return "Calon";
+    }
+  
+    // If status_aktif is none of the above and tanggal_selesai is before today, return "Alumni"
+    else if (user.tanggal_selesai && moment(user.tanggal_selesai).isBefore(today)) {
+      return "Alumni";
+    }
+  
+    // Default case, return "Aktif"
+    else {
+      return "Aktif";
+    }
+  };
+  
+  
+  
   const showSuccessNotification = (message) => {
     toast.success(message, {
       position: "top-right",
@@ -180,7 +212,7 @@ export const Peserta = () => {
     } catch (error) {
       navigate("/");
       console.log(error);
-    }
+    } 
   };
 
   const exportPeserta = async () => {
@@ -269,7 +301,7 @@ export const Peserta = () => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "Alumni.xlsx";
+      a.download = "Peserta Calon.xlsx";
       a.style.display = "none";
       document.body.appendChild(a);
       a.click();
@@ -676,7 +708,7 @@ export const Peserta = () => {
                           <td>{user.asal_jurusan}</td>
                           <td>{user.tanggal_mulai}</td>
                           <td>{user.tanggal_selesai}</td>
-                          <td>{user.status_aktif ? "Aktif" : "Tidak Aktif"}</td>
+                          <td>{calculateUserStatus(user)}</td>
                           <td>
                             <button
                               className="button is-small is-info"
@@ -895,7 +927,7 @@ export const Peserta = () => {
               />
               {validationErrors.tanggal_selesai && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.tanggal_selesai}</p>}
             </Form.Group>
-            <Form.Group controlId="formTaskStatus">
+            {/* <Form.Group controlId="formTaskStatus">
               <Form.Label>Status Aktif</Form.Label>
               <Form.Control
                 as="select"
@@ -910,7 +942,7 @@ export const Peserta = () => {
                 <option value="true">Aktif</option>
                 <option value="false">Tidak Aktif</option>
               </Form.Control>
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group controlId="formTaskUsername">
               <Form.Label>Username</Form.Label>
               <Form.Control
