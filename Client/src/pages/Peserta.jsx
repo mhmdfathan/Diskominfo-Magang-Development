@@ -134,7 +134,7 @@ export const Peserta = () => {
     asal_jurusan: "",
     tanggal_mulai: null,
     tanggal_selesai: null,
-    status_aktif: "",
+    // status_aktif:1,
     username: "",
     password: "",
   });
@@ -164,7 +164,7 @@ export const Peserta = () => {
   
     // Default case, return "Aktif"
     else {
-      return "Aktif";
+      return "Calon";
     }
   };
   
@@ -375,7 +375,6 @@ export const Peserta = () => {
       asal_jurusan: "",
       tanggal_mulai: null,
       tanggal_selesai: null,
-      status_aktif: true,
       username: "",
       password: "",
     });

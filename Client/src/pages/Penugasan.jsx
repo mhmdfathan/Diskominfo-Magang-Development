@@ -460,7 +460,7 @@ export const Penugasan = () => {
                     <thead>
                       <tr>
                         <th>Nama</th>
-                        <th>Tugas URL</th>
+                        <th>Lampiran Pekerjaan</th>
                         <th>Status Pengerjaan</th>
                         <th>Keterangan</th>
                       </tr>

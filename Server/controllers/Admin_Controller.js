@@ -215,7 +215,7 @@ async function addPeserta(req, res){
                                 asal_jurusan: req.body.asal_jurusan,
                                 tanggal_mulai: req.body.tanggal_mulai,
                                 tanggal_selesai: req.body.tanggal_selesai,
-                                status_aktif: req.body.status_aktif
+                                // status_aktif: req.body.status_aktif
                             }
                             const isDateOnly = (value) => {
                                 // Add your custom validation logic here to check if the value is a date without a time component
@@ -232,7 +232,7 @@ async function addPeserta(req, res){
                                 asal_jurusan: { type: "string", optional: false, max: 50 },
                                 tanggal_mulai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
                                 tanggal_selesai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
-                                status_aktif: { type: "string" } // Validate as a boolean
+                                // status_aktif: { type: "integer" } // Validate as a boolean
                             };
                             const v = new Validator();
                             const validationResponse = v.validate(peserta_magang, schema);
@@ -390,6 +390,7 @@ async function showCalonPesertaAll(req, res) {
     const currentDate = moment.tz(response.data.datetime, 'Asia/Jakarta'); // Get the current date and time
     await models.Peserta_Magang.findAll({
         where: {
+            status_aktif:3,
             tanggal_mulai: {
                 [Op.gt]: currentDate, // [Op.lt] stands for less than
             }
@@ -464,7 +465,7 @@ async function editPeserta(req,res){
                     asal_jurusan: req.body.asal_jurusan,
                     tanggal_mulai: req.body.tanggal_mulai,
                     tanggal_selesai: req.body.tanggal_selesai,
-                    status_aktif: req.body.status_aktif
+                    // status_aktif: req.body.status_aktif
                 }
                 if (req.body.password !== null) {
                     updatedPeserta.password = hash;
@@ -485,11 +486,10 @@ async function editPeserta(req,res){
                     asal_jurusan: { type: "string", optional: true, max: 50 },
                     tanggal_mulai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
                     tanggal_selesai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
-                    status_aktif: { type: "string" } // Validate as a boolean
+                    // status_aktif: { type: "integer" } // Validate as a boolean
                 };
                 const v = new Validator();
                 const validationResponse = v.validate(updatedPeserta, schema);
-                console.log("cek3");
 
                 if(validationResponse !== true){
                     return res.status(400).json({
@@ -642,7 +642,7 @@ function showTugasStatusByTugas(req, res){
     const tid = req.params.id;
     models.Peserta_Magang.findAll({
         where: {
-            status_aktif:true
+            status_aktif:2
         },
         include:[{
             model:models.Status_tugas,
@@ -706,7 +706,7 @@ async function addTugas(req, res, url) {
 
 async function addStatusToAll(result_tugas, req, res) {
     try {
-      const peserta = await models.Peserta_Magang.findAll({ where: { status_aktif: true } });
+      const peserta = await models.Peserta_Magang.findAll({ where: { status_aktif: 2 } });
   
       for (let i = 0; i < peserta.length; i++) {
         const status_tugas = {
@@ -821,7 +821,7 @@ async function statusCheck(req, res){
         // Update the status_aktif to false for outdatedPeserta
         await Promise.all(
           outdatedPeserta.map(async (peserta) => {
-            await peserta.update({ status_aktif: false });
+            await peserta.update({ status_aktif: 1 });
           })
         );
         console.log('Status of outdated Peserta_Magang entities updated successfully');
@@ -1010,8 +1010,7 @@ async function exportPeserta(req, res) {
   async function exportPesertaAlumni(req, res) {
     try {
       statusCheck(req,res);
-      const results = await models.Peserta_Magang.findAll({where:{status_aktif:false}});
-        //status_aktif:2
+      const results = await models.Peserta_Magang.findAll({where:{status_aktif:1}});
 
       const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
@@ -1076,7 +1075,7 @@ async function exportPeserta(req, res) {
             }
         }
       });
-      //status_aktif:3
+
   
       const workbook = new exceljs.Workbook();
       const sheet = workbook.addWorksheet('Peserta Magangs');

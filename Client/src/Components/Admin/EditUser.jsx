@@ -15,7 +15,7 @@ const EditUser = ({
         asal_jurusan: '',
         tanggal_mulai: new Date(),
         tanggal_selesai: new Date(),
-        status_aktif: true,
+        // status_aktif: true,
         username: '',
         password: '',
     });
@@ -134,24 +134,6 @@ const EditUser = ({
                                 setUserData({ ...userData, tanggal_selesai: e.target.value })
                             }
                         />
-                    </Form.Group>
-
-                    <Form.Group controlId="formTaskStatus">
-                        <Form.Label>Status Aktif</Form.Label>
-                        <Form.Control
-                            as="select"
-                            value={userData.status_aktif}
-                            onChange={(e) => {
-                                if (userData) {
-                                    setUserData({
-                                        ...userData, status_aktif: e.target.value === "true",
-                                    });
-                                }
-                            }}
-                        >
-                            <option value="true">Aktif</option>
-                            <option value="false">Tidak Aktif</option>
-                        </Form.Control>
                     </Form.Group>
 
                     <Form.Group controlId="formUserUsername">
