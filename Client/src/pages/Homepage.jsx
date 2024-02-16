@@ -66,7 +66,7 @@ const Homepage = () => {
           </div>
         </header>
         <div className={`l-navbar${showNav ? " show" : ""}`}>
-          <nav className="nav">
+          <nav className="nav2">
             <div>
               <a
                 href="/homepage"

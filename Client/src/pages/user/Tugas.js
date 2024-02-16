@@ -136,8 +136,20 @@ function Tugas() {
                   <i className="bi bi-list-task nav_icon" />
                   <span className="nav_name">Penugasan</span>
                 </a>
+                <a href="surat" target="_self" className="nav_link">
+                  <i className="bi bi-envelope nav_icon" />
+                  <span className="nav_name">Persuratan</span>
+                </a>
               </div>
             </div>
+            <a 
+            href="profil" 
+            target="_self" 
+            className="nav_link">
+            <i className="bi bi-person nav_icon"></i>
+            <span className="nav_name">Profil</span>
+            </a>
+
             <a
               href="/"
               target="_self"

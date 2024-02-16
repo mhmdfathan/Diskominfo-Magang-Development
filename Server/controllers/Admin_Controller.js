@@ -215,7 +215,7 @@ async function addPeserta(req, res){
                                 asal_jurusan: req.body.asal_jurusan,
                                 tanggal_mulai: req.body.tanggal_mulai,
                                 tanggal_selesai: req.body.tanggal_selesai,
-                                status_aktif: req.body.status_aktif
+                                // status_aktif: req.body.status_aktif
                             }
                             const isDateOnly = (value) => {
                                 // Add your custom validation logic here to check if the value is a date without a time component
@@ -232,7 +232,8 @@ async function addPeserta(req, res){
                                 asal_jurusan: { type: "string", optional: false, max: 50 },
                                 tanggal_mulai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
                                 tanggal_selesai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
-                                status_aktif: { type: "string" } // Validate as a boolean
+                                // status_aktif: { type: "string" } 
+                                // Validate as a boolean
                             };
                             const v = new Validator();
                             const validationResponse = v.validate(peserta_magang, schema);
@@ -464,7 +465,7 @@ async function editPeserta(req,res){
                     asal_jurusan: req.body.asal_jurusan,
                     tanggal_mulai: req.body.tanggal_mulai,
                     tanggal_selesai: req.body.tanggal_selesai,
-                    status_aktif: req.body.status_aktif
+                    // status_aktif: req.body.status_aktif
                 }
                 if (req.body.password !== null) {
                     updatedPeserta.password = hash;
@@ -485,7 +486,7 @@ async function editPeserta(req,res){
                     asal_jurusan: { type: "string", optional: true, max: 50 },
                     tanggal_mulai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
                     tanggal_selesai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
-                    status_aktif: { type: "string" } // Validate as a boolean
+                    // status_aktif: { type: "string" } // Validate as a boolean
                 };
                 const v = new Validator();
                 const validationResponse = v.validate(updatedPeserta, schema);

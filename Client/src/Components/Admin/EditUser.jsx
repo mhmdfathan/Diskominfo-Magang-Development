@@ -15,7 +15,7 @@ const EditUser = ({
         asal_jurusan: '',
         tanggal_mulai: new Date(),
         tanggal_selesai: new Date(),
-        status_aktif: true,
+        // status_aktif: true,
         username: '',
         password: '',
     });
@@ -136,7 +136,7 @@ const EditUser = ({
                         />
                     </Form.Group>
 
-                    <Form.Group controlId="formTaskStatus">
+                    {/* <Form.Group controlId="formTaskStatus">
                         <Form.Label>Status Aktif</Form.Label>
                         <Form.Control
                             as="select"
@@ -152,7 +152,7 @@ const EditUser = ({
                             <option value="true">Aktif</option>
                             <option value="false">Tidak Aktif</option>
                         </Form.Control>
-                    </Form.Group>
+                    </Form.Group> */}
 
                     <Form.Group controlId="formUserUsername">
                         <Form.Label>Username</Form.Label>
