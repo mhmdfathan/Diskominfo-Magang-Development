@@ -24,6 +24,8 @@ import Presensi from './pages/user/Presensi';
 import Tugas from './pages/user/Tugas';
 import UserPages from './pages/user/UserPages';
 import Admin from './pages/Admin';
+import Profil from './pages/user/Profil';
+import Surat from './pages/user/Surat';
 
 const App = () => {
   return (
@@ -45,13 +47,15 @@ const App = () => {
         <Route path="user/presensi" element={<Presensi/>}/>
         <Route path="user/tugas" element={<Tugas/>}/>
         <Route path="user/homepage" element={<UserPages />}/>
+        <Route path="user/surat" element={<Surat/>}/>
+        <Route path="user/profil" element={<Profil/>}/>
 
         <Route path='admin' element={<Admin />} />
         <Route path="homepage" element={<Homepage />}/>
         <Route path='peserta' element={<Peserta />}/>
         <Route path='presensi' element={<PresensiMagang />}/>
         <Route path='penugasan' element={<Penugasan />}/>   
-        <Route path="*" element={<NotFound />} />
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </BrowserRouter>
   );

@@ -114,7 +114,7 @@ function Data(props) {
           </div>
         </header>
         <div className={`l-navbar${showNav ? " show" : ""}`}>
-          <nav className="nav">
+          <div className="nav">
             <div>
               <a
                 href="/user/homepage"
@@ -170,7 +170,7 @@ function Data(props) {
               <i className="bi bi-box-arrow-left nav_icon" />
               <span className="nav_name">SignOut</span>
             </a>
-          </nav>
+          </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <h1 style={{textAlign:'left', fontWeight:'bold', fontSize:'18px', fontfamily: 'Poppins'}} >Daftar data Absen</h1>

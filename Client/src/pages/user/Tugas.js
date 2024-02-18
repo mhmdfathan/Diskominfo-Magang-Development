@@ -102,7 +102,7 @@ function Tugas() {
           </div>
         </header>
         <div className={`l-navbar${showNav ? " show" : ""}`}>
-          <nav className="nav">
+          <div className="nav">
             <div>
               <a
                 href="/user/homepage"
@@ -158,7 +158,7 @@ function Tugas() {
               <i className="bi bi-box-arrow-left nav_icon" />
               <span className="nav_name">SignOut</span>
             </a>
-          </nav>
+          </div>
         </div>
         <div className="App">
           <div

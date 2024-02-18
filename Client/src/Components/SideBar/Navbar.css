@@ -1,5 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
 
+
+
+
 .body-main {
     --header-height: 3rem;
     --nav-width: 68px;
@@ -138,6 +141,14 @@
 .height-100 {
     height: 100vh
 }
+
+.nav__container {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
 
 @media screen and (max-width: 767px) {
     .nav {
