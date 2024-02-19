@@ -132,9 +132,9 @@ export const Peserta = () => {
     nama: "",
     asal_univ: "",
     asal_jurusan: "",
+    no_telp: "", 
     tanggal_mulai: null,
     tanggal_selesai: null,
-    // status_aktif:1,
     username: "",
     password: "",
   });
@@ -373,6 +373,7 @@ export const Peserta = () => {
       nama: "",
       asal_univ: "",
       asal_jurusan: "",
+      no_telp: "",
       tanggal_mulai: null,
       tanggal_selesai: null,
       username: "",
@@ -404,6 +405,13 @@ export const Peserta = () => {
       isValid = false;
     } else {
       errors.asal_jurusan = "";
+    }
+
+    if(!formData.no_telp.trim()) {
+      errors.no_telp = "Nomor telepon harus diisi!";
+      isValid = false;
+    } else {
+      errors.no_telp = "";
     }
 
     const currentDate = new Date();
@@ -680,6 +688,7 @@ export const Peserta = () => {
                       <th>Nama</th>
                       <th>Universitas</th>
                       <th>Jurusan</th>
+                      <th>No. Telp</th>
                       <th>Tanggal Mulai</th>
                       <th>Tanggal Selesai</th>
                       <th>Status Aktif</th>
@@ -705,6 +714,7 @@ export const Peserta = () => {
                           </td>
                           <td>{user.asal_univ}</td>
                           <td>{user.asal_jurusan}</td>
+                          <td>{user.no_telp}</td>
                           <td>{user.tanggal_mulai}</td>
                           <td>{user.tanggal_selesai}</td>
                           <td>{calculateUserStatus(user)}</td>
@@ -903,6 +913,19 @@ export const Peserta = () => {
                 }}
               />
               {validationErrors.asal_jurusan && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.asal_jurusan}</p>}
+            </Form.Group>
+            <Form.Group controlId="formTaskDeadline">
+              <Form.Label>No. Telp</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Masukkan jurusan"
+                value={formData.no_telp}
+                onChange={(e) => {
+                  setFormData({ ...formData, no_telp: e.target.value });
+                  setValidationErrors({ ...validationErrors, no_telp: '' });
+                }}
+              />
+              {validationErrors.no_telp && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.no_telp}</p>}
             </Form.Group>
             <Form.Group controlId="formTaskDeadline">
               <Form.Label>Tanggal Mulai</Form.Label>
