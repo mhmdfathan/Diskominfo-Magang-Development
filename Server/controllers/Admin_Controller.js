@@ -213,6 +213,7 @@ async function addPeserta(req, res){
                                 password: hash,
                                 asal_univ: req.body.asal_univ,
                                 asal_jurusan: req.body.asal_jurusan,
+                                no_telp: req.body.no_telp,
                                 tanggal_mulai: req.body.tanggal_mulai,
                                 tanggal_selesai: req.body.tanggal_selesai,
                                 // status_aktif: req.body.status_aktif
@@ -230,9 +231,12 @@ async function addPeserta(req, res){
                                 password: { type: "string", optional: false},
                                 asal_univ: { type: "string", optional: false, max: 50 },
                                 asal_jurusan: { type: "string", optional: false, max: 50 },
+                                no_telp: { type: "string", optional: false, max: 50},
                                 tanggal_mulai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
                                 tanggal_selesai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
-                                // status_aktif: { type: "integer" } // Validate as a boolean
+                                
+                                // status_aktif: { type: "string" } 
+                                // Validate as a boolean
                             };
                             const v = new Validator();
                             const validationResponse = v.validate(peserta_magang, schema);
@@ -463,6 +467,7 @@ async function editPeserta(req,res){
                     username: req.body.username,
                     asal_univ: req.body.asal_univ,
                     asal_jurusan: req.body.asal_jurusan,
+                    no_telp: req.body.no_telp,
                     tanggal_mulai: req.body.tanggal_mulai,
                     tanggal_selesai: req.body.tanggal_selesai,
                     // status_aktif: req.body.status_aktif
@@ -479,14 +484,15 @@ async function editPeserta(req,res){
                 };
                 
                 const schema = {
-                    nama: { type: "string", optional: true, max: 50 },
-                    username: { type: "string", optional: true, max: 50 },
-                    password: { type: "string", optional: true},
-                    asal_univ: { type: "string", optional: true, max: 50 },
-                    asal_jurusan: { type: "string", optional: true, max: 50 },
+                    nama: { type: "string", optional: false, max: 50 },
+                    username: { type: "string", optional: false, max: 50 },
+                    password: { type: "string", optional: false},
+                    asal_univ: { type: "string", optional: false, max: 50 },
+                    asal_jurusan: { type: "string", optional: false, max: 50 },
+                    no_telp: { type: "string", optional: false, max: 50},
                     tanggal_mulai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
                     tanggal_selesai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
-                    // status_aktif: { type: "integer" } // Validate as a boolean
+                    // status_aktif: { type: "string" } // Validate as a boolean
                 };
                 const v = new Validator();
                 const validationResponse = v.validate(updatedPeserta, schema);
@@ -497,9 +503,7 @@ async function editPeserta(req,res){
                         errors: validationResponse
                     });
                 }
-                console.log("cek2");
                 await models.Peserta_Magang.update(updatedPeserta, {where:{id:id}});
-                console.log("cek");
                 await editPresensiForPeserta(updatedPeserta,id, req, res)
             } catch (error){
                 res.status(500).json({
@@ -514,16 +518,23 @@ async function editPeserta(req,res){
 function deletePeserta(req, res){
     const id = req.params.id;
 
-    models.Peserta_Magang.destroy({where:{id:id}}).then(result =>{
-        res.status(200).json({
-            message: "Peserta Magang deleted"
-        });
-    }).catch(error =>{
-        res.status(500).json({
-            message: "Something went wrong",
-            error:error
-        });
-    }); 
+    models.Status_tugas.destroy({where:{p_id:id}}).then(result =>{
+      models.Peserta_Magang.destroy({where:{id:id}}).then(result =>{
+          res.status(200).json({
+              message: "Peserta Magang deleted"
+          });
+      }).catch(error =>{
+          res.status(500).json({
+              message: "Something went wrong",
+              error:error
+          });
+      });
+    }).catch(error => {
+      res.status(500).json({
+        message: "Something went wrong",
+        error:error
+      })
+    })
 }
 
 async function showPresensiPerDay(req, res) {

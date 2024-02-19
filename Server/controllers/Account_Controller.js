@@ -132,7 +132,11 @@ const refreshToken = async (req, res) => {
                 nama: user.nama,
                 username: user.username,
                 userId: user.id,
-                role: decoded.role
+                role: decoded.role,
+                asal_univ : user.asal_univ,
+                asal_jurusan : user.asal_jurusan,
+                no_telp : user.no_telp
+
             }, process.env.JWT_KEY, {
                 expiresIn: '15m'
             });

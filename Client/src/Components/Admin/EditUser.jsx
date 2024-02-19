@@ -13,9 +13,10 @@ const EditUser = ({
         nama: '',
         asal_univ: '',
         asal_jurusan: '',
+        no_telp: "",
         tanggal_mulai: new Date(),
         tanggal_selesai: new Date(),
-        // status_aktif: true,
+        //status_aktif: true,
         username: '',
         password: '',
     });
@@ -82,7 +83,7 @@ const EditUser = ({
                         <Form.Label>Nama</Form.Label>
                         <Form.Control
                             type="text"
-                            placeholder="Enter name"
+                            placeholder="Masukkan nama"
                             value={userData.nama}
                             onChange={(e) =>
                                 setUserData({ ...userData, nama: e.target.value })
@@ -94,7 +95,7 @@ const EditUser = ({
                         <Form.Label>Asal Universitas</Form.Label>
                         <Form.Control
                             type="text"
-                            placeholder="Enter asal universitas"
+                            placeholder="Masukkan asal universitas"
                             value={userData.asal_univ}
                             onChange={(e) =>
                                 setUserData({ ...userData, asal_univ: e.target.value })
@@ -106,10 +107,22 @@ const EditUser = ({
                         <Form.Label>Asal Jurusan</Form.Label>
                         <Form.Control
                             type="text"
-                            placeholder="Enter asal jurusan"
+                            placeholder="Masukkan asal jurusan"
                             value={userData.asal_jurusan}
                             onChange={(e) =>
                                 setUserData({ ...userData, asal_jurusan: e.target.value })
+                            }
+                        />
+                    </Form.Group>
+
+                    <Form.Group controlId="formUserNoTelp">
+                        <Form.Label>No Telp</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Masukkan nomor telepon"
+                            value={userData.no_telp}
+                            onChange={(e) =>
+                                setUserData({ ...userData, no_telp: e.target.value })
                             }
                         />
                     </Form.Group>
@@ -140,7 +153,7 @@ const EditUser = ({
                         <Form.Label>Username</Form.Label>
                         <Form.Control
                             type="text"
-                            placeholder="Enter username"
+                            placeholder="Masukkan username"
                             value={userData.username}
                             onChange={(e) =>
                                 setUserData({ ...userData, username: e.target.value })
@@ -152,7 +165,7 @@ const EditUser = ({
                         <Form.Label>Password</Form.Label>
                         <Form.Control
                             type="password"
-                            placeholder="Enter password"
+                            placeholder="Masukkan password"
                             onChange={(e) => {
                                 setUserData({ ...userData, password: e.target.value });
                             }}

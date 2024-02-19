@@ -257,7 +257,7 @@ export const Admin = () => {
                     </div>
                 </header>
                 <div className={`l-navbar${showNav ? " show" : ""}`}>
-                    <nav className="nav">
+                    <div className="nav">
                         <div>
                             <a
                                 href="/homepage"
@@ -330,7 +330,7 @@ export const Admin = () => {
                             <i className="bi bi-box-arrow-left nav_icon" />
                             <span className="nav_name">SignOut</span>
                         </a>
-                    </nav>
+                    </div>
                 </div>
                 <div className="pb-4">
                     <div className="columns mt-5">

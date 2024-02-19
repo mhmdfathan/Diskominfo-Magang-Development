@@ -127,7 +127,7 @@ const showErrorNotification = (message) => {
           </div>
         </header>
         <div className={`l-navbar${showNav ? " show" : ""}`}>
-          <nav className="nav">
+          <div className="nav">
             <div>
               <a
                 href="/user/homepage"
@@ -162,11 +162,19 @@ const showErrorNotification = (message) => {
                   <span className="nav_name">Penugasan</span>
                 </a>
                 <a href="surat" target="_self" className="nav_link">
-                  <i className="bi bi-list-task nav_icon" />
+                  <i className="bi bi-envelope nav_icon" />
                   <span className="nav_name">Persuratan</span>
                 </a>
               </div>
             </div>
+            <a 
+            href="profil" 
+            target="_self" 
+            className="nav_link">
+            <i className="bi bi-person nav_icon"></i>
+            <span className="nav_name">Profil</span>
+            </a>
+
             <a
               href="/"
               target="_self"
@@ -175,7 +183,7 @@ const showErrorNotification = (message) => {
               <i className="bi bi-box-arrow-left nav_icon" />
               <span className="nav_name">SignOut</span>
             </a>
-          </nav>
+          </div>
         </div>
         <div className="pt-4 pb-4">
           <div className="homepage-container">

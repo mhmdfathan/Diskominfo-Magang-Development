@@ -114,7 +114,7 @@ function Data(props) {
           </div>
         </header>
         <div className={`l-navbar${showNav ? " show" : ""}`}>
-          <nav className="nav">
+          <div className="nav">
             <div>
               <a
                 href="/user/homepage"
@@ -132,28 +132,36 @@ function Data(props) {
                 )}
               </a>
               <div className="nav_list">
-                <a href="/user/homepage" className="nav_link">
+                <a href="homepage" className="nav_link">
                   <i className="bi bi-house nav_icon" />
                   <span className="nav_name">Home</span>
                 </a>
-                <a href="/user/presensi/riwayat" target="_self" className="nav_link">
+                <a href="presensi/riwayat" target="_self" className="nav_link">
                   <i className="bi bi-card-checklist nav_icon" />
                   <span className="nav_name">History Presensi</span>
                 </a>
-                <a href="/user/presensi" target="_self" className="nav_link">
+                <a href="presensi" target="_self" className="nav_link">
                   <i className="bi bi-camera nav_icon" />
                   <span className="nav_name">Lakukan Presensi</span>
                 </a>
-                <a href="/user/tugas" target="_self" className="nav_link">
+                <a href="tugas" target="_self" className="nav_link">
                   <i className="bi bi-list-task nav_icon" />
                   <span className="nav_name">Penugasan</span>
                 </a>
-                <a href="/user/surat" target="_self" className="nav_link">
-                  <i className="bi bi-list-task nav_icon" />
+                <a href="surat" target="_self" className="nav_link">
+                  <i className="bi bi-envelope nav_icon" />
                   <span className="nav_name">Persuratan</span>
                 </a>
               </div>
             </div>
+            <a 
+            href="profil" 
+            target="_self" 
+            className="nav_link">
+            <i className="bi bi-person nav_icon"></i>
+            <span className="nav_name">Profil</span>
+            </a>
+
             <a
               href="/"
               target="_self"
@@ -162,7 +170,7 @@ function Data(props) {
               <i className="bi bi-box-arrow-left nav_icon" />
               <span className="nav_name">SignOut</span>
             </a>
-          </nav>
+          </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <h1 style={{textAlign:'left', fontWeight:'bold', fontSize:'18px', fontfamily: 'Poppins'}} >Daftar data Absen</h1>
