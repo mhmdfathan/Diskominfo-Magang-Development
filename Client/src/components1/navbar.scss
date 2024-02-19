@@ -1,7 +1,7 @@
 nav {
   height: 5rem;
   width: 100vw;
-  background: #ff0808;
+  background: #4c499c;
   display: grid;
   place-items: fixed;
   position: fixed;
@@ -19,7 +19,7 @@ nav {
         font-size: 1.8rem;
         cursor: pointer;
         svg {
-            color: var(--color-gray-100);
+            color: #ffffff;
         }
     }
 }
