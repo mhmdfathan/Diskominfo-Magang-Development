@@ -132,7 +132,7 @@ export const Peserta = () => {
     nama: "",
     asal_univ: "",
     asal_jurusan: "",
-    no_telp: "", 
+    no_telp: "",
     tanggal_mulai: null,
     tanggal_selesai: null,
     username: "",
@@ -688,7 +688,7 @@ export const Peserta = () => {
                       <th>Nama</th>
                       <th>Universitas</th>
                       <th>Jurusan</th>
-                      <th>No. Telp</th>
+                      <th>No telp</th>
                       <th>Tanggal Mulai</th>
                       <th>Tanggal Selesai</th>
                       <th>Status Aktif</th>
@@ -915,10 +915,10 @@ export const Peserta = () => {
               {validationErrors.asal_jurusan && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.asal_jurusan}</p>}
             </Form.Group>
             <Form.Group controlId="formTaskDeadline">
-              <Form.Label>No. Telp</Form.Label>
+              <Form.Label>Nomor telepon</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Masukkan jurusan"
+                placeholder="Masukkan nomor telepon"
                 value={formData.no_telp}
                 onChange={(e) => {
                   setFormData({ ...formData, no_telp: e.target.value });
@@ -949,22 +949,6 @@ export const Peserta = () => {
               />
               {validationErrors.tanggal_selesai && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.tanggal_selesai}</p>}
             </Form.Group>
-            {/* <Form.Group controlId="formTaskStatus">
-              <Form.Label>Status Aktif</Form.Label>
-              <Form.Control
-                as="select"
-                value={formData.status_aktif.toString()}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    status_aktif: e.target.value === "true",
-                  })
-                }
-              >
-                <option value="true">Aktif</option>
-                <option value="false">Tidak Aktif</option>
-              </Form.Control>
-            </Form.Group> */}
             <Form.Group controlId="formTaskUsername">
               <Form.Label>Username</Form.Label>
               <Form.Control

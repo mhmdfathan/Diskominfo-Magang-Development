@@ -13,10 +13,9 @@ const EditUser = ({
         nama: '',
         asal_univ: '',
         asal_jurusan: '',
-        no_telp: "",
+        no_telp: '',
         tanggal_mulai: new Date(),
         tanggal_selesai: new Date(),
-        //status_aktif: true,
         username: '',
         password: '',
     });
@@ -116,7 +115,7 @@ const EditUser = ({
                     </Form.Group>
 
                     <Form.Group controlId="formUserNoTelp">
-                        <Form.Label>No Telp</Form.Label>
+                        <Form.Label>Nomor Telepon</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Masukkan nomor telepon"
