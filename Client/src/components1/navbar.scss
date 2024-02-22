@@ -1,7 +1,7 @@
 nav {
   height: 5rem;
   width: 100vw;
-  background: #1100ff;
+  background: #4c499c;
   display: grid;
   place-items: fixed;
   position: fixed;
@@ -19,7 +19,7 @@ nav {
         font-size: 1.8rem;
         cursor: pointer;
         svg {
-            color: var(--color-gray-100);
+            color: #ffffff;
         }
     }
 }
@@ -31,7 +31,7 @@ nav {
   position: relative;
 }
 .logo {
-  width: 7rem; 
+  width: 12rem; 
 }
 .nav__links {
   display: flex;

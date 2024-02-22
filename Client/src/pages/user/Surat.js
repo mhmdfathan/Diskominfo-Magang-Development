@@ -50,14 +50,16 @@ const Surat = () => {
     try {
       const response = await axios.post("http://localhost:3000/generateDocx", {
         data: formData,
-      }, { withCredentials: true }); // Include credentials in the request
-
-      if (response.data.success) {
+      }, { responseType: 'blob', withCredentials: true }); // Include credentials in the request
+  
+      if (response.status === 200) {
         // File generated successfully, initiate download
-        const downloadLink = document.createElement("a");
-        downloadLink.href = `http://localhost:3000/${response.data.filePath}`;
-        downloadLink.download = "output.docx";
-        downloadLink.click();
+        const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.setAttribute('download', 'output.docx');
+        document.body.appendChild(link);
+        link.click();
       } else {
         console.error("Error generating file:", response.data.error);
       }
@@ -65,7 +67,7 @@ const Surat = () => {
       console.error("Error:", error.message);
     }
   };
-
+  
   return (
     <div className="body-main">
       <div className="body-area body-pd">
@@ -96,7 +98,7 @@ const Surat = () => {
                   <i className="bi bi-house nav_icon" />
                   <span className="nav_name">Home</span>
                 </a>
-                <a href="presensi/riwayat" target="_self" className="nav_link">
+                <a href="riwayat" target="_self" className="nav_link">
                   <i className="bi bi-card-checklist nav_icon" />
                   <span className="nav_name">History Presensi</span>
                 </a>

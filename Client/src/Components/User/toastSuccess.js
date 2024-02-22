@@ -1,5 +1,5 @@
 import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const showSuccessNotification = (message) => {
     toast.success(message, {

@@ -517,25 +517,25 @@ async function editPeserta(req,res){
 }
 
 function deletePeserta(req, res){
-    const id = req.params.id;
+  const id = req.params.id;
 
-    models.Status_tugas.destroy({where:{p_id:id}}).then(result =>{
-      models.Peserta_Magang.destroy({where:{id:id}}).then(result =>{
-          res.status(200).json({
-              message: "Peserta Magang deleted"
-          });
-      }).catch(error =>{
-          res.status(500).json({
-              message: "Something went wrong",
-              error:error
-          });
-      });
-    }).catch(error => {
-      res.status(500).json({
-        message: "Something went wrong",
-        error:error
-      })
-    })
+  models.Status_tugas.destroy({where:{p_id:id}}).then(result =>{ //tambahin delete status tugas juga karena ada id peserta sebagai foreign key
+    models.Peserta_Magang.destroy({where:{id:id}}).then(result =>{
+        res.status(200).json({
+            message: "Peserta Magang deleted"
+        });
+    }).catch(error =>{
+        res.status(500).json({
+            message: "Something went wrong",
+            error:error
+        });
+    });
+  }).catch(error => {
+    res.status(500).json({
+      message: "Something went wrong",
+      error:error
+     })
+    })
 }
 
 async function showPresensiPerDay(req, res) {

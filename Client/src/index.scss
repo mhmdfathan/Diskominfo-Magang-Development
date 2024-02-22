@@ -14,13 +14,13 @@
 :root {
   --primary-hue: 210;
   --gray-hue: 240;
-  --color-primary: #ba2222c4;
+  --color-primary: #edcc6f;
   --color-primary-variant: #ffffff;
-  --color-secondary: #8600007a;
-  --color-gray-100: #000000;
-  --color-gray-200: #c1c12c;
+  --color-secondary: #000000;
+  --color-gray-100: #ffffff;
+  --color-gray-200: #000000;
   --color-gray-300: #00ffae;
-  --color-gray-400: #1f22eb;
+  --color-gray-400: #4c499c;
   --color-gray-500: #63d4e5;
   --color-gray-600: #f9fffe;
   --color-gray-700: #000000;
@@ -63,6 +63,7 @@ h5 {
 }
 h1 {
   font-size: 3rem;
+  color: var(--color-gray-700);
 }
 h2 {
   font-size: 2rem;
@@ -182,12 +183,12 @@ section {
   width: 44%;
   margin: 0 auto;
   text-align: center;
-  color: var(--color-gray-100);
+  color: var(--color-gray-700);
   h2 {
     margin-bottom: 1rem;
   }
   p {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgb(0, 0, 0);
   }
 }
 

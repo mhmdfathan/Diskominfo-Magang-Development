@@ -35,45 +35,43 @@ const PizZip = require("pizzip");
 const Docxtemplater = require("docxtemplater");
 
 app.post("/generateDocx", (req, res) => {
-    try {
-      const { data } = req.body;
+  try {
+    const { data } = req.body;
   
-      // Load the docx file as binary content
-      const content = fs.readFileSync(path.resolve(__dirname, "input.docx"), "binary");
+    // Load the docx file as binary content
+    const content = fs.readFileSync(path.resolve(__dirname, "input.docx"), "binary");
   
-      // Unzip the content of the file
-      const zip = new PizZip(content);
+    // Unzip the content of the file
+    const zip = new PizZip(content);
   
-      // This will parse the template, and will throw an error if the template is
-      // invalid, for example, if the template is "{user" (no closing tag)
-      const doc = new Docxtemplater(zip, {
-        paragraphLoop: true,
-        linebreaks: true,
-      });
+    // This will parse the template, and will throw an error if the template is
+    // invalid, for example, if the template is "{user" (no closing tag)
+    const doc = new Docxtemplater(zip, {
+      paragraphLoop: true,
+      linebreaks: true,
+    });
   
-      // Render the document
-      doc.render(data);
+    // Render the document
+    doc.render(data);
   
-      // Get the zip document and generate it as a nodebuffer
-      const buf = doc.getZip().generate({
-        type: "nodebuffer",
-        compression: "DEFLATE",
-      });
+    // Get the zip document and generate it as a nodebuffer
+    const buf = doc.getZip().generate({
+      type: "nodebuffer",
+      compression: "DEFLATE",
+    });
   
-      const outputPath = path.resolve(__dirname, "output.docx");
+    // Set response headers for file download
+    res.setHeader("Content-Disposition", "attachment; filename=output.docx");
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
   
-      // Write the generated file
-      fs.writeFileSync(outputPath, buf);
-  
-      // Allow access only from the specified origin (your React app)
-      res.header("Access-Control-Allow-Origin", "http://localhost:3001");
-  
-      // Send the file path back to the client
-      res.json({ success: true, filePath: outputPath });
-    } catch (error) {
-      res.status(500).json({ success: false, error: error.message });
-    }
-  });
+    // Send the file buffer as response
+    res.send(buf);
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+
 
 
 

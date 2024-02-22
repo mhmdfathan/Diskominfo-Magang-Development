@@ -51,14 +51,14 @@ const UserPages = () => {
       const decoded = jwt_decode(response.data.token);
       setNama(decoded.nama);
       setuserName(decoded.username);
-  
+
     } catch (error) {
       if (isUnauthorizedError(error)){
         navigate('/');
     }
     }
   }
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (Password !== confirmPassword) {
@@ -67,7 +67,7 @@ const UserPages = () => {
       // setFormData(Password)
       uploadPassword();
       console.log(formData);
-      
+
       handleClose();
     }
   };
@@ -80,7 +80,7 @@ const UserPages = () => {
         },
       });
       const decoded = jwt_decode(ambilid.data.token);
-      
+
       const response = await axiosJWTuser.patch(`http://localhost:3000/user/peserta/${decoded.userId}/edit`, formData);
       console.log('Server Response:', response.data);
       showSuccessNotification("Berhasil menggati password")
@@ -149,7 +149,7 @@ const showErrorNotification = (message) => {
                   <i className="bi bi-house nav_icon" />
                   <span className="nav_name">Home</span>
                 </a>
-                <a href="presensi/riwayat" target="_self" className="nav_link">
+                <a href="riwayat" target="_self" className="nav_link">
                   <i className="bi bi-card-checklist nav_icon" />
                   <span className="nav_name">History Presensi</span>
                 </a>

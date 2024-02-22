@@ -33,7 +33,7 @@
 .welcome-circle {
   width: 25rem;
   height: 25rem;
-  background: linear-gradient(75deg, var(--color-secondary), transparent);
+  background: linear-gradient(75deg, #000000, transparent);
   border-radius: 50%;
   position: absolute;
   transition: var(--transition);
@@ -128,7 +128,7 @@
 }
 
 .faq__icon {
-  color: var(--color-gray-100);
+  color: #000000;
   font-size: 1.5rem;
 }
 
@@ -202,7 +202,7 @@ footer {
   margin-top: 7rem;
   padding-top: 7rem;
   font-size: 0.9rem;
-  color: var(--color-gray-100);
+  color: #000000;
   .logo {
     width: 9rem;
   }
@@ -239,7 +239,7 @@ footer {
   gap: 1.2rem;
   align-items: center;
   a {
-    background: var(--color-gray-100);
+    background: #000000;
     border: 2px solid transparent;
     border-radius: 0.6rem;
     transition: var(--transition);
@@ -251,7 +251,7 @@ footer {
       color: var(--color-gray-600);
     }
     &:hover {
-      border-color: var(--color-gray-100);
+      border-color: #000000;
       border-color: var(--color-secondary);
       background: transparent;
 
@@ -262,7 +262,7 @@ footer {
   }
 }
 .footer__copyright {
-  color: var(--color-gray-100);
+  color: #000000;
   text-align: center;
   padding: 1.5rem 0;
   border-top: 2px solid var(--color-primary-variant);
