@@ -112,6 +112,16 @@ const showErrorNotification = (message) => {
   return (
     <div className="body-main">
       <div className={`body-area${showNav ? " body-pd" : ""}`}>
+      <header className={`header${showNav ? " body-pd" : ""}`}>
+          <div className="header_toggle">
+          </div>
+          <div className="header_img">
+            <img
+              src={icon}
+              alt=""
+            />
+          </div>
+        </header>
       <div className={`sidebar${showNav ? " open" : ""}`}> 
           <div className="logo-details">
             <i className='bx bxl-c-plus-plus icon'></i>
@@ -182,11 +192,7 @@ const showErrorNotification = (message) => {
           </ul>
         </div>
         <div className="home-section">
-          <div className="homepage-container">
-            <div className="image-container">
-              <img className="background-home" src={imageCon} alt="" />
-            </div>
-            <div className="account-info-container">
+        <div className="account-info-container">
               <div className="info-box">
                 <div className="user-info">
                   <p>Selamat Datang,</p>
@@ -219,8 +225,14 @@ const showErrorNotification = (message) => {
                 <img src={icon} alt="" />
               </div>
             </div>
+          <div className="homepage">
+            
+            <div className="image-container">
+              <img className="background-home" src={imageCon} alt="" />
+            </div>
+            
             <div className="action-buttons">
-              <a href="presensi/riwayat">
+              <a href="riwayat">
                 <img src={data} alt="Peserta" />
                 <span>History Presensi</span>
               </a>

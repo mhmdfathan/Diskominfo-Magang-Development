@@ -18,7 +18,7 @@ import EditTugas from "../Components/Admin/EditTugas";
 
 export const Penugasan = () => {
   TabTitle("Penugasan");
-  const [showNav, setShowNav] = useState(true);
+  const [showNav, setShowNav] = useState(false);
   const [activeTasks, setActiveTasks] = useState(0);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [timeNow, setTimeNow] = useState('');
@@ -263,97 +263,79 @@ export const Penugasan = () => {
   return (
     <div className="body-main">
       <div className={`body-area${showNav ? " body-pd" : ""}`}>
-        <header className={`header${showNav ? " body-pd" : ""}`}>
+      <header className={`header${showNav ? " body-pd" : ""}`}>
           <div className="header_toggle">
-            <i
-              className={`bi ${showNav ? "bi-x" : "bi-list"}`}
-              onClick={() => setShowNav(!showNav)}
-            />
           </div>
           <div className="header_img">
             <img
               src={icon}
-              alt="Clue Mediator"
+              alt=""
             />
           </div>
         </header>
-        <div className={`l-navbar${showNav ? " show" : ""}`}>
-          <div className="nav">
-            <div>
-              <a
-                href="/homepage"
-                target="_self"
-                className="nav_logo"
-              >
-                {showNav ? (
-                  <img
-                    src={logo}
-                    alt=""
-                    style={{ width: "120px", height: "auto" }}
-                  />
-                ) : (
-                  <i className="bi bi-border-width nav_logo-icon" />
-                )}
-              </a>
-              <div className="nav_list">
-                <a
-                  href="homepage"
-                  target="_self"
-                  className={`nav_link ${activeLink === '/homepage' ? 'active' : ''}`}
-                  onClick={() => handleNavLinkClick('homepage')}
-                >
-                  <i className="bi bi-house nav_icon" />
-                  <span className="nav_name">Home</span>
-                </a>
-                <a
-                  href="admin"
-                  target="_self"
-                  className={`nav_link ${activeLink === '/admin' ? 'active' : ''}`}
-                  onClick={() => handleNavLinkClick('admin')}
-                >
-                  <i className="bi bi-person-check-fill nav_icon" />
-                  <span className="nav_name">Admin</span>
-                </a>
-                <a
-                  href="peserta"
-                  target="_self"
-                  className={`nav_link ${activeLink === '/peserta' ? 'active' : ''}`}
-                  onClick={() => handleNavLinkClick('peserta')}
-                >
-                  <i className="bi bi-person nav_icon" />
-                  <span className="nav_name">Peserta</span>
-                </a>
-                <a
-                  href="presensi"
-                  target="_self"
-                  className={`nav_link ${activeLink === '/presensi' ? 'active' : ''}`}
-                  onClick={() => handleNavLinkClick('presensi')}
-                >
-                  <i className="bi bi-person-check nav_icon" />
-                  <span className="nav_name">Presensi Magang</span>
-                </a>
-                <a
-                  href="penugasan"
-                  target="_self"
-                  className={`nav_link ${activeLink === '/penugasan' ? 'active' : ''}`}
-                  onClick={() => handleNavLinkClick('penugasan')}
-                >
-                  <i className="bi bi-list-task nav_icon" />
-                  <span className="nav_name">Penugasan</span>
-                </a>
-              </div>
-            </div>
-            <a
-              href="/"
+      <div className={`sidebar${showNav ? " open" : ""}`}> 
+        <div className="logo-details">
+          <i className='bx bxl-c-plus-plus icon'></i>
+          <a
+              href="/homepage"
               target="_self"
-              className="nav_link"
+              className="logo_name"
             >
-              <i className="bi bi-box-arrow-left nav_icon" />
-              <span className="nav_name">SignOut</span>
+              <img
+                src={logo}
+                alt=""
+                style={{ width: "120px", height: "auto" }}
+              />
             </a>
-          </div>
+          <i class='bi-list' id="btn" onClick={() => setShowNav(!showNav)}></i>
         </div>
-        <div className="pt-1 pb-4">
+        <ul class="nav-list">
+          <li>
+            <a href="homepage">
+            <i className="bi bi-house nav_icon" />
+              <span class="links_name">Home</span>
+            </a>
+            <span class="tooltip">Home</span>
+          </li>
+          <li>
+            <a href="admin">
+            <i className="bi bi-person-check-fill nav_icon" />
+              <span class="links_name">Admin</span>
+            </a>
+            <span class="tooltip">Admin</span>
+          </li>
+          <li>
+            <a href="peserta">
+            <i className="bi bi-person nav_icon" />
+              <span class="links_name">Peserta</span>
+            </a>
+            <span class="tooltip">Peserta</span>
+          </li>
+          <li>
+            <a href="presensi">
+            <i className="bi bi-person-check nav_icon" />
+              <span class="links_name">Presensi Magang</span>
+            </a>
+            <span class="tooltip">Presensi Magang</span>
+          </li>
+          <li>
+            <a href="penugasan">
+            <i className="bi bi-list-task nav_icon" />
+              <span class="links_name">Penugasan</span>
+            </a>
+            <span class="tooltip">Penugasan</span>
+          </li>
+          <li className="profile">
+              
+            <a href="/">
+            
+            <i className="bi bi-box-arrow-left nav_icon" ></i>
+            <span class="links_name">Sign Out</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+        <div className="home-section">
           <div className="body-penugasan">
             <section id="penugasan">
               <p

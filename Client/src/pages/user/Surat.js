@@ -86,7 +86,17 @@ const Surat = () => {
   return (
     <div className="body-main">
      <div className={`body-area${showNav ? " body-pd" : ""}`}>
-    <div className={`sidebar${showNav ? " open" : ""}`}> 
+     <header className={`header${showNav ? " body-pd" : ""}`}>
+          <div className="header_toggle">
+          </div>
+          <div className="header_img">
+            <img
+              src={icon}
+              alt=""
+            />
+          </div>
+        </header>
+      <div className={`sidebar${showNav ? " open" : ""}`}> 
         <div className="logo-details">
           <i className='bx bxl-c-plus-plus icon'></i>
           <a
