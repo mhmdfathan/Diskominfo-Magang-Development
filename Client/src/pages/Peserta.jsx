@@ -132,9 +132,9 @@ export const Peserta = () => {
     nama: "",
     asal_univ: "",
     asal_jurusan: "",
+    no_telp: "",
     tanggal_mulai: null,
     tanggal_selesai: null,
-    status_aktif: "",
     username: "",
     password: "",
   });
@@ -164,7 +164,7 @@ export const Peserta = () => {
   
     // Default case, return "Aktif"
     else {
-      return "Aktif";
+      return "Calon";
     }
   };
   
@@ -373,9 +373,9 @@ export const Peserta = () => {
       nama: "",
       asal_univ: "",
       asal_jurusan: "",
+      no_telp: "",
       tanggal_mulai: null,
       tanggal_selesai: null,
-      status_aktif: true,
       username: "",
       password: "",
     });
@@ -405,6 +405,13 @@ export const Peserta = () => {
       isValid = false;
     } else {
       errors.asal_jurusan = "";
+    }
+
+    if(!formData.no_telp.trim()) {
+      errors.no_telp = "Nomor telepon harus diisi!";
+      isValid = false;
+    } else {
+      errors.no_telp = "";
     }
 
     const currentDate = new Date();
@@ -681,6 +688,7 @@ export const Peserta = () => {
                       <th>Nama</th>
                       <th>Universitas</th>
                       <th>Jurusan</th>
+                      <th>No telp</th>
                       <th>Tanggal Mulai</th>
                       <th>Tanggal Selesai</th>
                       <th>Status Aktif</th>
@@ -706,6 +714,7 @@ export const Peserta = () => {
                           </td>
                           <td>{user.asal_univ}</td>
                           <td>{user.asal_jurusan}</td>
+                          <td>{user.no_telp}</td>
                           <td>{user.tanggal_mulai}</td>
                           <td>{user.tanggal_selesai}</td>
                           <td>{calculateUserStatus(user)}</td>
@@ -906,6 +915,19 @@ export const Peserta = () => {
               {validationErrors.asal_jurusan && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.asal_jurusan}</p>}
             </Form.Group>
             <Form.Group controlId="formTaskDeadline">
+              <Form.Label>Nomor telepon</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Masukkan nomor telepon"
+                value={formData.no_telp}
+                onChange={(e) => {
+                  setFormData({ ...formData, no_telp: e.target.value });
+                  setValidationErrors({ ...validationErrors, no_telp: '' });
+                }}
+              />
+              {validationErrors.no_telp && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.no_telp}</p>}
+            </Form.Group>
+            <Form.Group controlId="formTaskDeadline">
               <Form.Label>Tanggal Mulai</Form.Label>
               <Form.Control
                 type="date"
@@ -927,22 +949,6 @@ export const Peserta = () => {
               />
               {validationErrors.tanggal_selesai && <p style={{ color: 'red', fontSize: '14px' }}>{validationErrors.tanggal_selesai}</p>}
             </Form.Group>
-            {/* <Form.Group controlId="formTaskStatus">
-              <Form.Label>Status Aktif</Form.Label>
-              <Form.Control
-                as="select"
-                value={formData.status_aktif.toString()}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    status_aktif: e.target.value === "true",
-                  })
-                }
-              >
-                <option value="true">Aktif</option>
-                <option value="false">Tidak Aktif</option>
-              </Form.Control>
-            </Form.Group> */}
             <Form.Group controlId="formTaskUsername">
               <Form.Label>Username</Form.Label>
               <Form.Control

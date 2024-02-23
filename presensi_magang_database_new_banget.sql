@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 13, 2024 at 03:27 AM
+-- Generation Time: Feb 21, 2024 at 05:35 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -58,6 +58,7 @@ CREATE TABLE `peserta_magangs` (
   `nama` varchar(255) DEFAULT NULL,
   `asal_univ` varchar(255) DEFAULT NULL,
   `asal_jurusan` varchar(255) DEFAULT NULL,
+  `no_telp` varchar(255) NOT NULL,
   `tanggal_mulai` date DEFAULT NULL,
   `tanggal_selesai` date DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
@@ -72,23 +73,23 @@ CREATE TABLE `peserta_magangs` (
 -- Dumping data for table `peserta_magangs`
 --
 
-INSERT INTO `peserta_magangs` (`id`, `nama`, `asal_univ`, `asal_jurusan`, `tanggal_mulai`, `tanggal_selesai`, `username`, `password`, `refreshTokens`, `createdAt`, `updatedAt`, `status_aktif`) VALUES
-(8, 'ferdy', 'UNDIP', 'Komputer', '2024-02-24', '2024-03-29', 'ferdy', '$2a$10$6NxeylqfmH/AHuPH.lKHreHRavqwCa/zUJ8bnD9dZu8UjdRAiMZW6', NULL, '2023-10-27 10:21:55', '2024-02-07 07:06:53', 3),
-(11, 'Abdul Jawar 6', 'UNDIP', 'Komputer', '2023-10-28', '2023-12-09', 'yosia1234xxx', '$2a$10$BNAXCJqkFe3xqBwarRO7S.42wOWAFsRtBeT3Gpyqfn04aRrTDrdlm', NULL, '2023-10-27 13:04:02', '2024-02-05 03:13:10', 1),
-(12, 'Abdul Jawar', 'UNDIP', 'Komputer', '2023-10-01', '2023-11-02', 'adi', '$2a$12$kFl03BlpfBEyIC7NxSBmreWq4tVtGuY0ZC0lcVtjNkhnJZyUsBseq', NULL, '2023-10-27 19:37:53', '2024-02-05 03:13:10', 1),
-(99, 'Lil Tay', 'Tay', 'Taykom', '2024-02-05', '2024-02-09', 'taytay', '$2a$12$pWAHIJp7A9H.2J8bfR7jjerFbIowyYpL72J4DsGUqqAeRetS6gvAu', NULL, '2024-02-05 04:55:54', '2024-02-12 04:17:58', 1),
-(145, 'Liam White', 'Stanford', 'Biologi', '2025-01-13', '2025-01-18', 'liam_176', '734', NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 3),
-(146, 'Mia Clark', 'Harvard', 'Ilmu Komputer', '2025-01-18', '2025-01-23', 'mia_177', '294', NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 3),
-(148, 'Olivia Adams', 'Yale', 'Psikologi', '2025-01-28', '2025-02-02', 'olivia_179', '531', NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 3),
-(149, 'Patrick Davis', 'Princeton', 'Ilmu Politik', '2025-02-02', '2025-02-07', 'patrick_180', '971', NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 3),
-(155, 'Abdul Jawar 1111', 'UNDIP', 'Komputer', '2023-11-15', '2023-12-09', 'mb1233333', '$2a$10$j.R/xdmYkV/tkyBav71PZ.JUbFLG7iT9KTMnc8OUFOMmb7zyzeWWu', NULL, '2023-11-03 16:27:51', '2024-02-05 03:13:10', 1),
-(157, 'Abdul Jawar 999', 'UNDIP', 'Komputer', '2023-11-04', '2023-11-05', 'mbstar12345', '$2a$10$UxyTS5psFvuFNBB/hJB9ae.L88vZhUef5D1AzEx6pkAZxxZrcmSwm', NULL, '2023-11-04 23:45:10', '2024-02-05 03:13:10', 1),
-(158, 'Abdul Jawar 1111111', 'UNDIP', 'Komputer', '2023-11-01', '2023-11-07', 'mbstar123456789', '$2a$10$z00HUYBQFz0O3Qzv3XfkkutbuenZXUY10AQyngeivZxTsWzIehMBe', NULL, '2023-11-04 23:46:50', '2024-02-05 03:13:10', 1),
-(170, 'Ferdy1', 'univ1', 'tekom', '2024-02-08', '2024-03-14', 'ferdy1', '$2a$10$NUPLbF541TQQk4JsnH8buezdkbR0ns2GZR4Z8ujDs7.kT6ZcoUoiW', NULL, '2024-02-07 08:06:55', '2024-02-07 08:06:55', 2),
-(171, 'Ferdy2', 'univ2', 'tekom', '2024-02-12', '2024-03-18', 'ferdy2', '$2a$10$hDqOPYFLPbhWpfjpqfEWoOENUqLbnh4DESNJyiQkK4U8p/b5CFwWu', NULL, '2024-02-12 04:53:17', '2024-02-12 04:53:17', 2),
-(172, 'Ferdy3', 'univ3', 'tekom', '2024-02-12', '2024-03-18', 'ferdy3', '$2a$10$bHWfSzqy31u9ndwHM.0uheuHTx06X7wLDsTAopkS.LzKDfeLR7JqW', NULL, '2024-02-12 06:19:17', '2024-02-12 06:19:17', 2),
-(173, 'ferdy4', 'univ4', 'tekom', '2024-02-13', '2024-03-19', 'ferdy4', '$2a$10$mrbZyp3luW.CC0zlQG94nOQFxXmwPFzQwOnR/vwDrezfGjIdq1SD2', NULL, '2024-02-12 06:26:16', '2024-02-12 06:26:16', 2),
-(174, 'Ferdy5', 'univ5', 'tekom', '2024-02-14', '2024-03-19', 'ferdy5', '$2a$10$swucF8JWQiTpniVqw0TJRO4ancURUfxsmDZVpThEkLxUyQGWFn1Ta', NULL, '2024-02-13 00:51:26', '2024-02-13 00:51:26', 3);
+INSERT INTO `peserta_magangs` (`id`, `nama`, `asal_univ`, `asal_jurusan`, `no_telp`, `tanggal_mulai`, `tanggal_selesai`, `username`, `password`, `refreshTokens`, `createdAt`, `updatedAt`, `status_aktif`) VALUES
+(8, 'ferdy', 'UNDIP', 'Komputer', '', '2024-02-24', '2024-03-29', 'ferdy', '$2a$10$6NxeylqfmH/AHuPH.lKHreHRavqwCa/zUJ8bnD9dZu8UjdRAiMZW6', NULL, '2023-10-27 10:21:55', '2024-02-07 07:06:53', 3),
+(11, 'Abdul Jawar 6', 'UNDIP', 'Komputer', '', '2023-10-28', '2023-12-09', 'yosia1234xxx', '$2a$10$BNAXCJqkFe3xqBwarRO7S.42wOWAFsRtBeT3Gpyqfn04aRrTDrdlm', NULL, '2023-10-27 13:04:02', '2024-02-05 03:13:10', 1),
+(12, 'Abdul Jawar', 'UNDIP', 'Komputer', '', '2023-10-01', '2023-11-02', 'adi', '$2a$12$kFl03BlpfBEyIC7NxSBmreWq4tVtGuY0ZC0lcVtjNkhnJZyUsBseq', NULL, '2023-10-27 19:37:53', '2024-02-05 03:13:10', 1),
+(99, 'Lil Tay', 'Tay', 'Taykom', '', '2024-02-05', '2024-02-09', 'taytay', '$2a$12$pWAHIJp7A9H.2J8bfR7jjerFbIowyYpL72J4DsGUqqAeRetS6gvAu', NULL, '2024-02-05 04:55:54', '2024-02-12 04:17:58', 1),
+(145, 'Liam White', 'Stanford', 'Biologi', '', '2025-01-13', '2025-01-18', 'liam_176', '734', NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 3),
+(146, 'Mia Clark', 'Harvard', 'Ilmu Komputer', '', '2025-01-18', '2025-01-23', 'mia_177', '294', NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 3),
+(148, 'Olivia Adams', 'Yale', 'Psikologi', '', '2025-01-28', '2025-02-02', 'olivia_179', '531', NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 3),
+(149, 'Patrick Davis', 'Princeton', 'Ilmu Politik', '', '2025-02-02', '2025-02-07', 'patrick_180', '971', NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 3),
+(155, 'Abdul Jawar 1111', 'UNDIP', 'Komputer', '', '2023-11-15', '2023-12-09', 'mb1233333', '$2a$10$j.R/xdmYkV/tkyBav71PZ.JUbFLG7iT9KTMnc8OUFOMmb7zyzeWWu', NULL, '2023-11-03 16:27:51', '2024-02-05 03:13:10', 1),
+(157, 'Abdul Jawar 999', 'UNDIP', 'Komputer', '', '2023-11-04', '2023-11-05', 'mbstar12345', '$2a$10$UxyTS5psFvuFNBB/hJB9ae.L88vZhUef5D1AzEx6pkAZxxZrcmSwm', NULL, '2023-11-04 23:45:10', '2024-02-05 03:13:10', 1),
+(158, 'Abdul Jawar 1111111', 'UNDIP', 'Komputer', '', '2023-11-01', '2023-11-07', 'mbstar123456789', '$2a$10$z00HUYBQFz0O3Qzv3XfkkutbuenZXUY10AQyngeivZxTsWzIehMBe', NULL, '2023-11-04 23:46:50', '2024-02-05 03:13:10', 1),
+(170, 'Ferdy1', 'univ1', 'tekom', '', '2024-02-08', '2024-03-14', 'ferdy1', '$2a$10$NUPLbF541TQQk4JsnH8buezdkbR0ns2GZR4Z8ujDs7.kT6ZcoUoiW', NULL, '2024-02-07 08:06:55', '2024-02-07 08:06:55', 2),
+(171, 'Ferdy2', 'univ2', 'tekom', '', '2024-02-12', '2024-03-18', 'ferdy2', '$2a$10$hDqOPYFLPbhWpfjpqfEWoOENUqLbnh4DESNJyiQkK4U8p/b5CFwWu', NULL, '2024-02-12 04:53:17', '2024-02-12 04:53:17', 2),
+(172, 'Ferdy3', 'univ3', 'tekom', '', '2024-02-12', '2024-03-18', 'ferdy3', '$2a$10$bHWfSzqy31u9ndwHM.0uheuHTx06X7wLDsTAopkS.LzKDfeLR7JqW', NULL, '2024-02-12 06:19:17', '2024-02-12 06:19:17', 2),
+(173, 'ferdy4', 'univ4', 'tekom', '', '2024-02-13', '2024-03-19', 'ferdy4', '$2a$10$mrbZyp3luW.CC0zlQG94nOQFxXmwPFzQwOnR/vwDrezfGjIdq1SD2', NULL, '2024-02-12 06:26:16', '2024-02-12 06:26:16', 2),
+(174, 'Ferdy5', 'univ5', 'tekom', '', '2024-02-14', '2024-03-19', 'ferdy5', '$2a$10$swucF8JWQiTpniVqw0TJRO4ancURUfxsmDZVpThEkLxUyQGWFn1Ta', NULL, '2024-02-13 00:51:26', '2024-02-13 00:51:26', 3);
 
 --
 -- Triggers `peserta_magangs`

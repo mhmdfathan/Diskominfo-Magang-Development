@@ -17,7 +17,8 @@ const Surat = () => {
   const [showNav, setShowNav] = useState(false);
   useEffect(() => {
     refreshToken();
-  })
+  }, []);
+
   const refreshToken = async () => {
     try {
       const response = await axios.get('http://localhost:3000/account/token',{
@@ -28,31 +29,37 @@ const Surat = () => {
       const decoded = jwt_decode(response.data.token);
       setNama(decoded.nama);
       setUserName(decoded.username);
-  
+
     } catch (error) {
       if (isUnauthorizedError(error)){
         navigate('/');
-    }
+      }
     }
   }
-
-
-  const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    // Clear error message when input fields are filled
+    setErrorMessage("");
+  };
+
+  const handleConfirmationChange = (e) => {
+    setConfirmationChecked(e.target.checked);
   };
 
   const handleGenerateDocx = async () => {
     try {
+      // Check if all input fields are filled
+      if (!formData.first_name || !formData.last_name) {
+        setErrorMessage("Isi data diatas terlebih dahulu.");
+        return;
+      }
+
       const response = await axios.post("http://localhost:3000/generateDocx", {
         data: formData,
       }, { responseType: 'blob', withCredentials: true }); // Include credentials in the request
-  
+
       if (response.status === 200) {
         // File generated successfully, initiate download
         const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
@@ -68,7 +75,7 @@ const Surat = () => {
       console.error("Error:", error.message);
     }
   };
-  
+
   return (
     <div className="body-main">
     <div className={`body-area${showNav ? " body-pd" : ""}`}>
@@ -144,7 +151,7 @@ const Surat = () => {
         <div className="home-section">
           <div className="homepage-container">
             <div>
-              <h1>Surat Generator</h1>
+              <h1 className="h1">Surat Generator</h1>
               <div>
                 <label>First Name:</label>
                 <input type="text" name="first_name" onChange={handleInputChange} />
@@ -153,18 +160,19 @@ const Surat = () => {
                 <label>Last Name:</label>
                 <input type="text" name="last_name" onChange={handleInputChange} />
               </div>
-              <button onClick={handleGenerateDocx}>Generate Docx</button>
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
+              <div className="confirmation-checkbox">
+                <input type="checkbox" id="confirmation" checked={confirmationChecked} onChange={handleConfirmationChange} />
+                <label htmlFor="confirmation">&nbsp;Saya telah mengisi data diatas dengan benar</label>
+              </div>
+              <div className="button-container"> 
+                <button className="button" onClick={handleGenerateDocx} disabled={!confirmationChecked}>Generate Docx</button>
+              </div>
             </div>
-            <div>
-              <p>Selamat Datang, {nama}</p>
-              <p
-                style={{
-                  fontSize: "15px",
-                  marginTop: "5px",
-                  borderTop: "1px solid #000000",
-                }}
-              >
-                Username: {username}
+            <div className="info-field">
+              <p>Referensi: </p>
+              <p>
+                Nama terdaftar: &nbsp;&nbsp;&nbsp;&nbsp;{nama}
               </p>
             </div>
           </div>

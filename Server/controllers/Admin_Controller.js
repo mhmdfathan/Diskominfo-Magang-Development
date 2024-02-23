@@ -212,7 +212,9 @@ async function addPeserta(req, res){
                                 username: req.body.username,
                                 password: hash,
                                 asal_univ: req.body.asal_univ,
+                                no_telp: req.body.no_telp,
                                 asal_jurusan: req.body.asal_jurusan,
+                                no_telp: req.body.no_telp,
                                 tanggal_mulai: req.body.tanggal_mulai,
                                 tanggal_selesai: req.body.tanggal_selesai,
                                 // status_aktif: req.body.status_aktif
@@ -230,8 +232,10 @@ async function addPeserta(req, res){
                                 password: { type: "string", optional: false},
                                 asal_univ: { type: "string", optional: false, max: 50 },
                                 asal_jurusan: { type: "string", optional: false, max: 50 },
+                                no_telp: {type: "string", optional: true, max: 50 },
                                 tanggal_mulai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
                                 tanggal_selesai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
+                                
                                 // status_aktif: { type: "string" } 
                                 // Validate as a boolean
                             };
@@ -391,6 +395,7 @@ async function showCalonPesertaAll(req, res) {
     const currentDate = moment.tz(response.data.datetime, 'Asia/Jakarta'); // Get the current date and time
     await models.Peserta_Magang.findAll({
         where: {
+            status_aktif:3,
             tanggal_mulai: {
                 [Op.gt]: currentDate, // [Op.lt] stands for less than
             }
@@ -463,6 +468,7 @@ async function editPeserta(req,res){
                     username: req.body.username,
                     asal_univ: req.body.asal_univ,
                     asal_jurusan: req.body.asal_jurusan,
+                    no_telp: req.body.no_telp,
                     tanggal_mulai: req.body.tanggal_mulai,
                     tanggal_selesai: req.body.tanggal_selesai,
                     // status_aktif: req.body.status_aktif
@@ -483,6 +489,7 @@ async function editPeserta(req,res){
                     username: { type: "string", optional: true, max: 50 },
                     password: { type: "string", optional: true},
                     asal_univ: { type: "string", optional: true, max: 50 },
+                    no_telp: {type: "string", optional: true, max: 50 },
                     asal_jurusan: { type: "string", optional: true, max: 50 },
                     tanggal_mulai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
                     tanggal_selesai: { type: "custom", messages: { custom: "Invalid date format" }, check: isDateOnly },
@@ -490,7 +497,6 @@ async function editPeserta(req,res){
                 };
                 const v = new Validator();
                 const validationResponse = v.validate(updatedPeserta, schema);
-                console.log("cek3");
 
                 if(validationResponse !== true){
                     return res.status(400).json({
@@ -498,9 +504,7 @@ async function editPeserta(req,res){
                         errors: validationResponse
                     });
                 }
-                console.log("cek2");
                 await models.Peserta_Magang.update(updatedPeserta, {where:{id:id}});
-                console.log("cek");
                 await editPresensiForPeserta(updatedPeserta,id, req, res)
             } catch (error){
                 res.status(500).json({
@@ -650,7 +654,7 @@ function showTugasStatusByTugas(req, res){
     const tid = req.params.id;
     models.Peserta_Magang.findAll({
         where: {
-            status_aktif:true
+            status_aktif:2
         },
         include:[{
             model:models.Status_tugas,
@@ -714,7 +718,7 @@ async function addTugas(req, res, url) {
 
 async function addStatusToAll(result_tugas, req, res) {
     try {
-      const peserta = await models.Peserta_Magang.findAll({ where: { status_aktif: true } });
+      const peserta = await models.Peserta_Magang.findAll({ where: { status_aktif: 2 } });
   
       for (let i = 0; i < peserta.length; i++) {
         const status_tugas = {
@@ -820,16 +824,14 @@ async function statusCheck(req, res){
         // Find all Peserta_Magang entities where tanggal_selesai is earlier than the current date
         const outdatedPeserta = await models.Peserta_Magang.findAll({
           where: {
-            tanggal_selesai: {
-              [Op.lt]: currentDate,
-            },
+            status_aktif:1,
           },
         });
     
         // Update the status_aktif to false for outdatedPeserta
         await Promise.all(
           outdatedPeserta.map(async (peserta) => {
-            await peserta.update({ status_aktif: false });
+            await peserta.update({ status_aktif:1 });
           })
         );
         console.log('Status of outdated Peserta_Magang entities updated successfully');
@@ -898,7 +900,7 @@ async function exportPeserta(req, res) {
                   return 'Calon';
               // Add more cases as needed
               default:
-                  return 'Aktif';
+                  return 'Calon';
           }
       };
 
@@ -913,6 +915,7 @@ async function exportPeserta(req, res) {
           { header: 'Username', key: 'username', width: 30 },
           { header: 'Asal Universitas', key: 'asal_univ', width: 80 },
           { header: 'Asal Jurusan', key: 'asal_jurusan', width: 80 },
+          { header: 'Nomor Telepon', key: 'no_telp', width: 80 },
           { header: 'Tanggal Mulai', key: 'tanggal_mulai', width: 80 },
           { header: 'Tanggal Selesai', key: 'tanggal_selesai', width: 80 },
           { header: 'Status Aktif', key: 'status_aktif', width: 80 }
@@ -925,6 +928,7 @@ async function exportPeserta(req, res) {
               username: value.username,
               asal_univ: value.asal_univ,
               asal_jurusan: value.asal_jurusan,
+              no_telp: value.no_telp,
               tanggal_mulai: value.tanggal_mulai,
               tanggal_selesai: value.tanggal_selesai,
               status_aktif: getStatusString(value.status_aktif) // Convert integer to string
@@ -975,6 +979,7 @@ async function exportPeserta(req, res) {
         { header: 'Username', key: 'username', width: 30 },
         { header: 'Asal Universitas', key: 'asal_univ', width: 80 },
         { header: 'Asal Jurusan', key: 'asal_jurusan', width: 80 },
+        { header: 'Nomor Telepon', key: 'no_telp', width: 80 },
         { header: 'Tanggal Mulai', key: 'tanggal_mulai', width: 80 },
         { header: 'Tanggal Selesai', key: 'tanggal_selesai', width: 80 },
         { header: 'Status Aktif', key: 'status_aktif', width: 80 }
@@ -987,6 +992,7 @@ async function exportPeserta(req, res) {
           username: value.username,
           asal_univ: value.asal_univ,
           asal_jurusan: value.asal_jurusan,
+          no_telp: value.no_telp,
           tanggal_mulai: value.tanggal_mulai,
           tanggal_selesai: value.tanggal_selesai,
           status_aktif: value.status_aktif 
@@ -1018,7 +1024,7 @@ async function exportPeserta(req, res) {
   async function exportPesertaAlumni(req, res) {
     try {
       statusCheck(req,res);
-      const results = await models.Peserta_Magang.findAll({where:{status_aktif:false}});
+      const results = await models.Peserta_Magang.findAll({where:{status_aktif:1}});
         //status_aktif:2
 
       const response = await axios.get('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
@@ -1032,6 +1038,7 @@ async function exportPeserta(req, res) {
         { header: 'Username', key: 'username', width: 30 },
         { header: 'Asal Universitas', key: 'asal_univ', width: 80 },
         { header: 'Asal Jurusan', key: 'asal_jurusan', width: 80 },
+        { header: 'Nomor Telepon', key: 'no_telp', width: 80 },
         { header: 'Tanggal Mulai', key: 'tanggal_mulai', width: 80 },
         { header: 'Tanggal Selesai', key: 'tanggal_selesai', width: 80 },
         { header: 'Status Aktif', key: 'status_aktif', width: 80 }
@@ -1044,6 +1051,7 @@ async function exportPeserta(req, res) {
           username: value.username,
           asal_univ: value.asal_univ,
           asal_jurusan: value.asal_jurusan,
+          no_telp: value.no_telp,
           tanggal_mulai: value.tanggal_mulai,
           tanggal_selesai: value.tanggal_selesai,
           status_aktif: value.status_aktif 
@@ -1079,12 +1087,9 @@ async function exportPeserta(req, res) {
       const tanggal = moment.tz(response.data.datetime, 'Asia/Jakarta');
       const results = await models.Peserta_Magang.findAll({
         where: {
-            tanggal_mulai: {
-                [Op.gt]: tanggal, // [Op.lt] stands for less than
-            }
+          status_aktif:3,
         }
       });
-      //status_aktif:3
   
       const workbook = new exceljs.Workbook();
       const sheet = workbook.addWorksheet('Peserta Magangs');
@@ -1094,6 +1099,7 @@ async function exportPeserta(req, res) {
         { header: 'Username', key: 'username', width: 30 },
         { header: 'Asal Universitas', key: 'asal_univ', width: 80 },
         { header: 'Asal Jurusan', key: 'asal_jurusan', width: 80 },
+        { header: 'Nomor Telepon', key: 'no_telp', width: 80 },
         { header: 'Tanggal Mulai', key: 'tanggal_mulai', width: 80 },
         { header: 'Tanggal Selesai', key: 'tanggal_selesai', width: 80 },
         { header: 'Status Aktif', key: 'status_aktif', width: 80 }
@@ -1106,6 +1112,7 @@ async function exportPeserta(req, res) {
           username: value.username,
           asal_univ: value.asal_univ,
           asal_jurusan: value.asal_jurusan,
+          no_telp: value.no_telp,
           tanggal_mulai: value.tanggal_mulai,
           tanggal_selesai: value.tanggal_selesai,
           status_aktif: value.status_aktif 
@@ -1220,6 +1227,7 @@ async function exportPeserta(req, res) {
         { header: 'Nama', key: 'nama', width: 30 },
         { header: 'Asal Universitas', key: 'asal_univ', width: 30 },
         { header: 'Asal Jurusan', key: 'asal_jurusan', width: 30 },
+        { header: 'Nomor Telepon', key: 'no_telp', width: 80 },
         { header: 'Tanggal Mulai', key: 'tanggal_mulai', width: 30 },
         { header: 'Tanggal Selesai', key: 'tanggal_selesai', width: 30 },
         { header: 'Status Aktif', key: 'status_aktif', width: 30 },
@@ -1260,6 +1268,7 @@ async function exportPeserta(req, res) {
           nama: value.nama,
           asal_univ: value.asal_univ,
           asal_jurusan: value.asal_jurusan,
+          no_telp: value.no_telp,
           tanggal_mulai: value.tanggal_mulai,
           tanggal_selesai: value.tanggal_selesai,
           status_aktif: value.status_aktif,
