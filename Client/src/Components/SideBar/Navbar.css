@@ -1,16 +1,16 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 
-/* Kode CSS yang ingin Anda terapkan */
+/* Penyesuaian untuk desain futuristik */
 .body-main {
-    --header-height: 3rem;
-    --nav-width: 68px;
-    --first-color: #3c3b3b;
-    --first-color-light: #F7F8F3;
-    --white-color: #F7F6FB;
-    --active-color: rgb(0, 0, 0);
-    --body-font: 'Nunito', sans-serif;
+    --header-height: 3rem; /* Sesuaikan tinggi header */
+    --nav-width: 80px; /* Sesuaikan lebar navbar */
+    --first-color: #11101D; /* Sesuaikan warna utama */
+    --first-color-light: #FFF; /* Sesuaikan warna terang */
+    --white-color: #FFF; /* Warna putih */
+    --active-color: #FFF; /* Warna aktif */
+    --body-font: 'Poppins', sans-serif; /* Font Poppins */
     --normal-font-size: 1rem;
-    --z-fixed: 100;
+    --z-fixed: 100; /* Z-index */
 }
 
 .body-area {
@@ -27,7 +27,7 @@
     height: var(--header-height);
     position: fixed;
     top: 0;
-    left: 0;
+    left: 0px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -147,6 +147,43 @@
     align-items: center;
     position: relative;
 }
+
+/* Tambahkan desain futuristik */
+.header {
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav_link {
+  transition: color 0.3s ease;
+}
+
+.nav_link:hover,
+.nav_link.active {
+  color: #ffcd00; /* Ubah warna saat dihover atau aktif */
+}
+
+/* Tambahkan animasi saat diklik */
+.nav_link {
+  position: relative;
+}
+
+.nav_link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #ffcd00; /* Warna garis bawah */
+  transition: width 0.3s ease; /* Animasi lebar */
+}
+
+.nav_link:hover::after,
+.nav_link.active::after {
+  width: 100%; /* Garis bawah mengisi lebar saat dihover atau aktif */
+}
+
 
 @media screen and (max-width: 767px) {
     .nav {

@@ -22,7 +22,7 @@ const Presensi = () => {
   const videoRef = useRef(null);
   const [imageSrc, setImageSrc] = useState(null);
   const [captureTime, setCaptureTime] = useState(null);
-  const [showNav, setShowNav] = useState(true);
+  const [showNav, setShowNav] = useState(false);
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -104,81 +104,77 @@ const Presensi = () => {
 
   return (
     <div className="body-main">
-      <div className={`body-area${showNav ? " body-pd" : ""}`}>
-        <header className={`header${showNav ? " body-pd" : ""}`}>
-          <div className="header_toggle">
-            <i
-              className={`bi ${showNav ? "bi-x" : "bi-list"}`}
-              onClick={() => setShowNav(!showNav)}
-            />
-          </div>
-          <div className="header_img">
-            <img
-              src={icon}
-              alt=""
-            />
-          </div>
-        </header>
-        <div className={`l-navbar${showNav ? " show" : ""}`}>
-          <div className="nav">
-            <div>
-              <a
-                href="/user/homepage"
-                target="_self"
-                className="nav_logo"
-              >
-                {showNav ? (
-                  <img
-                    src={logo}
-                    alt=""
-                    style={{ width: "120px", height: "auto" }}
-                  />
-                ) : (
-                  <i className="bi bi-border-width nav_logo-icon" />
-                )}
-              </a>
-              <div className="nav_list">
-                <a href="homepage" className="nav_link">
-                  <i className="bi bi-house nav_icon" />
-                  <span className="nav_name">Home</span>
-                </a>
-                <a href="riwayat" target="_self" className="nav_link">
-                  <i className="bi bi-card-checklist nav_icon" />
-                  <span className="nav_name">History Presensi</span>
-                </a>
-                <a href="presensi" target="_self" className="nav_link">
-                  <i className="bi bi-camera nav_icon" />
-                  <span className="nav_name">Lakukan Presensi</span>
-                </a>
-                <a href="tugas" target="_self" className="nav_link">
-                  <i className="bi bi-list-task nav_icon" />
-                  <span className="nav_name">Penugasan</span>
-                </a>
-                <a href="surat" target="_self" className="nav_link">
-                  <i className="bi bi-envelope nav_icon" />
-                  <span className="nav_name">Persuratan</span>
-                </a>
-              </div>
-            </div>
-            <a 
-            href="profil" 
-            target="_self" 
-            className="nav_link">
-            <i className="bi bi-person nav_icon"></i>
-            <span className="nav_name">Profil</span>
-            </a>
-
-            <a
-              href="/"
+    <div className={`body-area${showNav ? " body-pd" : ""}`}>
+    <div className={`sidebar${showNav ? " open" : ""}`}> 
+        <div className="logo-details">
+          <i className='bx bxl-c-plus-plus icon'></i>
+          <a
+              href="/user/homepage"
               target="_self"
-              className="nav_link"
+              className="logo_name"
             >
-              <i className="bi bi-box-arrow-left nav_icon" />
-              <span className="nav_name">SignOut</span>
+              <img
+                src={logo}
+                alt=""
+                style={{ width: "120px", height: "auto" }}
+              />
             </a>
-          </div>
+          <i class='bi-list' id="btn" onClick={() => setShowNav(!showNav)}></i>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+        <ul class="nav-list">
+          <li>
+            <a href="homepage">
+            <i className="bi bi-house nav_icon" />
+              <span class="links_name">Home</span>
+            </a>
+            <span class="tooltip">Home</span>
+          </li>
+          <li>
+            <a href="riwayat">
+            <i className="bi bi-card-checklist nav_icon" />
+              <span class="links_name">History Presensi</span>
+            </a>
+            <span class="tooltip">History Presensi</span>
+          </li>
+          <li>
+            <a href="presensi">
+            <i className="bi bi-camera nav_icon" />
+              <span class="links_name">Lakukan Presensi</span>
+            </a>
+            <span class="tooltip">Lakukan Presensi</span>
+          </li>
+          <li>
+            <a href="tugas">
+            <i className="bi bi-list-task nav_icon" />
+              <span class="links_name">Penugasan</span>
+            </a>
+            <span class="tooltip">Penugasan</span>
+          </li>
+          <li>
+            <a href="surat">
+            <i className="bi bi-envelope nav_icon" />
+              <span class="links_name">Persuratan</span>
+            </a>
+            <span class="tooltip">Persuratan</span>
+          </li>
+          <li>
+            <a href="profil">
+            <i className="bi bi-person nav_icon"></i>
+              <span class="links_name">Profile</span>
+            </a>
+            <span class="tooltip">Profile</span>
+          </li>
+          <li className="profile">
+              {/* <img src="profile.jpg" alt="profileImg"/> */}
+            <a href="/">
+            
+            <i className="bi bi-box-arrow-left nav_icon" ></i>
+            <span class="links_name">Sign Out</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+        <div className={"home-section"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
           <h1 style={{ marginBottom: "10px" }}>Silahkan Presensi</h1>
           <div> <Dates style={{ display: 'flex', alignItems: 'end' }} /> </div>
           <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'flex-start' }}>
